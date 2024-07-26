@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('publications', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
+             $table->id();
+            $table->string('name')->unique();
+            $table->timestamps();
+        });
+
+         Schema::create('role_user', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('title');
-            $table->text('abstract');
-            $table->string('journal');
-            $table->date('publication_date');
             $table->timestamps();
         });
     }
@@ -27,6 +30,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('publications');
+        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('roles');
     }
 };

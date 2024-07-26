@@ -1,49 +1,126 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Link, useForm, usePage } from '@inertiajs/react';
-import { Transition } from '@headlessui/react';
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
+import TextInput from "@/Components/TextInput";
+import { Link, useForm, usePage } from "@inertiajs/react";
+import { Transition } from "@headlessui/react";
 
-export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
+export default function UpdateProfileInformation({
+    mustVerifyEmail,
+    status,
+    className = "",
+}) {
     const user = usePage().props.auth.user;
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        name: user.name,
-        email: user.email,
-    });
+    const { data, setData, patch, errors, processing, recentlySuccessful } =
+        useForm({
+            name: user.name,
+            email: user.email,
+            photo: user.photo,
+            bio: user.bio,
+            title: user.title,
+        });
 
     const submit = (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'));
+        patch(route("profile.update"));
     };
 
     return (
         <section className={className}>
-            <header>
-                <h2 className="text-lg font-medium text-gray-900">Profile Information</h2>
+            <header className="flex justify-between">
+                <div className="profile-heading flex flex-col">
+                    <h2 className="text-lg font-medium text-gray-900">
+                        Profile Information
+                    </h2>
 
-                <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
-                </p>
+                    <p className="mt-1 text-sm text-gray-600">
+                        Update your account's profile information and email
+                        address.
+                    </p>
+                </div>
+
+                <div className="avatar">
+                    <div className="ring-primary ring-offset-base-100 w-24 rounded-full ring ring-offset-2">
+                        <img
+                            className="rounded-full"
+                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                        />
+                    </div>
+                </div>
             </header>
 
-            <form onSubmit={submit} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
+            <form
+                onSubmit={submit}
+                className="mt-6 space-y-6 "
+                enctype="multipart/form-data"
+            >
+                <div className="avatar flex justify-end">
+                    <div className="image-upload">
+                        <InputLabel htmlFor="photo" value="Profile Image" />
+                        <TextInput
+                            id="photo"
+                            type="file"
+                            className="file-input file-input-bordered file-input-primary max-w-[100px] overflow-hidden"
+                            value={data.photo}
+                            onChange={(e) => setData("photo", e.target.value)}
+                            required
+                            isFocused
+                        />
 
-                    <TextInput
-                        id="name"
-                        className="mt-1 block w-full"
-                        value={data.name}
-                        onChange={(e) => setData('name', e.target.value)}
+                        <InputError className="mt-2" message={errors.photo} />
+                    </div>
+                </div>
+                <div className="flex gap-4 ">
+                    <div className="w-full">
+                        <InputLabel htmlFor="title" value="Title" />
+
+                        <TextInput
+                            id="title"
+                            className="mt-1 block w-full h-8"
+                            value={data.title}
+                            onChange={(e) => setData("title", e.target.value)}
+                            required
+                            isFocused
+                            autoComplete="title"
+                        />
+
+                        <InputError className="mt-2" message={errors.title} />
+                    </div>
+                    <div className="w-full">
+                        <InputLabel htmlFor="name" value="Name" />
+
+                        <TextInput
+                            id="name"
+                            className="mt-1 block w-full h-8"
+                            value={data.name}
+                            onChange={(e) => setData("name", e.target.value)}
+                            required
+                            isFocused
+                            autoComplete="name"
+                        />
+
+                        <InputError className="mt-2" message={errors.name} />
+                    </div>
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="bio" value="Bio" />
+
+                    <textarea
+                        cols={10}
+                        rows={10}
+                        id="bio"
+                        className=" border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                        value={data.bio}
+                        onChange={(e) => setData("bio", e.target.value)}
                         required
                         isFocused
-                        autoComplete="name"
+                        autoComplete="bio"
                     />
 
-                    <InputError className="mt-2" message={errors.name} />
+                    <InputError className="mt-2" message={errors.bio} />
                 </div>
 
                 <div>
@@ -52,9 +129,9 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     <TextInput
                         id="email"
                         type="email"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full h-8"
                         value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={(e) => setData("email", e.target.value)}
                         required
                         autoComplete="username"
                     />
@@ -67,7 +144,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         <p className="text-sm mt-2 text-gray-800">
                             Your email address is unverified.
                             <Link
-                                href={route('verification.send')}
+                                href={route("verification.send")}
                                 method="post"
                                 as="button"
                                 className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -76,9 +153,10 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                             </Link>
                         </p>
 
-                        {status === 'verification-link-sent' && (
+                        {status === "verification-link-sent" && (
                             <div className="mt-2 font-medium text-sm text-green-600">
-                                A new verification link has been sent to your email address.
+                                A new verification link has been sent to your
+                                email address.
                             </div>
                         )}
                     </div>
