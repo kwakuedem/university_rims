@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CollaborationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResearcherController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,6 +31,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+Route::get('/admin', [AdminController::class, 'index'])->middleware('role:admin');
+Route::get('/researcher', [ResearcherController::class, 'index'])->middleware('role:researcher');
+
+
+
+//collaboration route
+Route::middleware('auth')->group(function () {
+    Route::resource('collaborations', CollaborationController::class)->except(['create', 'edit']);
 });
 
 require __DIR__ . '/auth.php';

@@ -20,7 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'photo',
+        'profile_photo',
         'bio',
         'title',
         'password',
@@ -49,13 +49,30 @@ class User extends Authenticatable
         ];
     }
 
-    public function publications()
+    public function roles()
     {
-        return $this->hasMany(Publication::class);
+        return $this->belongsToMany(Role::class, 'role_user');
     }
 
-    public function professionalActivities()
+    public function researches()
     {
-        return $this->hasMany(ProfessionalActivity::class);
+        return $this->hasMany(Research::class);
+    }
+
+    public function collaborations()
+    {
+        return $this->hasMany(Collaboration::class);
+    }
+
+    public function collaboratedResearches()
+    {
+        return $this->belongsToMany(Research::class, 'collaborations', 'collaborator_id', 'research_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
+
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
     }
 }
