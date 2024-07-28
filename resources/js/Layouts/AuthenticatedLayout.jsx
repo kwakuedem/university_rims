@@ -33,8 +33,10 @@ export default function Authenticated({ user, header, children }) {
                                     </NavLink>
 
                                     <NavLink
-                                        href={route("dashboard")}
-                                        active={route().current("publication")}
+                                        href={route("publications.index")}
+                                        active={route().current(
+                                            "publications.index"
+                                        )}
                                         className="!font-bold !text-white mt-5 !text-sm"
                                     >
                                         Publications
@@ -54,6 +56,16 @@ export default function Authenticated({ user, header, children }) {
                                         className="!text-sm !font-bold !text-white mt-5"
                                     >
                                         Teaching
+                                    </NavLink>
+
+                                    <NavLink
+                                        href={route("collaborations.index")}
+                                        active={route().current(
+                                            "collaborations.index"
+                                        )}
+                                        className="!text-sm !font-bold !text-white mt-5"
+                                    >
+                                        Collaboration
                                     </NavLink>
                                 </div>
                             </div>

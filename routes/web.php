@@ -3,7 +3,9 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CollaborationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResearchController;
 use App\Http\Controllers\ResearcherController;
+use App\Http\Middleware\CheckRole;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,13 +37,14 @@ Route::middleware('auth')->group(function () {
 
 
 Route::get('/admin', [AdminController::class, 'index'])->middleware('role:admin');
-Route::get('/researcher', [ResearcherController::class, 'index'])->middleware('role:researcher');
+Route::get('/researcher', [ResearcherController::class, 'index'])->middleware(CheckRole::class);
 
 
 
 //collaboration route
-Route::middleware('auth')->group(function () {
-    Route::resource('collaborations', CollaborationController::class)->except(['create', 'edit']);
+Route::middleware('auth', 'role:admin')->group(function () {
+    Route::resource('collaborations', CollaborationController::class)->except(['edit']);
+    Route::resource('publications',ResearchController::class);
 });
 
 require __DIR__ . '/auth.php';

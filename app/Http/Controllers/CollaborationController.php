@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Collaboration;
+use App\Models\Research;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CollaborationController extends Controller
 {
@@ -11,6 +13,14 @@ class CollaborationController extends Controller
     {
         $collaborations = Collaboration::with(['research', 'user', 'collaborator'])->get();
         return inertia('Collaborations/Index', ['collaborations' => $collaborations]);
+    }
+
+     public function create()
+    {
+       $research=Research::where('user_id',Auth::user()->id);
+    //    $research_count=count($research);
+       dd($research);
+        return inertia('Collaborations/Invite',['research_count'=> $research]);
     }
 
     public function store(Request $request)
@@ -44,9 +54,10 @@ class CollaborationController extends Controller
         return redirect()->back()->with('success', 'Collaboration status updated.');
     }
 
-    public function destroy($id)
+    public function destroy(Collaboration $collaboration)
     {
-        $collaboration = Collaboration::findOrFail($id);
+        auth()->user()->can('delete', $collaboration);
+        $collaboration = Collaboration::findOrFail($collaboration);
         $collaboration->delete();
 
         return redirect()->back()->with('success', 'Collaboration invitation deleted.');
