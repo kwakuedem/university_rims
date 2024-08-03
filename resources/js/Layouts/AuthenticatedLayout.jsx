@@ -47,7 +47,7 @@ export default function Authenticated({ user, header, children }) {
                                         active={route().current("publication")}
                                         className="!text-sm !font-bold !text-white mt-5"
                                     >
-                                        Professional
+                                        Submissions
                                     </NavLink>
 
                                     <NavLink

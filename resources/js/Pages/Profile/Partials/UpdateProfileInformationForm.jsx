@@ -16,7 +16,7 @@ export default function UpdateProfileInformation({
         useForm({
             name: user.name,
             email: user.email,
-            photo: user.photo,
+            profile_photo: user.profile_photo,
             bio: user.bio,
             title: user.title,
         });
@@ -45,7 +45,7 @@ export default function UpdateProfileInformation({
                     <div className="ring-primary ring-offset-base-100 w-24 rounded-full ring ring-offset-2">
                         <img
                             className="rounded-full"
-                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                            src={data.profile_photo}
                         />
                     </div>
                 </div>
@@ -58,18 +58,26 @@ export default function UpdateProfileInformation({
             >
                 <div className="avatar flex justify-end">
                     <div className="image-upload">
-                        <InputLabel htmlFor="photo" value="Profile Image" />
+                        <InputLabel
+                            htmlFor="profile_photo"
+                            value="Profile Image"
+                        />
                         <TextInput
-                            id="photo"
+                            id="profile_photo"
                             type="file"
                             className="file-input file-input-bordered file-input-primary max-w-[100px] overflow-hidden"
-                            value={data.photo}
-                            onChange={(e) => setData("photo", e.target.value)}
+                            value={data.profile_photo}
+                            onChange={(e) =>
+                                setData("profile_photo", e.target.value)
+                            }
                             required
                             isFocused
                         />
 
-                        <InputError className="mt-2" message={errors.photo} />
+                        <InputError
+                            className="mt-2"
+                            message={errors.profile_photo}
+                        />
                     </div>
                 </div>
                 <div className="flex gap-4 ">

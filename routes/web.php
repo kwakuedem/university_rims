@@ -37,14 +37,18 @@ Route::middleware('auth')->group(function () {
 
 
 Route::get('/admin', [AdminController::class, 'index'])->middleware('role:admin');
-Route::get('/researcher', [ResearcherController::class, 'index'])->middleware(CheckRole::class);
+// Route::get('/researcher', [ResearcherController::class, 'index'])->middleware(CheckRole::class);
 
 
 
 //collaboration route
-Route::middleware('auth', 'role:admin')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::resource('collaborations', CollaborationController::class)->except(['edit']);
     Route::resource('publications',ResearchController::class);
+
+    Route::delete('/collaborations/{collaboration}', [CollaborationController::class, 'cancel'])->name('collaborations.cancel');
+    Route::patch('/collaborations/{collaboration}/accept', [CollaborationController::class, 'accept'])->name('collaborations.accept');
+    Route::patch('/collaborations/{collaboration}/reject', [CollaborationController::class, 'reject'])->name('collaborations.reject');
 });
 
 require __DIR__ . '/auth.php';

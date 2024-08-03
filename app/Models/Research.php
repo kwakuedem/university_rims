@@ -17,8 +17,14 @@ class Research extends Model
         'user_id',
     ];
 
-    public function user()
+    public function collaborators()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class, 'collaborations', 'research_id', 'user_id');
+    }
+
+    // Define the relationship with the owner
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
