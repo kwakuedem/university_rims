@@ -49,7 +49,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'profile_photo' =>$filePath,
         ]);
-
+        $user->assignRole('author'); 
         event(new Registered($user));
 
         Auth::login($user);

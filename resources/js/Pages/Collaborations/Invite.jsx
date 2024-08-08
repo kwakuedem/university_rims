@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { MdCancel } from "react-icons/md";
 
 const Create = ({ researches, users, auth, collaborations }) => {
+    const [toogleForm, settoogleForm] = useState(false);
+
+    const toogle = () => {
+        settoogleForm(!toogleForm);
+    };
     const {
         data,
         setData,
@@ -25,14 +31,6 @@ const Create = ({ researches, users, auth, collaborations }) => {
         destroy(route("collaborations.cancel", collaborator_id));
     };
 
-    const handleAccept = (collaborator_id) => {
-        patch(route("collaborations.accept", collaborator_id));
-    };
-
-    const handleReject = (collaborator_id) => {
-        patch(route("collaborations.reject", collaborator_id));
-    };
-
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -47,161 +45,220 @@ const Create = ({ researches, users, auth, collaborations }) => {
             <div className="py-12 max-h-screen">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 overflow-hidden">
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <div>
-                                    <label className="block font-medium text-sm text-gray-700">
-                                        Research
-                                    </label>
-                                    <select
-                                        name="research_id"
-                                        value={data.research_id}
-                                        onChange={(e) =>
-                                            setData(
-                                                "research_id",
-                                                e.target.value
-                                            )
-                                        }
-                                        className="form-select block w-full mt-1"
-                                    >
-                                        <option value="">
-                                            Select Research
-                                        </option>
-                                        {researches.map((research) => (
-                                            <option
-                                                key={research.id}
-                                                value={research.id}
+                        <div className="p-6 text-gray-900">
+                            <div className="flex justify-between">
+                                {!toogleForm && (
+                                    <form className="outline-none focus:outline-none w-[60%]">
+                                        <div className="flex w-full gap-3">
+                                            <div className="form-controls w-[80%] flex outline outline-1 rounded-lg  focus-within:outline-blue-400">
+                                                <input
+                                                    type="text"
+                                                    placeholder="search"
+                                                    name="search"
+                                                    className="rounded-l-lg w-full outline-0 border-0 focus:outline-0 focus:border-0 focus:ring-0"
+                                                />
+                                                <button className="bg-blue-400  rounded-r-lg text-white px-1">
+                                                    search
+                                                </button>
+                                            </div>
+                                            <select
+                                                name="research_id"
+                                                value={""}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "research_id",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="form-select block w-[20%] mt-1 rounded-lg p-1  outline outline-0 focus:outline-0 focus:border-0"
                                             >
-                                                {research.title}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {errors.research_id && (
-                                        <div className="text-red-600">
-                                            {errors.research_id}
+                                                <option value={"all"}>
+                                                    Search by
+                                                </option>
+
+                                                <option value={"author"}>
+                                                    {"Author"}
+                                                </option>
+                                                <option value={"topic"}>
+                                                    {"Topic"}
+                                                </option>
+                                            </select>
                                         </div>
-                                    )}
-                                </div>
-                                <div>
-                                    <label className="block font-medium text-sm text-gray-700">
-                                        Collaborator
-                                    </label>
-                                    <select
-                                        name="collaborator_id"
-                                        value={data.collaborator_id}
-                                        onChange={(e) =>
-                                            setData(
-                                                "collaborator_id",
-                                                e.target.value
-                                            )
-                                        }
-                                        className="form-select block w-full mt-1"
-                                    >
-                                        <option value="">
-                                            Select Collaborator
-                                        </option>
-                                        {users.map((user) => (
-                                            <option
-                                                key={user.id}
-                                                value={user.id}
-                                            >
-                                                {user.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {errors.collaborator_id && (
-                                        <div className="text-red-600">
-                                            {errors.collaborator_id}
-                                        </div>
-                                    )}
-                                </div>
-                                <div>
+                                    </form>
+                                )}
+                                <div
+                                    className={`flex justify-end items-end ${
+                                        !toogleForm ? "w-[20%]" : "w-full"
+                                    }`}
+                                >
                                     <button
-                                        type="submit"
-                                        className="inline-flex items-center px-4 py-2 bg-blue-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150"
-                                        disabled={processing}
+                                        onClick={toogle}
+                                        className="bg-blue-900/90 text-white/60 hover:bg-blue-900/70 rounded-md px-2"
                                     >
-                                        {processing
-                                            ? "Sending..."
-                                            : "Send Invitation"}
+                                        {toogleForm
+                                            ? "Hide Form"
+                                            : "Invite Collaborator"}
                                     </button>
                                 </div>
-                            </form>
+                            </div>
+                            {toogleForm && (
+                                <form
+                                    onSubmit={handleSubmit}
+                                    className="space-y-6"
+                                >
+                                    <div>
+                                        <label className="block font-medium text-sm text-gray-700">
+                                            Research
+                                        </label>
+                                        <select
+                                            name="research_id"
+                                            value={data.research_id}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "research_id",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="form-select block w-full mt-1 rounded-md"
+                                        >
+                                            <option value="">
+                                                Select Research
+                                            </option>
+                                            {researches.map((research) => (
+                                                <option
+                                                    key={research.id}
+                                                    value={research.id}
+                                                >
+                                                    {research.title}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        {errors.research_id && (
+                                            <div className="text-red-600">
+                                                {errors.research_id}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <label className="block font-medium text-sm text-gray-700">
+                                            Collaborator
+                                        </label>
+                                        <select
+                                            name="collaborator_id"
+                                            value={data.collaborator_id}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "collaborator_id",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="form-select block w-full mt-1 rounded-lg"
+                                        >
+                                            <option value="">
+                                                Select Collaborator
+                                            </option>
+                                            {users.map((user) => (
+                                                <option
+                                                    key={user.id}
+                                                    value={user.id}
+                                                >
+                                                    {user.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        {errors.collaborator_id && (
+                                            <div className="text-red-600">
+                                                {errors.collaborator_id}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <button
+                                            type="submit"
+                                            className="inline-flex items-center px-4 py-2 bg-blue-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150"
+                                            disabled={processing}
+                                        >
+                                            {processing
+                                                ? "Sending..."
+                                                : "Send Invitation"}
+                                        </button>
+                                    </div>
+                                </form>
+                            )}
 
-                            <div className="mt-8 bg-gray-50 overflow-hidden">
-                                <h3 className="font-semibold text-lg">
+                            <div className="mt-8 bg-gray-50">
+                                <h3 className="font-bold text-lg px-4 pt-4 text-blue-900/80">
                                     Your Invitations
                                 </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-2 py-1 !overflow-auto">
-                                    {collaborations.map((collaboration) => (
-                                        <div
-                                            key={collaboration.id}
-                                            className="mt-4 border-2 border-blue-100 rounded-lg shadow-md px-2 py-1"
-                                        >
-                                            <p className="flex flex-col">
-                                                <span className="text-blue-900/90">
-                                                    <span className="font-bold">
-                                                        INVITATION TO :
-                                                    </span>
-                                                    {
-                                                        collaboration
-                                                            .collaborator.name
-                                                    }
-                                                </span>
-                                                <span className="text-gray-500">
-                                                    <span className="font-bold">
-                                                        RESEARCH TOPIC :{" "}
-                                                    </span>
-                                                    {
-                                                        collaboration.research
-                                                            .title
-                                                    }{" "}
-                                                </span>
-                                            </p>
-                                            {collaboration.user_id ===
-                                            auth.user.id ? (
-                                                <button
-                                                    onClick={() =>
-                                                        handleCancel(
-                                                            collaboration.id
-                                                        )
-                                                    }
-                                                    className="inline-flex items-center px-4 py-1 my-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150"
-                                                >
-                                                    Cancel Invitation
-                                                </button>
-                                            ) : (
-                                                <div>
-                                                    {collaboration.status ===
-                                                        "pending" && (
-                                                        <>
-                                                            <button
-                                                                onClick={() =>
-                                                                    handleAccept(
-                                                                        collaboration.id
-                                                                    )
+                                <div className="overflow-x-auto mt-4 max-h-64 overflow-y-auto px-2">
+                                    <table className="min-w-full divide-y divide-gray-200 ">
+                                        <thead className="bg-blue-900/70 rounded-md">
+                                            <tr className="text-white">
+                                                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80  uppercase tracking-wider">
+                                                    Collaborator
+                                                </th>
+                                                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80  uppercase tracking-wider">
+                                                    Research Topic
+                                                </th>
+                                                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80  uppercase tracking-wider">
+                                                    Actions
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {collaborations.map(
+                                                (collaboration, index) =>
+                                                    collaboration.user_id ===
+                                                    auth.user.id ? (
+                                                        <tr
+                                                            key={
+                                                                collaboration.id
+                                                            }
+                                                            className={
+                                                                index % 2 === 0
+                                                                    ? "bg-gray-50"
+                                                                    : "bg-white"
+                                                            }
+                                                        >
+                                                            <td className="px-4 py-2 whitespace-nowrap">
+                                                                {
+                                                                    collaboration
+                                                                        .collaborator
+                                                                        .name
                                                                 }
-                                                                className="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150"
-                                                            >
-                                                                Accept
-                                                            </button>
-                                                            <button
-                                                                onClick={() =>
-                                                                    handleReject(
-                                                                        collaboration.id
-                                                                    )
+                                                            </td>
+                                                            <td className="px-4 py-2 whitespace-nowrap">
+                                                                {
+                                                                    collaboration
+                                                                        .research
+                                                                        .title
                                                                 }
-                                                                className="inline-flex items-center px-4 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:border-yellow-900 focus:ring ring-yellow-300 disabled:opacity-25 transition ease-in-out duration-150"
-                                                            >
-                                                                Reject
-                                                            </button>
-                                                        </>
-                                                    )}
-                                                </div>
+                                                            </td>
+                                                            <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleCancel(
+                                                                            collaboration.id
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <MdCancel className="!text-red-600/90 text-[25px] hover:text-red-600/70" />
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    ) : null
                                             )}
-                                        </div>
-                                    ))}
+                                        </tbody>
+                                    </table>
                                 </div>
+                                {collaborations.filter(
+                                    (collaboration) =>
+                                        collaboration.user_id === auth.user.id
+                                ).length === 0 && (
+                                    <div className="p-4 text-center text-gray-500">
+                                        You have not placed any invitations yet!
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -4,14 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Research;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ResearchController extends Controller
 {
+    public function dashboard()
+{
+    $user = Auth::user();
+    $publications = Research::where('user_id',$user->id);
+
+    // Example statistics data
+    $statistics = [
+        'months' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        'publications' => [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+    ];
+
+    return inertia('Dashboard', compact('statistics'));
+}
+
      // Get all research work
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Get research works owned by the user or where the user is a collaborator
         $publications = Research::where('user_id', $user->id)
@@ -50,7 +65,7 @@ class ResearchController extends Controller
             'title' => $data['title'],
             'abstract' => $data['abstract'],
             'file_path' => $filePath,
-            'user_id' => auth()->user()->id
+            'user_id' => Auth::user()->id
         ]);
 
         // Return response (for example, redirect or Inertia response)
@@ -97,6 +112,17 @@ class ResearchController extends Controller
 
     // Return response (e.g., redirect or Inertia response)
     return redirect()->route('publications.index')->with('success', 'Publication updated successfully.');
+}
+
+public function show(Research $publication){
+    dd($publication);
+    return inertia('Publications/Edit',compact('publication'));
+}
+
+public function destroy(Research $publication)
+{
+    $publication->delete();
+    return redirect()->back()->with('success', 'Research deleted successfully.');
 }
 
 }

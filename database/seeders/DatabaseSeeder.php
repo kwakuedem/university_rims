@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Chat;
 use App\Models\Collaboration;
 use App\Models\Research;
 use App\Models\User;
@@ -18,8 +19,9 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        // User::factory(4)->create();
+        User::factory(1)->create();
         // Research::factory(20)->create();
-        Collaboration::factory(5)->create();
+        // Collaboration::factory(5)->create();
+        // Chat::factory(10)->create();
     }
 }

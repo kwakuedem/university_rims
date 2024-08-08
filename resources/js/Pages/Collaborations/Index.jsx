@@ -1,16 +1,16 @@
 import React from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { IoChatboxEllipses } from "react-icons/io5";
+import { FcApprove, FcApproval, FcDisapprove } from "react-icons/fc";
+import { MdPending, MdDeleteForever } from "react-icons/md";
+import { IoMdCloseCircle } from "react-icons/io";
 
 const Invitations = ({ collaborations, auth }) => {
     const { data, setData, post, patch, processing, errors } = useForm({
         status: "", // To determine whether the action is 'accept' or 'reject'
     });
 
-    // const handleAction = (id, status) => {
-    //     setData("status", status);
-    //     post(route(`collaborations.${status}`, { id }));
-    // };
     const handleAccept = (collaborator_id) => {
         patch(route("collaborations.accept", collaborator_id));
     };
@@ -42,142 +42,161 @@ const Invitations = ({ collaborations, auth }) => {
                                     href={route("collaborations.create")}
                                     className="bg-blue-900 text-white/70 font-bold py-1 px-3 rounded-md"
                                 >
-                                    {" "}
-                                    Invite Collaborator
+                                    Invitations
                                 </Link>
                             </div>
-                            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                {collaborations.map((collaboration) => (
-                                    <div
-                                        key={collaboration.id}
-                                        className="p-4 bg-white shadow-md rounded-lg mb-4 flex flex-col items-center border-2"
-                                    >
-                                        {/* <p>
-                                            Research:{" "}
-                                            {collaboration.research.title}
-                                        </p> */}
-                                        <p className="flex flex-col gap-1 justify-center items-center">
-                                            {auth.user.id ===
-                                            collaboration.user_id ? (
-                                                <div className="flex flex-col">
-                                                    <span>
-                                                        You Invited{" "}
-                                                        {
-                                                            collaboration
-                                                                .collaborator
-                                                                .name
+                            <div className="mt-6">
+                                <div className="overflow-x-auto overflow-y-auto">
+                                    <table className="min-w-full divide-y divide-gray-200">
+                                        <thead className="bg-gray-50 sticky top-0">
+                                            <tr className="bg-blue-900/70 rounded-md">
+                                                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
+                                                    Inviter
+                                                </th>
+                                                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
+                                                    Research Topic
+                                                </th>
+                                                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
+                                                    Status
+                                                </th>
+                                                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
+                                                    Actions
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200 overflow-y-auto max-h-40">
+                                            {collaborations.map(
+                                                (collaboration, index) => (
+                                                    <tr
+                                                        key={collaboration.id}
+                                                        className={
+                                                            index % 2 === 0
+                                                                ? "bg-gray-50"
+                                                                : "bg-white"
                                                         }
-                                                    </span>
-
-                                                    <span>
-                                                        Project Topic:{" "}
-                                                        {
-                                                            collaboration
-                                                                .research.title
-                                                        }
-                                                    </span>
-                                                    {collaboration.status ==
-                                                        "pending" && (
-                                                        <span className=" w-[40%] m-auto pt-2 ">
-                                                            <span className="text-white bg-yellow-500 flex justify-center items-center ring-1 rounded-md ring-yellow-300">
-                                                                {
-                                                                    collaboration.status
-                                                                }
-                                                            </span>
-                                                        </span>
-                                                    )}
-
-                                                    {collaboration.status ==
-                                                        "accepted" && (
-                                                        <span className="w-[60%] m-auto pt-2">
-                                                            <button className="bg-blue-900/90 text-white/80 rounded-md hover:bg-blue-900/70 px-2">
-                                                                Chat
-                                                                Collaborator(s)
-                                                            </button>
-                                                        </span>
-                                                    )}
-
-                                                    {collaboration.status ==
-                                                        "rejected" && (
-                                                        <span className=" w-[80%] m-auto pt-2 flex gap-3 justify-center items-center">
-                                                            <button className="text-red-400 px-2 ring-1 rounded-md ring-red-300">
-                                                                {
-                                                                    collaboration.status
-                                                                }
-                                                            </button>
-                                                            <form
-                                                                onSubmit={
-                                                                    deleteCollaboration
-                                                                }
-                                                                action=""
-                                                                className="w-full"
-                                                            >
-                                                                <button className="bg-red-600 text-white ring-1 ring-red-300 rounded-md px-2 hover:bg-red-600/90">
-                                                                    delete
-                                                                </button>
-                                                            </form>
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            ) : (
-                                                <span className="flex flex-col">
-                                                    <span>
-                                                        <span className="font-bold text-blue-900/80">
-                                                            INVITATION BY :{" "}
-                                                        </span>
-                                                        {
-                                                            collaboration.user
-                                                                .name
-                                                        }
-                                                    </span>
-
-                                                    <span>
-                                                        <span className="font-bold text-blue-900/80">
-                                                            ON THE RESEARCH
-                                                            TOPIC :{" "}
-                                                        </span>
-                                                        {
-                                                            collaboration
-                                                                .research.title
-                                                        }
-                                                    </span>
-                                                </span>
+                                                    >
+                                                        <td className="px-4 py-2 whitespace-nowrap">
+                                                            {auth.user.id ===
+                                                            collaboration.user_id ? (
+                                                                <span className="font-medium text-gray-900">
+                                                                    You invited{" "}
+                                                                    {
+                                                                        collaboration
+                                                                            .collaborator
+                                                                            .name
+                                                                    }
+                                                                </span>
+                                                            ) : (
+                                                                <span className="font-medium text-gray-900">
+                                                                    {
+                                                                        collaboration
+                                                                            .user
+                                                                            .name
+                                                                    }
+                                                                </span>
+                                                            )}
+                                                        </td>
+                                                        <td className="px-4 py-2 whitespace-nowrap">
+                                                            {
+                                                                collaboration
+                                                                    .research
+                                                                    .title
+                                                            }
+                                                        </td>
+                                                        <td className="px-4 py-2 whitespace-nowrap">
+                                                            {collaboration.status ===
+                                                                "pending" && (
+                                                                <MdPending className="!text-yellow-500 text-[25px]" />
+                                                            )}
+                                                            {collaboration.status ===
+                                                                "accepted" && (
+                                                                <FcApproval className="!text-green-500 text-[25px]" />
+                                                            )}
+                                                            {collaboration.status ===
+                                                                "rejected" && (
+                                                                <FcDisapprove className="!text-red-500 text-[25px]" />
+                                                            )}
+                                                        </td>
+                                                        <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
+                                                            {auth.user.id ===
+                                                                collaboration.collaborator_id &&
+                                                                collaboration.status ===
+                                                                    "pending" && (
+                                                                    <div className="flex space-x-2">
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                handleAccept(
+                                                                                    collaboration.id
+                                                                                )
+                                                                            }
+                                                                            disabled={
+                                                                                processing
+                                                                            }
+                                                                        >
+                                                                            <FcApprove className="!text-green-600 text-[25px]" />
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                handleReject(
+                                                                                    collaboration.id
+                                                                                )
+                                                                            }
+                                                                            disabled={
+                                                                                processing
+                                                                            }
+                                                                        >
+                                                                            <IoMdCloseCircle className="!text-red-600 text-[25px]" />
+                                                                        </button>
+                                                                    </div>
+                                                                )}
+                                                            {auth.user.id ===
+                                                                collaboration.collaborator_id &&
+                                                                collaboration.status ===
+                                                                    "accepted" && (
+                                                                    <Link
+                                                                        href={route(
+                                                                            "chats.create"
+                                                                        )}
+                                                                    >
+                                                                        <IoChatboxEllipses className="!text-blue-900/90 text-[25px]  hover:text-blue-900/70" />
+                                                                    </Link>
+                                                                )}
+                                                            {auth.user.id ===
+                                                                collaboration.user_id &&
+                                                                collaboration.status ===
+                                                                    "accepted" && (
+                                                                    <Link
+                                                                        href={route(
+                                                                            "chats.create"
+                                                                        )}
+                                                                    >
+                                                                        <IoChatboxEllipses className="!text-blue-900/90 text-[25px]  hover:text-blue-900/70" />
+                                                                    </Link>
+                                                                )}
+                                                            {auth.user.id ===
+                                                                collaboration.user_id &&
+                                                                collaboration.status ===
+                                                                    "rejected" && (
+                                                                    <form
+                                                                        onSubmit={() =>
+                                                                            deleteCollaboration(
+                                                                                collaboration.id
+                                                                            )
+                                                                        }
+                                                                        className="inline"
+                                                                    >
+                                                                        <button className="">
+                                                                            <MdDeleteForever className="!text-red-600/90 text-[25px]  hover:text-red-600/70" />
+                                                                        </button>
+                                                                    </form>
+                                                                )}
+                                                        </td>
+                                                    </tr>
+                                                )
                                             )}
-                                        </p>
-                                        {auth.user.id ===
-                                            collaboration.collaborator_id && (
-                                            <div className="mt-2 flex space-x-2 w-[80%] justify-around">
-                                                <button
-                                                    onClick={() =>
-                                                        handleAccept(
-                                                            collaboration.id
-                                                        )
-                                                    }
-                                                    className="px-4 py-1 bg-green-500 text-white rounded-md"
-                                                    disabled={processing}
-                                                >
-                                                    Accept
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        handleReject(
-                                                            collaboration.id
-                                                        )
-                                                    }
-                                                    className="px-4 py-1 bg-red-500 text-white rounded-md"
-                                                    disabled={processing}
-                                                >
-                                                    Reject
-                                                </button>
-                                            </div>
-                                        )}
-                                        {errors.action && (
-                                            <div className="text-red-600">
-                                                {errors.action}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

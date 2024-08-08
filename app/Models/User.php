@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+
 
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens, Notifiable;
+    use HasFactory, HasApiTokens,HasRoles,Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -49,11 +51,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'role_user');
-    }
-
+    
     public function researches()
     {
         return $this->hasMany(Research::class);
@@ -71,8 +69,9 @@ class User extends Authenticatable
                     ->withTimestamps();
     }
 
-    public function hasRole($role)
-    {
-        return $this->roles()->where('name', $role)->exists();
+   
+
+    public function chat() {
+        return $this->hasMany(Chat::class);
     }
 }

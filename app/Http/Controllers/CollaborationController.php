@@ -22,13 +22,14 @@ class CollaborationController extends Controller
 // }
 
 
-    public function index()
+ public function index()
 {
     $userId = auth()->user()->id;
     
     $collaborations = Collaboration::with(['research', 'user', 'collaborator'])
         ->where('user_id', $userId)
         ->orWhere('collaborator_id', $userId)
+        ->orderBy('created_at', 'desc') // Order by 'created_at' in descending order
         ->get();
 
     return inertia('Collaborations/Index', ['collaborations' => $collaborations]);
