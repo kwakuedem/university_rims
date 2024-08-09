@@ -98,11 +98,57 @@ const Dashboard = ({ auth, statistics }) => {
         },
     ];
 
+    //third
+    const chartSeries3 = [
+        {
+            name: "Collaborations",
+            data: statistics.publications,
+        },
+    ];
+
+    const chartOptions3 = {
+        chart: {
+            type: "bar",
+            height: 200,
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: "55%",
+                endingShape: "rounded",
+            },
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ["transparent"],
+        },
+        xaxis: {
+            categories: statistics.months,
+        },
+        yaxis: {
+            title: {
+                text: "Collaborations",
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: (val) => `${val} publications`,
+            },
+        },
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                <h2 className="font-semibold text-sm text-gray-800/60 leading-tight">
                     Dashboard
                 </h2>
             }
@@ -113,12 +159,15 @@ const Dashboard = ({ auth, statistics }) => {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            <h3 className="text-lg font-semibold mb-4">
+                            <h3 className="text-md font-semibold mb-4 text-black/60">
                                 Welcome, {auth.user.name}!
                             </h3>
 
                             <div className="cards grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full py-3">
-                                <Link className="flex flex-col py-4 border-2 border-blue-900/80 items-center justify-center rounded-md shadow-md shadow-blue-600/70">
+                                <Link
+                                    href={route("publications.index")}
+                                    className="flex flex-col py-4 border-b-4 rounded-b-md border-blue-900/80 items-center justify-center  shadow-md shadow-blue-600/70"
+                                >
                                     <p className="text-xl font-bold text-blue-900">
                                         100
                                     </p>
@@ -127,7 +176,10 @@ const Dashboard = ({ auth, statistics }) => {
                                     </p>
                                 </Link>
 
-                                <Link className="flex flex-col py-4 bottom-1 border-blue-900/80 items-center justify-center rounded-md shadow-md shadow-blue-600/70">
+                                <Link
+                                    href={route("submissions.index")}
+                                    className="flex flex-col border-b-4 rounded-b-md py-4 bottom-1 border-blue-600/80 items-center justify-center rounded-md shadow-md shadow-blue-600/70"
+                                >
                                     <p className="text-xl font-bold text-blue-900">
                                         300
                                     </p>
@@ -136,7 +188,10 @@ const Dashboard = ({ auth, statistics }) => {
                                     </p>
                                 </Link>
 
-                                <Link className="flex flex-col py-4 bottom-1 border-blue-900/80 items-center justify-center rounded-md shadow-md shadow-blue-600/70">
+                                <Link
+                                    href={route("collaborations.index")}
+                                    className="flex flex-col border-b-4 rounded-b-md py-4 border-blue-300 items-center justify-center rounded-md shadow-md shadow-blue-600/70"
+                                >
                                     <p className="text-xl font-bold text-blue-900">
                                         45
                                     </p>
@@ -145,7 +200,7 @@ const Dashboard = ({ auth, statistics }) => {
                                     </p>
                                 </Link>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                                 <div className="bg-white p-4 shadow rounded-lg">
                                     <h4 className="text-md font-semibold mb-2">
                                         Publication Statistics
@@ -165,6 +220,19 @@ const Dashboard = ({ auth, statistics }) => {
                                     <Chart
                                         options={chartOptions2}
                                         series={chartSeries2}
+                                        type="bar"
+                                        height={200}
+                                    />
+                                </div>
+
+                                {/* Add more sections here as needed */}
+                                <div className="bg-white p-4 shadow rounded-lg">
+                                    <h4 className="text-md font-semibold mb-2">
+                                        Collaboration Statistics
+                                    </h4>
+                                    <Chart
+                                        options={chartOptions3}
+                                        series={chartSeries3}
                                         type="bar"
                                         height={200}
                                     />

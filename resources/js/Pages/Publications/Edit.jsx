@@ -8,6 +8,7 @@ import { Transition } from "@headlessui/react";
 
 const Edit = ({ auth, publication }) => {
     // Initialize useForm with existing publication data
+
     const { data, setData, put, errors, processing, recentlySuccessful } =
         useForm({
             title: publication.title || "",
@@ -17,11 +18,13 @@ const Edit = ({ auth, publication }) => {
 
     const submit = (e) => {
         e.preventDefault();
+        console.log(data); // Log the form data
         put(route("publications.update", publication.id), {
-            forceFormData: true, // Important for handling file uploads
+            data, // Pass the form data
+            onSuccess: () => console.log("Form submitted successfully"),
+            onError: (error) => console.log("Error in form submission:", error),
         });
     };
-
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -46,10 +49,16 @@ const Edit = ({ auth, publication }) => {
                                 </div>
                             </header>
                             <form
+                                id="form"
                                 onSubmit={submit}
                                 className="mt-4 space-y-6"
                                 encType="multipart/form-data"
                             >
+                                <input
+                                    type="hidden"
+                                    name="_token"
+                                    value="{{ csrf_token() }}"
+                                />
                                 <div className="w-full">
                                     <InputLabel
                                         htmlFor="title"

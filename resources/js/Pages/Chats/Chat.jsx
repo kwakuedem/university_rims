@@ -27,12 +27,12 @@ const Chat = ({ auth, chats }) => {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 h-full overflow-hidden">
-                            <div className="modal w-[40%] m-auto overflow-hidden h-[80%]  bg-slate-800">
-                                <h3 className="font-bold text-lg text-white/80 w-full bg-blue-900 p-2">
+                            <div className="modal w-[40%] m-auto overflow-hidden h-[100%]  bg-gray-50">
+                                <h3 className="font-bold text-lg text-white/80 w-full bg-slate-800 p-2">
                                     Chat Collaborator
                                 </h3>
 
-                                <div className="h-80 overflow-auto px-5 pt-3">
+                                <div className="h-96 overflow-auto px-5 pt-3">
                                     {chats.map((chat) => (
                                         <div
                                             key={chat.id}
@@ -56,16 +56,19 @@ const Chat = ({ auth, chats }) => {
                                     ))}
                                 </div>
 
-                                <form onSubmit={submit} className="bottom-0">
-                                    <div className="flex justify-center outline outline-1 bg-slate-900 rounded-md">
+                                <form
+                                    onSubmit={submit}
+                                    className="bottom-0 pb-3 w-[80%] m-auto"
+                                >
+                                    <div className="flex justify-center outline outline-1 bg-gray-300 rounded-md">
                                         <input
                                             type="text"
                                             placeholder="message"
-                                            className="rounded-md w-[80%] text-sm bg-slate-900  text-white-/60 outline-none border-0 focus:ring-0 focus:outline-0"
+                                            className="rounded-md w-[80%] text-sm bg-gray-300  text-white-/60 outline-none border-0 focus:ring-0 focus:outline-0"
                                         />
 
                                         <span className="flex justify-center items-center">
-                                            <IoMdSend className="text-white/80 text-xl flex item-center" />
+                                            <IoMdSend className="text-green-400 text-xl flex item-center" />
                                         </span>
                                     </div>
                                 </form>

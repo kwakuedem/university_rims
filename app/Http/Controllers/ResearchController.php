@@ -11,6 +11,7 @@ class ResearchController extends Controller
 {
     public function dashboard()
 {
+   
     $user = Auth::user();
     $publications = Research::where('user_id',$user->id);
 
@@ -51,20 +52,19 @@ class ResearchController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'abstract' => 'required|string',
-            'file_path' => 'required|file|mimes:pdf,txt,odt,doc,docx|max:2048',
+            'file_path' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,odp|max:2048'
         ]);
 
         // Handle file upload
-        $filePath = null;
+        $file = null;
         if ($request->hasFile('file_path')) {
-            $filePath = $request->file('file_path')->store('research_files', 'public');
-
+            $file = $request->file('file_path')->store('research_files', 'public');
         }
 
         Research::create([
             'title' => $data['title'],
             'abstract' => $data['abstract'],
-            'file_path' => $filePath,
+            'file_path' => $file,
             'user_id' => Auth::user()->id
         ]);
 
@@ -81,12 +81,12 @@ class ResearchController extends Controller
     public function update(Request $request, Research $publication)
 {
     // dd($publication);
-    sleep(5);
+  
     // Validate the request
     $data = $request->validate([
         'title' => 'required|string|max:255',
         'abstract' => 'required|string',
-        'file_path' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+        'file_path' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,odp,odt|max:2048',
     ]);
 
     // Handle file upload if a new file is provided
@@ -95,34 +95,34 @@ class ResearchController extends Controller
         if ($publication->file_path) {
             Storage::disk('public')->delete($publication->file_path);
         }
-
-        // Store new file
-        $filePath = $request->file('file_path')->store('research_files', 'public');
+        $file = $request->file('file_path')->store('research_files', 'public');
     } else {
-        // Retain the old file path if no new file is provided
-        $filePath = $publication->file_path;
+        $file = $publication->file_path;
     }
 
     // Update the data
     $publication->update([
         'title' => $data['title'],
         'abstract' => $data['abstract'],
-        'file_path' => $filePath,
+        'file_path' => $file,
     ]);
-
-    // Return response (e.g., redirect or Inertia response)
     return redirect()->route('publications.index')->with('success', 'Publication updated successfully.');
 }
 
-public function show(Research $publication){
-    dd($publication);
-    return inertia('Publications/Edit',compact('publication'));
-}
+    public function show(Research $publication){
+        dd($publication);
+        return inertia('Publications/Edit',compact('publication'));
+    }
 
-public function destroy(Research $publication)
-{
-    $publication->delete();
-    return redirect()->back()->with('success', 'Research deleted successfully.');
-}
+    public function destroy(Research $publication)
+    {
+        // Delete the file from storage if it exists
+        if ($publication->file_path) {
+            Storage::disk('public')->delete($publication->file_path);
+        }
+
+        $publication->delete();
+        return redirect()->back()->with('success', 'Research deleted successfully.');
+    }
 
 }

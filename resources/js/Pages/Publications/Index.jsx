@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { format } from "date-fns";
 import { FaRegEdit } from "react-icons/fa";
@@ -6,12 +6,17 @@ import { MdDeleteForever } from "react-icons/md";
 import { GrView } from "react-icons/gr";
 
 const Index = ({ auth, publications }) => {
+    const { delete: destroy } = useForm();
+
     // Helper function to format the date
     const formatDate = (dateString) => {
         return format(new Date(dateString), "yyyy-MM-dd");
     };
 
-    const { delete: destroy } = useForm();
+    // Helper function to get the correct asset URL
+    const getAssetUrl = (path) => {
+        return `${window.location.origin}/storage/${path}`;
+    };
 
     const deletePublication = (publication_id) => {
         destroy(route("publications.destroy", publication_id));
@@ -33,7 +38,7 @@ const Index = ({ auth, publications }) => {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             {/* Button to add a new publication */}
-                            <div className="mb-3  flex justify-end">
+                            <div className="mb-3 flex justify-end">
                                 <Link
                                     className="py-1 px-2 rounded-md bg-blue-900 text-white/60"
                                     href={route("publications.create")}
@@ -49,6 +54,9 @@ const Index = ({ auth, publications }) => {
                                         <tr>
                                             <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
                                                 Title
+                                            </th>
+                                            <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
+                                                Document
                                             </th>
                                             <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
                                                 Date
@@ -81,9 +89,22 @@ const Index = ({ auth, publications }) => {
                                                         </Link>
                                                     </td>
                                                     <td className="px-4 py-2 whitespace-nowrap">
-                                                        {formatDate(
-                                                            publication.created_at
-                                                        )}
+                                                        <a
+                                                            href={getAssetUrl(
+                                                                publication.file_path
+                                                            )}
+                                                            target="_blank"
+                                                            className="text-sm underline text-blue-600"
+                                                        >
+                                                            Document
+                                                        </a>
+                                                    </td>
+                                                    <td className="px-4 py-2 whitespace-nowrap">
+                                                        <p className="text-sm text-gray-500">
+                                                            {formatDate(
+                                                                publication.created_at
+                                                            )}
+                                                        </p>
                                                     </td>
                                                     <td className="flex justify-center gap-2 px-4 py-2 whitespace-nowrap text-sm font-medium">
                                                         <Link
@@ -102,24 +123,18 @@ const Index = ({ auth, publications }) => {
                                                             )}
                                                             className="text-blue-600 hover:underline"
                                                         >
-                                                            <FaRegEdit className="!text-blue-600 text-[20px]" />
+                                                            <FaRegEdit className="text-[20px] !text-indigo-500" />
                                                         </Link>
-                                                        <form
-                                                            onSubmit={(e) => {
-                                                                e.preventDefault();
+                                                        <button
+                                                            onClick={() =>
                                                                 deletePublication(
                                                                     publication.id
-                                                                );
-                                                            }}
-                                                            className="inline"
+                                                                )
+                                                            }
+                                                            className="text-red-600 hover:text-red-900"
                                                         >
-                                                            <button
-                                                                type="submit"
-                                                                className="text-red-600/90 hover:text-red-600/70"
-                                                            >
-                                                                <MdDeleteForever className="text-[20px]" />
-                                                            </button>
-                                                        </form>
+                                                            <MdDeleteForever className="text-[25px] !text-red-500" />
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             )
@@ -127,12 +142,6 @@ const Index = ({ auth, publications }) => {
                                     </tbody>
                                 </table>
                             </div>
-
-                            {publications.length === 0 && (
-                                <div className="p-4 text-center text-gray-500">
-                                    No publications found!
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>
