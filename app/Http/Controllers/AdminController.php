@@ -41,14 +41,6 @@ class AdminController extends Controller
         ]);
     }
 
-    public function permissions()
-    {
-        $permissions = Permission::all();
-
-        return Inertia::render('Admin/Permissions', compact('permissions'));
-        
-    }
-
     public function assignRole(Request $request)
     {
         $user = User::find($request->user_id);
@@ -80,13 +72,8 @@ class AdminController extends Controller
     }
     
 
-    /**
-     * Store a newly created review in storage.
-     */
-
      //Admin Store publications
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         // Validate the request
         $data = $request->validate([
             'title' => 'required|string|max:255',
@@ -119,9 +106,7 @@ class AdminController extends Controller
 
 
         //admin update
-      public function update(Request $request, Publication $publication)
-{
-    // dd($publication);
+    public function update(Request $request, Publication $publication){
   
     // Validate the request
     $data = $request->validate([

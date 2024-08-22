@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ContactUs;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class PagesController extends Controller
     ]);
     }
 
+    //search for author
     public function filter(Request $request){
         $search=$request['search'];
         $author=User::select('name')->where('name','like','%'. $search .'%')->get();
@@ -31,6 +33,7 @@ class PagesController extends Controller
         return inertia('About');
     }
 
+    //show authors profile
     public function profile($id){
         $author=Publication::with('author')->where('author_id',$id);
         return inertia('AuthorProfile',compact('author'));
@@ -41,20 +44,20 @@ class PagesController extends Controller
         return inertia('Contact');
     }
 
+    //store contact messages
     public function store(Request $request){
-        
-
         $validData=$request->validate([
             'name'=>'string',
             'email'=>'email|string',
             'message'=>'string'
         ]);
 
+        ContactUs::create($validData);
         return inertia('Contact',['success'=>'Message Submitted Successfull. Thanks For Contacting Us']);
     }
 
     
-
+    //display publication detail page
     public function show(Publication $publication){
        
         $research = Publication::with('author')->where('id',$publication->id)->get();

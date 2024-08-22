@@ -33,8 +33,8 @@ class PublicationController extends Controller
 }
 
      // Get all research work
-    public function index()
-    {
+    public function index(){
+        
         $user = Auth::user();
 
         // Get research works owned by the user or where the user is a collaborator
@@ -84,6 +84,7 @@ class PublicationController extends Controller
     }
 
 
+    //get publication edit page
     public function edit(Publication $publication){
         $collaborators=User::where('id', '!=', Auth::id())->get();
          return inertia('Publications/Edit',compact('publication','collaborators'));
@@ -91,52 +92,52 @@ class PublicationController extends Controller
 
 
 
-//update publication function
-    public function update(Request $request, Publication $publication)
-{
-  
-    // Validate the request
-    $data = $request->validate([
-        'title' => 'required|string|max:255',
-        'abstract' => 'required|string',
-        'file_path' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,odp,odt|max:2048',
-        'status'=>'required|string|in:published,unpublished',
-    ]);
+    //update publication function
+    public function update(Request $request, Publication $publication){
+    
+        // Validate the request
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'abstract' => 'required|string',
+            'file_path' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,odp,odt|max:2048',
+            'status'=>'required|string|in:published,unpublished',
+        ]);
 
-    // Handle file upload if a new file is provided
-    if ($request->hasFile('file_path')) {
-    // Delete old file if it exists
-    if ($publication->file_path) {
-        Storage::disk('public')->delete($publication->file_path);
+        // Handle file upload if a new file is provided
+        if ($request->hasFile('file_path')) {
+        // Delete old file if it exists
+            if ($publication->file_path) {
+                Storage::disk('public')->delete($publication->file_path);
+            }
+            $fileName = $request->file('file_path')->getClientOriginalName();
+            $file = $request->file('file_path')->storeAs('research_files', $fileName, 'public');
+        } else {
+            // Keep the old file path if no new file is uploaded
+            $file = $publication->file_path;
+        }
+
+        // Update the data
+        $publication->update([
+            'title' => $data['title'],
+            'abstract' => $data['abstract'],
+            'file_path' => $file,
+            'status'=>$data['status']
+        ]);
+
+        $user = Auth::user();
+        $success= 'Publication Updated Successfully.';
+            // Get research works owned by the user or where the user is a collaborator
+            $publications = Publication::where('author_id', $user->id)
+                ->get();
+        return inertia('Publications/Index',compact('success','publications'));
     }
-    $fileName = $request->file('file_path')->getClientOriginalName();
-    $file = $request->file('file_path')->storeAs('research_files', $fileName, 'public');
-    } else {
-        // Keep the old file path if no new file is uploaded
-        $file = $publication->file_path;
-    }
 
-    // Update the data
-    $publication->update([
-        'title' => $data['title'],
-        'abstract' => $data['abstract'],
-        'file_path' => $file,
-        'status'=>$data['status']
-    ]);
-
-     $user = Auth::user();
-    $success= 'Publication Updated Successfully.';
-        // Get research works owned by the user or where the user is a collaborator
-        $publications = Publication::where('author_id', $user->id)
-            ->get();
-    return inertia('Publications/Index',compact('success','publications'));
-}
-
+    //show particular publication
     public function show(Publication $publication){
-        // dd($publication);
         return inertia('Publications/Show',compact('publication'));
     }
 
+    //delete a publication
     public function destroy(Publication $publication)
     {
         // Delete the file from storage if it exists
@@ -145,7 +146,7 @@ class PublicationController extends Controller
         }
 
         $publication->delete();
-         $user = Auth::user();
+        $user = Auth::user();
         $success= 'Publication Updated Successfully.';
         // Get research works owned by the user or where the user is a collaborator
         $publications = Publication::where('author_id', $user->id)
@@ -153,6 +154,8 @@ class PublicationController extends Controller
         return inertia('Publications/Index',compact('success', 'publications'));
     }
 
+
+// function that handles document download
 public function download(Publication $publication)
 {
     $publication->increamentDownloads();
@@ -161,9 +164,6 @@ public function download(Publication $publication)
         info($publication->file_path);
         return Storage::disk('public')->download($publication->file_path);
     }
-
-    
-
     return redirect()->back()->with('error', 'File not found.');
 }
 

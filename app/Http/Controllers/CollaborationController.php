@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Collaboration;
 use App\Models\Publication;
 use Illuminate\Http\Request;
@@ -10,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class CollaborationController extends Controller
 {
 
+    //get collaborated work for each user
    public function index(){
     $publications=Publication::whereHas('collaborations',function($query){
         $query->where('collaborator_id',Auth::User()->id);
@@ -26,8 +26,6 @@ class CollaborationController extends Controller
         'collaborators.*' => 'exists:users,id',
     ]);
 
-    // Remove existing collaborators for this publication
-    // Collaboration::where('publication_id', $publicationId)->delete();
 
     // Add new collaborators
     foreach ($request->input('collaborators', []) as $collaboratorId) {

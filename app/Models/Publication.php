@@ -19,11 +19,13 @@ class Publication extends Model
         'status',
     ];
 
+    //handles views count
     public function increamentView(){
         $this->views +=1;
         $this->save();
     }
 
+    //handles download count
     public function increamentDownloads(){
         $this->downloads +=1;
         $this->save();

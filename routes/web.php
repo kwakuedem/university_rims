@@ -2,17 +2,10 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CollaborationController;
-use App\Http\Controllers\CollaborationsController;
-use App\Http\Controllers\CollaboratorController;
-use App\Http\Controllers\IndexController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicationController;
-use App\Http\Controllers\ResearchController;
-use App\Models\Publication;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 
 Route::get('/',[PagesController::class,'index'])->name('home');
@@ -32,21 +25,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-//collaboration route
+//publications route
 Route::middleware('auth')->group(function () {
    Route::resource('publications',PublicationController::class);
-   Route::patch('/publications/{publication}/update-status', [PublicationController::class, 'updateStatus'])
-    ->name('publications.update-status');
-//    Route::put('publications/{publication}',[PublicationController::class,'updatestatus'])->name('publications.updatestatus');
 });
 
 
 //collaboration route
 Route::middleware('auth')->group(function () {
-    Route::resource('collaborations', CollaborationController::class)->except(['edit']);
-    Route::delete('/collaborations/{collaboration}', [CollaboratorController::class, 'cancel'])->name('collaborations.cancel');
-    // Route::patch('/collaborations/{collaborator}/accept', [CollaboratorController::class, 'accept'])->name('collaborations.accept');
-    // Route::patch('/collaborations/{collaborator}/reject', [CollaboratorController::class, 'reject'])->name('collaborations.reject');
+    Route::resource('collaborations', CollaborationController::class)->only(['index','store']);
 });
 
 
@@ -62,6 +49,7 @@ Route::middleware(['auth', 'verified','role:admin'])->prefix('admin')->name('adm
     Route::post('/revoke-role', [AdminController::class, 'revokeRole'])->name('revokeRole'); 
 });
 
+//collaboration route
 Route::post('/publications/{publication}/collaborators', [CollaborationController::class, 'store'])
     ->name('collaborations.store');
 
