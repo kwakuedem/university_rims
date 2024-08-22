@@ -10,15 +10,14 @@ class Collaboration extends Model
     use HasFactory;
 
     protected $fillable = [
-        'research_id',
-        'user_id',
+        'publication_id',
         'collaborator_id',
         'status',
     ];
 
-    public function research()
+    public function publication()
     {
-        return $this->belongsTo(Research::class);
+        return $this->belongsTo(Publication::class);
     }
 
     public function user()

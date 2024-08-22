@@ -1,69 +1,69 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CollaborationController;
+use App\Http\Controllers\CollaborationsController;
+use App\Http\Controllers\CollaboratorController;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ResearchController;
-use App\Http\Controllers\ResearcherController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\SubmissionController;
-use App\Http\Middleware\CheckRole;
-use App\Models\Research;
+use App\Models\Publication;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
 
-Route::get('/dashboard',[ResearchController::class,'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/',[PagesController::class,'index'])->name('home');
+Route::post('/contact',[PagesController::class,'store']);
+Route::post('/',[PagesController::class,'filter'])->name('author.filter');
+Route::get('/contact',[PagesController::class,'contact'])->name('contact');
+Route::get('/about',[PagesController::class,'about'])->name('about');
+Route::get('/author/{id}/profile',[PagesController::class,'profile'])->name('author.profile');
+Route::get('/publications/{publication}/read',[PagesController::class,'show'])->name('read');
+Route::get('/publications/{publication}/download', [PublicationController::class, 'download'])->name('publication.download');
+
 
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard',[PublicationController::class,'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-Route::get('/admin', [AdminController::class, 'index'])->middleware('role:admin');
-// Route::get('/researcher', [ResearcherController::class, 'index'])->middleware(CheckRole::class);
-
+//collaboration route
+Route::middleware('auth')->group(function () {
+   Route::resource('publications',PublicationController::class);
+   Route::patch('/publications/{publication}/update-status', [PublicationController::class, 'updateStatus'])
+    ->name('publications.update-status');
+//    Route::put('publications/{publication}',[PublicationController::class,'updatestatus'])->name('publications.updatestatus');
+});
 
 
 //collaboration route
 Route::middleware('auth')->group(function () {
     Route::resource('collaborations', CollaborationController::class)->except(['edit']);
-    Route::resource('publications',ResearchController::class);
-    Route::resource('collaborations/chats',ChatController::class);
-
-    Route::delete('/collaborations/{collaboration}', [CollaborationController::class, 'cancel'])->name('collaborations.cancel');
-    Route::patch('/collaborations/{collaboration}/accept', [CollaborationController::class, 'accept'])->name('collaborations.accept');
-    Route::patch('/collaborations/{collaboration}/reject', [CollaborationController::class, 'reject'])->name('collaborations.reject');
+    Route::delete('/collaborations/{collaboration}', [CollaboratorController::class, 'cancel'])->name('collaborations.cancel');
+    // Route::patch('/collaborations/{collaborator}/accept', [CollaboratorController::class, 'accept'])->name('collaborations.accept');
+    // Route::patch('/collaborations/{collaborator}/reject', [CollaboratorController::class, 'reject'])->name('collaborations.reject');
 });
 
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::resource('submissions', SubmissionController::class);
-    Route::resource('reviews', ReviewController::class)->only(['create', 'store']);
-    // Route::resource('researches', ResearchController::class);
-});
 
 //Admin routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified','role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('index');
+    Route::get('/publications',[AdminController::class,'publications'])->name('publications');
+    Route::get('/collaborations',[AdminController::class,'collaborations'])->name('collaborations');
+    Route::resource('/publications',AdminController::class)->except('index');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::get('/roles', [AdminController::class, 'roles'])->name('roles');
-    Route::get('/permissions', [AdminController::class, 'permissions'])->name('permissions');
     Route::post('/assign-role', [AdminController::class, 'assignRole'])->name('assignRole');
-    Route::post('/revoke-role', [AdminController::class, 'revokeRole'])->name('revokeRole');
+    Route::post('/revoke-role', [AdminController::class, 'revokeRole'])->name('revokeRole'); 
 });
+
+Route::post('/publications/{publication}/collaborators', [CollaborationController::class, 'store'])
+    ->name('collaborations.store');
 
 
 

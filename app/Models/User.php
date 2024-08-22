@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens,HasRoles,Notifiable;
+    use HasFactory, HasApiTokens, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +24,9 @@ class User extends Authenticatable
         'bio',
         'title',
         'password',
+        'facebook',
+        'whatsapp',
+        'linkedin'
     ];
 
     /**
@@ -39,7 +40,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -51,27 +52,31 @@ class User extends Authenticatable
         ];
     }
 
-    
-    public function researches()
-    {
-        return $this->hasMany(Research::class);
-    }
+    // /**
+    //  * Relationship with Research model.
+    //  */
+    // public function researches()
+    // {
+    //     return $this->hasMany(Research::class);
+    // }
 
+    /**
+     * Relationship with Collaboration model.
+     */
     public function collaborations()
     {
         return $this->hasMany(Collaboration::class);
     }
 
-    public function collaboratedResearches()
-    {
-        return $this->belongsToMany(Research::class, 'collaborations', 'collaborator_id', 'research_id')
-                    ->withPivot('status')
-                    ->withTimestamps();
-    }
+    /**
+     * Many-to-Many relationship with Research through Collaborations.
+     */
+    // public function collaboratedResearches()
+    // {
+    //     return $this->belongsToMany(Research::class, 'collaborations', 'collaborator_id', 'research_id')
+    //                 ->withPivot('status')
+    //                 ->withTimestamps();
+    // }
 
    
-
-    public function chat() {
-        return $this->hasMany(Chat::class);
-    }
 }

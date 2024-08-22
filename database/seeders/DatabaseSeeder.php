@@ -9,6 +9,8 @@ use App\Models\User;
 use Collator;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,9 +19,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $user=User::create([
+            'name' => 'Admin',
+            'email' => 'admin@hturims.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('Admin@123'),
+            'facebook'=>'facebook.com/edemkwaku',
+            'linkedin'=>'linkedin.com/edem-kwaku-98',
+            'whatsapp'=>'0540908248',
+            'remember_token' => Str::random(10),
+        ]);
+        $user->assignRole('admin');
 
-        User::factory(1)->create();
+        // User::factory(1)->create();
         // Research::factory(20)->create();
         // Collaboration::factory(5)->create();
         // Chat::factory(10)->create();

@@ -1,10 +1,10 @@
 import React from "react";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
 const Users = ({ auth, users }) => {
     const { post } = useForm();
-
+    console.log(auth);
     const handleAssignRole = (userId, role) => {
         post(route("admin.assignRole"), {
             user_id: userId,
@@ -12,6 +12,7 @@ const Users = ({ auth, users }) => {
         });
     };
 
+    console.log(auth);
     const handleRevokeRole = (userId, role) => {
         post(route("admin.revokeRole"), {
             user_id: userId,
@@ -20,71 +21,115 @@ const Users = ({ auth, users }) => {
     };
 
     return (
-        <AuthenticatedLayout user={auth.user}>
-            <Head title="Manage Users" />
+        <AuthenticatedLayout
+            user={auth}
+            header={
+                <h2 className="font-semibold text-sm text-gray-500 leading-tight">
+                    Reviews
+                </h2>
+            }
+        >
+            <Head title="Reviews" />
+
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 h-screen overflow-hidden">
+                    <div className="bg-white shadow-sm sm:rounded-lg max-h-full flex flex-col">
+                        <div className="p-6 text-gray-900 flex-grow">
+                            <h2 className="font-semibold text-xl text-gray-800 leading-tight mb-4">
                                 Manage Users
                             </h2>
-                            <table className="min-w-full bg-white">
-                                <thead>
-                                    <tr>
-                                        <th className="py-2">Name</th>
-                                        <th className="py-2">Email</th>
-                                        <th className="py-2">Roles</th>
-                                        <th className="py-2">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {users.map((user) => (
-                                        <tr key={user.id}>
-                                            <td className="py-2">
-                                                {user.name}
-                                            </td>
-                                            <td className="py-2">
-                                                {user.email}
-                                            </td>
-                                            <td className="py-2">
-                                                {user.roles.map((role) => (
-                                                    <span
-                                                        key={role.id}
-                                                        className="px-2 py-1 bg-blue-500 text-white rounded"
-                                                    >
-                                                        {role.name}
-                                                    </span>
-                                                ))}
-                                            </td>
-                                            <td className="py-2">
-                                                <button
-                                                    onClick={() =>
-                                                        handleAssignRole(
-                                                            user.id,
-                                                            "admin"
-                                                        )
-                                                    }
-                                                    className="px-2 py-1 bg-green-500 text-white rounded mr-2"
-                                                >
-                                                    Assign Admin
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        handleRevokeRole(
-                                                            user.id,
-                                                            "admin"
-                                                        )
-                                                    }
-                                                    className="px-2 py-1 bg-red-500 text-white rounded"
-                                                >
-                                                    Revoke Admin
-                                                </button>
-                                            </td>
+                            <div
+                                className="overflow-y-auto flex-grow"
+                                style={{ maxHeight: "calc(100vh - 200px)" }}
+                            >
+                                <table className="w-full divide-y divide-gray-200">
+                                    <thead className="bg-blue-900 text-white">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                                                Name
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                                                Email
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                                                Roles
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                                                Actions
+                                            </th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {users.map((user) => (
+                                            <tr key={user.id}>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    {user.name}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {user.email}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {user.role_id}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <div className="flex gap-2">
+                                                        {[
+                                                            "admin",
+                                                            "editor",
+                                                            "author",
+                                                            "reviewer",
+                                                        ].map((role) => (
+                                                            <button
+                                                                key={role}
+                                                                onClick={() =>
+                                                                    handleAssignRole(
+                                                                        user.id,
+                                                                        role
+                                                                    )
+                                                                }
+                                                                className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                                                            >
+                                                                Assign{" "}
+                                                                {role
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                    role.slice(
+                                                                        1
+                                                                    )}
+                                                            </button>
+                                                        ))}
+                                                        {[
+                                                            "admin",
+                                                            "editor",
+                                                            "author",
+                                                            "reviewer",
+                                                        ].map((role) => (
+                                                            <button
+                                                                key={`revoke-${role}`}
+                                                                onClick={() =>
+                                                                    handleRevokeRole(
+                                                                        user.id,
+                                                                        role
+                                                                    )
+                                                                }
+                                                                className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                                                            >
+                                                                Revoke{" "}
+                                                                {role
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                    role.slice(
+                                                                        1
+                                                                    )}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

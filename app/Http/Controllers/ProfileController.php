@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,10 +30,11 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(Request $request): RedirectResponse
+    public function update(Request $request, User $user): RedirectResponse
     {
+       
         // Validate the incoming request data
-    $request->validate([
+    $validUserDate=$request->validate([
         'title' => 'nullable|string|max:255',
         'name' => 'required|string|max:255',
         'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $request->user()->id,
@@ -41,16 +43,17 @@ class ProfileController extends Controller
         'password' => 'nullable|string|min:8|confirmed',
     ]);
 
-    $user = $request->user();
-
-    // Handle profile photo upload
+    // Handle file upload if a new file is provided
     if ($request->hasFile('profile_photo')) {
-        if ($user->profile_photo_path) {
-            Storage::delete($user->profile_photo_path);
-        }
-
-        $path = $request->file('profile_photo')->store('profile_photos');
-        $user->profile_photo_path = $path;
+    // Delete old file if it exists
+    if ($user->profile_photo) {
+        Storage::disk('public')->delete($user->profile_photo);
+    }
+    $fileName = $request->file('profile_photo')->getClientOriginalName();
+    $photo = $request->file('profile_photo')->storeAs('profile_photos', $fileName, 'public');
+    } else {
+        // Keep the old file path if no new file is uploaded
+        $photo = $request->profile_photo;
     }
 
     // Check if email is changed and reset email verification if necessary
@@ -59,10 +62,7 @@ class ProfileController extends Controller
     }
 
     // Update user details
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->bio = $request->bio;
-    $user->title = $request->title;
+   
 
     // Update password if provided
     if ($request->password) {
@@ -70,7 +70,14 @@ class ProfileController extends Controller
     }
 
     // Save the updated user information
-    $user->save();
+    $user->update([
+        'title'=>$validUserDate['title'],
+        'name'=> $validUserDate['name'],
+        'email' => $validUserDate['email'],
+        'bio' => $validUserDate['bio'],
+        'title' => $validUserDate['title'],
+        'profile_photo'=>$photo,
+    ]);
 
     return redirect()->back()->with('success', 'Profile updated successfully!');
         

@@ -59,7 +59,7 @@ const Create = ({ auth }) => {
                                     <TextInput
                                         id="title"
                                         name="title"
-                                        className="mt-1 block w-full !pointer-events-auto outline outline-1 outline-blue-900 h-8 bg-slate-900/20 shadow-inner"
+                                        className="mt-1 block w-full !pointer-events-auto outline outline-1 outline-blue-900 h-8 bg-slate-50 shadow-inner"
                                         value={data.title}
                                         onChange={(e) =>
                                             setData("title", e.target.value)
@@ -82,7 +82,7 @@ const Create = ({ auth }) => {
                                         cols={10}
                                         rows={6}
                                         id="abstract"
-                                        className="outline outline-1 outline-blue-900 border-gray-300 bg-slate-900/20 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                                        className="outline outline-1 outline-blue-900 border-gray-300 bg-slate-50 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
                                         value={data.abstract}
                                         onChange={(e) =>
                                             setData("abstract", e.target.value)
@@ -103,7 +103,7 @@ const Create = ({ auth }) => {
                                     <TextInput
                                         id="file_path"
                                         type="file"
-                                        className="file-input bg-slate-900/20 file-input-bordered file-input-primary outline outline-1 outline-blue-900"
+                                        className="file-input bg-slate-50 file-input-bordered file-input-primary outline outline-1 outline-blue-900"
                                         onChange={(e) =>
                                             setData(
                                                 "file_path",
@@ -122,17 +122,6 @@ const Create = ({ auth }) => {
                                     <PrimaryButton disabled={processing}>
                                         Save Publication
                                     </PrimaryButton>
-                                    <Transition
-                                        show={!recentlySuccessful}
-                                        enter="transition ease-in-out"
-                                        enterFrom="opacity-0"
-                                        leave="transition ease-in-out"
-                                        leaveTo="opacity-0"
-                                    >
-                                        <p className="text-sm text-gray-600">
-                                            Publication Updated.
-                                        </p>
-                                    </Transition>
                                 </div>
                             </form>
                         </div>

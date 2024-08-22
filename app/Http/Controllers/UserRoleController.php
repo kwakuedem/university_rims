@@ -21,7 +21,7 @@ class UserRoleController extends Controller
 
         $user->roles()->attach($role);
 
-        return response()->json(['message' => 'Role attached successfully.']);
+        return inertia("Admin/Users",['message' => 'Role attached successfully.']);
     }
 
     public function detachRole(Request $request, $userId)
@@ -35,7 +35,7 @@ class UserRoleController extends Controller
 
         $user->roles()->detach($role);
 
-        return response()->json(['message' => 'Role detached successfully.']);
+        return inertia("Admin/Users",['message' => 'Role detached successfully.']);
     }
 
     public function syncRoles(Request $request, $userId)
@@ -48,6 +48,6 @@ class UserRoleController extends Controller
         $user = User::findOrFail($userId);
         $user->roles()->sync($request->role_ids);
 
-        return response()->json(['message' => 'Roles synced successfully.']);
+        return inertia("Admin/Users",['message' => 'Roles synced successfully.']);
     }
 }

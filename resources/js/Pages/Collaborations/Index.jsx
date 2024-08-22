@@ -1,26 +1,24 @@
 import React from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { IoChatboxEllipses } from "react-icons/io5";
-import { FcApprove, FcApproval, FcDisapprove } from "react-icons/fc";
-import { MdPending, MdDeleteForever } from "react-icons/md";
-import { IoMdCloseCircle } from "react-icons/io";
+import { format } from "date-fns";
+import { FaRegEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import { GrView } from "react-icons/gr";
 
-const Invitations = ({ collaborations, auth }) => {
+const Collaborations = ({ publications, auth }) => {
     const { data, setData, post, patch, processing, errors } = useForm({
         status: "", // To determine whether the action is 'accept' or 'reject'
     });
 
-    const handleAccept = (collaborator_id) => {
-        patch(route("collaborations.accept", collaborator_id));
+    // Helper function to format the date
+    const formatDate = (dateString) => {
+        return format(new Date(dateString), "yyyy-MM-dd");
     };
 
-    const handleReject = (collaborator_id) => {
-        patch(route("collaborations.reject", collaborator_id));
-    };
-
-    const deleteCollaboration = (collaborator_id) => {
-        destroy(route("collaborations.delete", collaborator_id));
+    // Helper function to get the correct asset URL
+    const getAssetUrl = (path) => {
+        return `${window.location.origin}/storage/${path}`;
     };
 
     return (
@@ -37,24 +35,19 @@ const Invitations = ({ collaborations, auth }) => {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            <div className="invite-button flex justify-end py-2">
-                                <Link
-                                    href={route("collaborations.create")}
-                                    className="bg-blue-900 text-white/70 font-bold py-1 px-3 rounded-md"
-                                >
-                                    Invitations
-                                </Link>
-                            </div>
-                            <div className="mt-6">
-                                <div className="overflow-x-auto overflow-y-auto">
+                            {publications.length > 0 ? (
+                                <div className="overflow-x-auto mt-4">
                                     <table className="min-w-full divide-y divide-gray-200">
-                                        <thead className="bg-gray-50 sticky top-0">
-                                            <tr className="bg-blue-900/70 rounded-md">
+                                        <thead className="bg-blue-900/80">
+                                            <tr>
                                                 <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
-                                                    Inviter
+                                                    Title
                                                 </th>
                                                 <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
-                                                    Research Topic
+                                                    Document
+                                                </th>
+                                                <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
+                                                    Date
                                                 </th>
                                                 <th className="px-4 py-3 text-left text-xs font-semibold text-white/80 uppercase tracking-wider">
                                                     Status
@@ -64,11 +57,11 @@ const Invitations = ({ collaborations, auth }) => {
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200 overflow-y-auto max-h-40">
-                                            {collaborations.map(
-                                                (collaboration, index) => (
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {publications.map(
+                                                (publication, index) => (
                                                     <tr
-                                                        key={collaboration.id}
+                                                        key={publication.id}
                                                         className={
                                                             index % 2 === 0
                                                                 ? "bg-gray-50"
@@ -76,120 +69,80 @@ const Invitations = ({ collaborations, auth }) => {
                                                         }
                                                     >
                                                         <td className="px-4 py-2 whitespace-nowrap">
-                                                            {auth.user.id ===
-                                                            collaboration.user_id ? (
-                                                                <span className="font-medium text-gray-900">
-                                                                    You invited{" "}
-                                                                    {
-                                                                        collaboration
-                                                                            .collaborator
-                                                                            .name
-                                                                    }
-                                                                </span>
-                                                            ) : (
-                                                                <span className="font-medium text-gray-900">
-                                                                    {
-                                                                        collaboration
-                                                                            .user
-                                                                            .name
-                                                                    }
-                                                                </span>
-                                                            )}
+                                                            <Link
+                                                                href={route(
+                                                                    "publications.show",
+                                                                    publication.id
+                                                                )}
+                                                                className="text-blue-600 hover:underline"
+                                                            >
+                                                                {
+                                                                    publication.title
+                                                                }
+                                                            </Link>
                                                         </td>
                                                         <td className="px-4 py-2 whitespace-nowrap">
-                                                            {
-                                                                collaboration
-                                                                    .research
-                                                                    .title
-                                                            }
+                                                            <a
+                                                                href={getAssetUrl(
+                                                                    publication.file_path
+                                                                )}
+                                                                target="_blank"
+                                                                className="text-sm underline text-blue-600"
+                                                            >
+                                                                Document
+                                                            </a>
                                                         </td>
                                                         <td className="px-4 py-2 whitespace-nowrap">
-                                                            {collaboration.status ===
-                                                                "pending" && (
-                                                                <MdPending className="!text-yellow-500 text-[25px]" />
-                                                            )}
-                                                            {collaboration.status ===
-                                                                "accepted" && (
-                                                                <FcApproval className="!text-green-500 text-[25px]" />
-                                                            )}
-                                                            {collaboration.status ===
-                                                                "rejected" && (
-                                                                <FcDisapprove className="!text-red-500 text-[25px]" />
-                                                            )}
+                                                            <p className="text-sm text-gray-500">
+                                                                {formatDate(
+                                                                    publication.created_at
+                                                                )}
+                                                            </p>
                                                         </td>
-                                                        <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
-                                                            {auth.user.id ===
-                                                                collaboration.collaborator_id &&
-                                                                collaboration.status ===
-                                                                    "pending" && (
-                                                                    <div className="flex space-x-2">
-                                                                        <button
-                                                                            onClick={() =>
-                                                                                handleAccept(
-                                                                                    collaboration.id
-                                                                                )
-                                                                            }
-                                                                            disabled={
-                                                                                processing
-                                                                            }
-                                                                        >
-                                                                            <FcApprove className="!text-green-600 text-[25px]" />
-                                                                        </button>
-                                                                        <button
-                                                                            onClick={() =>
-                                                                                handleReject(
-                                                                                    collaboration.id
-                                                                                )
-                                                                            }
-                                                                            disabled={
-                                                                                processing
-                                                                            }
-                                                                        >
-                                                                            <IoMdCloseCircle className="!text-red-600 text-[25px]" />
-                                                                        </button>
-                                                                    </div>
+
+                                                        <td className="px-4 py-2 whitespace-nowrap">
+                                                            <span
+                                                                className={`rounded-md  text-sm p-2 ${
+                                                                    publication.status ===
+                                                                    "published"
+                                                                        ? "bg-green-500 text-white "
+                                                                        : " bg-orange-100 text-orange-600"
+                                                                }`}
+                                                            >
+                                                                {
+                                                                    publication.status
+                                                                }
+                                                            </span>
+                                                        </td>
+                                                        <td className="flex justify-center gap-2 px-4 py-2 whitespace-nowrap text-sm font-medium">
+                                                            <Link
+                                                                href={route(
+                                                                    "publications.show",
+                                                                    publication.id
                                                                 )}
-                                                            {auth.user.id ===
-                                                                collaboration.collaborator_id &&
-                                                                collaboration.status ===
-                                                                    "accepted" && (
-                                                                    <Link
-                                                                        href={route(
-                                                                            "chats.create"
-                                                                        )}
-                                                                    >
-                                                                        <IoChatboxEllipses className="!text-blue-900/90 text-[25px]  hover:text-blue-900/70" />
-                                                                    </Link>
+                                                                className="text-blue-600 hover:underline"
+                                                            >
+                                                                <GrView className="!text-green-400 text-[20px]" />
+                                                            </Link>
+                                                            <Link
+                                                                href={route(
+                                                                    "publications.edit",
+                                                                    publication.id
                                                                 )}
-                                                            {auth.user.id ===
-                                                                collaboration.user_id &&
-                                                                collaboration.status ===
-                                                                    "accepted" && (
-                                                                    <Link
-                                                                        href={route(
-                                                                            "chats.create"
-                                                                        )}
-                                                                    >
-                                                                        <IoChatboxEllipses className="!text-blue-900/90 text-[25px]  hover:text-blue-900/70" />
-                                                                    </Link>
-                                                                )}
-                                                            {auth.user.id ===
-                                                                collaboration.user_id &&
-                                                                collaboration.status ===
-                                                                    "rejected" && (
-                                                                    <form
-                                                                        onSubmit={() =>
-                                                                            deleteCollaboration(
-                                                                                collaboration.id
-                                                                            )
-                                                                        }
-                                                                        className="inline"
-                                                                    >
-                                                                        <button className="">
-                                                                            <MdDeleteForever className="!text-red-600/90 text-[25px]  hover:text-red-600/70" />
-                                                                        </button>
-                                                                    </form>
-                                                                )}
+                                                                className="text-blue-600 hover:underline"
+                                                            >
+                                                                <FaRegEdit className="text-[20px] !text-indigo-500" />
+                                                            </Link>
+                                                            {/* <button
+                                                                onClick={() =>
+                                                                    deletePublication(
+                                                                        publication.id
+                                                                    )
+                                                                }
+                                                                className="text-red-600 hover:text-red-900"
+                                                            >
+                                                                <MdDeleteForever className="text-[25px] !text-red-500" />
+                                                            </button> */}
                                                         </td>
                                                     </tr>
                                                 )
@@ -197,7 +150,11 @@ const Invitations = ({ collaborations, auth }) => {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            ) : (
+                                <p>
+                                    You do not have any collaborated work yet!
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -206,4 +163,4 @@ const Invitations = ({ collaborations, auth }) => {
     );
 };
 
-export default Invitations;
+export default Collaborations;

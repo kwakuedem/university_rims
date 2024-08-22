@@ -2,13 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-.htu-red-background{
+.htu-red-background {
     @apply bg-red-500;
 }
-.htu-blue-background{
+.htu-blue-background {
     @apply bg-blue-900;
 }
 
-.htu-red{
+.htu-red {
     @apply text-red-500;
 }
+
+/* .active {
+    @apply border-2 border-b-blue-800 rounded-b-md;
+} */

@@ -9,15 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+   public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('profile_photo')->nullable(true);
-            $table->text('bio')->nullable(true);
-            $table->string('title')->nullable(true);
+            $table->string('profile_photo')->nullable();
+            $table->text('bio')->nullable();
+            $table->string('title')->nullable();
+            $table->string('linkedin')->nullable();
+            $table->string('whatsapp')->nullable();
+            $table->string('facebook')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

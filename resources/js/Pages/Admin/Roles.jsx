@@ -13,16 +13,24 @@ const Roles = ({ auth, roles }) => {
                             <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                                 Manage Roles
                             </h2>
-                            <table className="min-w-full bg-white">
-                                <thead>
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-blue-900 text-white">
                                     <tr>
-                                        <th className="py-2">Role</th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                                            Id
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                                            Role
+                                        </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="bg-white divide-y divide-gray-200">
                                     {roles.map((role) => (
                                         <tr key={role.id}>
-                                            <td className="py-2">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {role.id}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {role.name}
                                             </td>
                                         </tr>

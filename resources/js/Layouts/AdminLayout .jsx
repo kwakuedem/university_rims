@@ -11,10 +11,6 @@ export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
-    const getAssetUrl = (path) => {
-        return `${window.location.origin}/storage/${path}`;
-    };
-
     const { hasRole, hasAnyRole } = useAuthorizations(user.roles);
 
     return (
@@ -32,58 +28,42 @@ export default function Authenticated({ user, header, children }) {
 
                                 <div className="flex flex-col w-full !mt-10 items-center">
                                     <NavLink
-                                        href={
-                                            hasRole("admin")
-                                                ? route("admin.index")
-                                                : route("dashboard")
-                                        }
-                                        active={route().current(
-                                            hasRole("admin")
-                                                ? "admin.index"
-                                                : "dashboard"
-                                        )}
-                                        className="!text-sm !font-bold !text-white "
+                                        href={route("admin.index")}
+                                        active={route().current("admin.index")}
+                                        className="!text-sm !font-bold !text-white"
                                     >
                                         Dashboard
                                     </NavLink>
                                     <NavLink
-                                        href={
-                                            hasRole("admin")
-                                                ? route("admin.publications")
-                                                : route("publications.index")
-                                        }
+                                        href={route("admin.publications.index")}
                                         active={route().current(
                                             "publications.index"
                                         )}
-                                        className="!font-bold !text-white mt-5 !text-sm "
+                                        className="!font-bold !text-white mt-5 !text-sm"
                                     >
                                         Publications
                                     </NavLink>
 
                                     <NavLink
-                                        href={
-                                            hasRole("admin")
-                                                ? route("admin.collaborations")
-                                                : route("collaborations.index")
-                                        }
+                                        href={route("collaborations.index")}
                                         active={route().current(
-                                            "collaborations.index"
+                                            "admin.collaborations"
                                         )}
-                                        className="!text-sm !font-bold !text-white mt-5 "
+                                        className="!text-sm !font-bold !text-white mt-5"
                                     >
                                         Collaboration
                                     </NavLink>
-
+                                    {console.log(hasRole("admin"))}
                                     {hasRole("admin") && (
                                         <div className="flex items-center justify-center mt-4">
-                                            <Dropdown className="flex items-center justify-center ">
+                                            <Dropdown className="flex items-center justify-center  ml-6">
                                                 <Dropdown.Trigger>
                                                     <span className="inline-flex  rounded-md">
                                                         <button
                                                             type="button"
-                                                            className=" inline-flex items-center px-1 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                                         >
-                                                            <span className="">
+                                                            <span className="px-2">
                                                                 Management
                                                             </span>
 
@@ -190,15 +170,7 @@ export default function Authenticated({ user, header, children }) {
                                                             {user.name}
                                                         </span>
 
-                                                        <img
-                                                            src={getAssetUrl(
-                                                                user.profile_photo
-                                                            )}
-                                                            alt=""
-                                                            srcset=""
-                                                            width={20}
-                                                            className=" rounded-full"
-                                                        />
+                                                        <FaRegUserCircle />
 
                                                         <svg
                                                             className="ms-2 -me-0.5 h-4 w-4"
