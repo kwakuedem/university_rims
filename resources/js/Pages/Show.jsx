@@ -57,7 +57,8 @@ export default function Show({ research }) {
                             </div>
                         </header>
                         <div className="h-2 bg-red-600 border-spacing-10" />
-                        <main className="w-full bg-white mb-16">
+                        <div className="h-1 bg-blue-600 border-spacing-10" />
+                        <main className="w-full h-[75vh] bg-white mb-16 2xl:h-[70vh]">
                             <div className="content  bg-white">
                                 <div className="w-full lg:w-[90%] 2xl:w-[70%]  bg-white justify-center items-center lg:flex  lg:gap-4 lg:m-auto lg:justify-center px-2 py-8 lg:items-center lg:px-32 lg:py-8">
                                     {research.map((research) => (

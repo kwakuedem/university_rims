@@ -4,7 +4,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaFacebook, FaWhatsapp, FaLinkedin } from "react-icons/fa";
 
 export default function UpdateProfileInformation({
@@ -22,11 +22,13 @@ export default function UpdateProfileInformation({
             profile_photo: user.profile_photo ?? "",
             bio: user.bio ?? "",
             title: user.title ?? "",
+            research_area: user.research_area ?? "",
             whatsapp: user.whatsapp ?? "",
             linkedin: user.linkedin ?? "",
             facebook: user.facebook ?? "",
             _method: "patch",
         });
+    const photoRef = useRef(data.profile_photo);
 
     const submit = (e) => {
         e.preventDefault();
@@ -93,6 +95,7 @@ export default function UpdateProfileInformation({
                         <TextInput
                             id="profile_photo"
                             type="file"
+                            ref={photoRef}
                             className="file-input !z-0 file-input-bordered file-input-primary overflow-hidden"
                             onChange={(e) =>
                                 setData("profile_photo", e.target.files[0])
@@ -151,20 +154,45 @@ export default function UpdateProfileInformation({
                     </div>
                 </div>
 
-                <div>
-                    <InputLabel htmlFor="bio" value="Bio" />
+                <div className="flex flex-col lg:flex-row w-full gap-3">
+                    <div className="w-full">
+                        <InputLabel htmlFor="bio" value="Biography" />
 
-                    <textarea
-                        cols={10}
-                        rows={5}
-                        id="bio"
-                        className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
-                        value={data.bio}
-                        onChange={(e) => setData("bio", e.target.value)}
-                        required
-                    />
+                        <textarea
+                            cols={10}
+                            rows={5}
+                            id="bio"
+                            className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                            value={data.bio}
+                            onChange={(e) => setData("bio", e.target.value)}
+                            required
+                        />
 
-                    <InputError className="mt-2" message={errors.bio} />
+                        <InputError className="mt-2" message={errors.bio} />
+                    </div>
+                    <div className="w-full">
+                        <InputLabel
+                            htmlFor="research_area "
+                            value="Research Areas (please seperate areas with comma . eg AI, Machine learning)"
+                        />
+
+                        <textarea
+                            cols={10}
+                            rows={5}
+                            id="research_area"
+                            className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                            value={data.research_area}
+                            onChange={(e) =>
+                                setData("research_area", e.target.value)
+                            }
+                            required
+                        />
+
+                        <InputError
+                            className="mt-2"
+                            message={errors.research_area}
+                        />
+                    </div>
                 </div>
 
                 <div className="flex gap-4">

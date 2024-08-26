@@ -37,9 +37,13 @@ class ProfileController extends Controller
     $validUserDate=$request->validate([
         'title' => 'nullable|string|max:255',
         'name' => 'required|string|max:255',
+        'whatsapp'=>'string|max:15',
+        'facebook'=>'string',
+        'linkedin'=>'string',
         'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $request->user()->id,
         'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        'bio' => 'nullable|string|max:1000',
+        'bio' => 'nullable|string|max:2000',
+        'research_area'=>'string|max:400',
         'password' => 'nullable|string|min:8|confirmed',
     ]);
 
@@ -76,6 +80,10 @@ class ProfileController extends Controller
         'email' => $validUserDate['email'],
         'bio' => $validUserDate['bio'],
         'title' => $validUserDate['title'],
+        'research_area'=>$validUserDate['research_area'],
+        'whatsapp'=>$validUserDate['whatsapp'],
+        'facebook'=>$validUserDate['facebook'],
+        'linkedin'=>$validUserDate['linkedin'],
         'profile_photo'=>$photo,
     ]);
 

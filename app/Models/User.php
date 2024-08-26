@@ -26,7 +26,8 @@ class User extends Authenticatable
         'password',
         'facebook',
         'whatsapp',
-        'linkedin'
+        'linkedin',
+        'research_area'
     ];
 
     /**
@@ -55,10 +56,7 @@ class User extends Authenticatable
     // /**
     //  * Relationship with Research model.
     //  */
-    // public function researches()
-    // {
-    //     return $this->hasMany(Research::class);
-    // }
+
 
     /**
      * Relationship with Collaboration model.

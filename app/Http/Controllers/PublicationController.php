@@ -156,13 +156,15 @@ class PublicationController extends Controller
 
 
 // function that handles document download
-public function download(Publication $publication)
+public function download($publicationName)
 {
-    $publication->increamentDownloads();
+    $publicationName=Publication::where('title', 'LIKE', "%{$publicationName}%")->firstOrFail();
 
-    if ($publication->file_path && Storage::disk('public')->exists($publication->file_path)) {
-        info($publication->file_path);
-        return Storage::disk('public')->download($publication->file_path);
+   
+
+    if ($publicationName->file_path && Storage::disk('public')->exists($publicationName->file_path)) {
+         $publicationName->increamentDownloads();
+        return Storage::disk('public')->download($publicationName->file_path);
     }
     return redirect()->back()->with('error', 'File not found.');
 }

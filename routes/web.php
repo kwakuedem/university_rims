@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CollaborationController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
@@ -10,12 +11,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/',[PagesController::class,'index'])->name('home');
 Route::post('/contact',[PagesController::class,'store']);
-Route::post('/',[PagesController::class,'filter'])->name('author.filter');
+
 Route::get('/contact',[PagesController::class,'contact'])->name('contact');
 Route::get('/about',[PagesController::class,'about'])->name('about');
-Route::get('/author/{id}/profile',[PagesController::class,'profile'])->name('author.profile');
-Route::get('/publications/{publication}/read',[PagesController::class,'show'])->name('read');
-Route::get('/publications/{publication}/download', [PublicationController::class, 'download'])->name('publication.download');
+Route::get('/authors/{authorName}', [AuthorController::class, 'show'])->name('author.profile');
+Route::get('/publication/{title}',[PagesController::class,'show'])->name('read');
+Route::get('/publications/{publicationName}/download', [PublicationController::class, 'download'])->name('publication.download');
+
+Route::get('/author', [AuthorController::class, 'test'])->name('author.test');
 
 
 Route::middleware('auth')->group(function () {

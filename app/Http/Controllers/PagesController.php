@@ -11,22 +11,21 @@ use Illuminate\Support\Facades\Route;
 class PagesController extends Controller
 {
     public function index(){
-        $publications = Publication::with(['author', 'collaborations.collaborator'])->where('status', 'published')->latest()->paginate(2);
+        $publications = Publication::with(['author', 'collaborations'=>function($query) {
+            $query->select('name');
+        }])->where('status', 'published')->latest()->paginate(10);
 
+
+    $authors=User::select('name','profile_photo','research_area','bio')->get();
     // Return the publications data to the Inertia component, along with login/register route availability
     return inertia('Index', [
         'publications' => $publications,
+        'authors'=>$authors,
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
     }
 
-    //search for author
-    public function filter(Request $request){
-        $search=$request['search'];
-        $author=User::select('name')->where('name','like','%'. $search .'%')->get();
-        return inertia('Index',compact('author'));
-    }
 
     //get about page
     public function about(){
@@ -58,8 +57,8 @@ class PagesController extends Controller
 
     
     //display publication detail page
-    public function show(Publication $publication){
-       
+    public function show($title){
+       $publication = Publication::where('title', 'LIKE', "%{$title}%")->firstOrFail();
         $research = Publication::with('author')->where('id',$publication->id)->get();
         $publication->increamentView();
         return inertia('Show',compact('research'));

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('profile_photo')->nullable();
             $table->text('bio')->nullable();
+            $table->text('research_area')->nullable();
             $table->string('title')->nullable();
             $table->string('linkedin')->nullable();
             $table->string('whatsapp')->nullable();
