@@ -3,7 +3,7 @@ import { Head, Link, usePage } from "@inertiajs/react";
 import Chart from "react-apexcharts";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
-const Dashboard = ({ auth, statistics }) => {
+const Dashboard = ({ auth, statistics, publication }) => {
     // Example data for the chart
     const chartOptions = {
         chart: {
@@ -164,40 +164,28 @@ const Dashboard = ({ auth, statistics }) => {
                                 Welcome, {auth.user.name}!
                             </h3>
 
-                            <div className="cards grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full py-3">
+                            <div className="cards flex w-[50%] m-auto gap-3 py-3">
                                 <Link
-                                    href={route("admin.publications.index")}
-                                    className="flex flex-col py-4 border-b-4 rounded-b-md border-blue-900/80 items-center justify-center  shadow-md shadow-blue-600/70"
+                                    href={route("publications.index")}
+                                    className="flex flex-col py-4 border-b-4 w-full rounded-b-md border-blue-900/80 items-center justify-center  shadow-md shadow-blue-600/70"
                                 >
-                                    <p className="text-xl font-bold text-blue-900">
-                                        100
+                                    <p className="text-lg font-extrabold text-blue-900">
+                                        {publication}
                                     </p>
-                                    <p className="text-xl font-bold text-blue-900">
+                                    <p className="text-sm font-bold text-blue-900">
                                         Publications
                                     </p>
                                 </Link>
 
-                                {/* <Link
-                                    href={route("submissions.index")}
-                                    className="flex flex-col border-b-4 rounded-b-md py-4 bottom-1 border-blue-600/80 items-center justify-center rounded-md shadow-md shadow-blue-600/70"
-                                >
-                                    <p className="text-xl font-bold text-blue-900">
-                                        300
-                                    </p>
-                                    <p className="text-xl font-bold text-blue-900">
-                                        Submissions
-                                    </p>
-                                </Link> */}
-
                                 <Link
                                     href={route("collaborations.index")}
-                                    className="flex flex-col border-b-4 rounded-b-md py-4 border-blue-300 items-center justify-center rounded-md shadow-md shadow-blue-600/70"
+                                    className="flex w-full flex-col border-b-4 rounded-b-md py-4 border-blue-300 items-center justify-center rounded-md shadow-md shadow-blue-600/70"
                                 >
-                                    <p className="text-xl font-bold text-blue-900">
-                                        45
+                                    <p className="text-lg font-extrabold text-blue-900">
+                                        {publication}
                                     </p>
-                                    <p className="text-xl font-bold text-blue-900">
-                                        Collaborators
+                                    <p className="text-sm font-bold text-blue-900">
+                                        Collaboration Works
                                     </p>
                                 </Link>
                             </div>

@@ -7,6 +7,7 @@ import NavMenu from "@/Components/NavMenu";
 import DOMPurify from "dompurify";
 import { FaFileDownload, FaUsers } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import NavLink from "@/Components/NavLink";
 
 export default function Welcome({ authors, publications }) {
     const { data, setData, get, processing } = useForm({
@@ -132,6 +133,7 @@ export default function Welcome({ authors, publications }) {
 
                                 <div className="mt-6 items-center justify-center border  border-slate-800 focus-within:border-slate-900 rounded-md w-[30%] m-auto">
                                     <input
+                                        autoComplete="off"
                                         value={data.search}
                                         type="text"
                                         className="flex-1 w-full text-gray-600  rounded-md"
@@ -280,32 +282,57 @@ export default function Welcome({ authors, publications }) {
                                         </div>
                                     </div>
                                     <div className="pagination p-4 bg-white rounded-b-md">
-                                        <p className="text-gray-500">
-                                            {publications.data &&
-                                                publications.from}{" "}
-                                            -{" "}
-                                            {publications.data &&
-                                                publications.to}{" "}
-                                            of{" "}
-                                            {publications.data &&
-                                                publications.total}
-                                        </p>
                                         <div className="pagination-links">
                                             {publications.links &&
-                                                publications.links.map(
-                                                    (link, index) => (
-                                                        <Link
-                                                            key={index}
-                                                            href={link.url}
-                                                            className={`pagination-link ${
-                                                                link.active
-                                                                    ? "active"
-                                                                    : ""
-                                                            }`}
-                                                        >
-                                                            {link.label}
-                                                        </Link>
-                                                    )
+                                                publications.links.length >
+                                                    0 && (
+                                                    <div className="lg:col-span-2 mt-4 flex justify-center space-x-2 py-3">
+                                                        {/* Page Numbers */}
+                                                        <div className="text-gray-500 px-2 pt-2">
+                                                            {publications?.from ??
+                                                                0}{" "}
+                                                            -{" "}
+                                                            {publications?.to ??
+                                                                0}{" "}
+                                                            of{" "}
+                                                            {publications?.total ??
+                                                                0}
+                                                        </div>
+                                                        {publications.links.map(
+                                                            (link, index) => (
+                                                                <Link
+                                                                    key={index}
+                                                                    href={
+                                                                        link.url
+                                                                    }
+                                                                    className={`px-3 py-1 mx-1 rounded-md ${
+                                                                        link.active
+                                                                            ? "bg-blue-700 text-white"
+                                                                            : "bg-gray-300 text-gray-800"
+                                                                    }`}
+                                                                    disabled={
+                                                                        (link.label ===
+                                                                            "Previous" &&
+                                                                            publications.current_page ===
+                                                                                1) ||
+                                                                        (link.label ===
+                                                                            "Next" &&
+                                                                            publications.current_page ===
+                                                                                publications.last_page)
+                                                                    }
+                                                                    rel="nofollow"
+                                                                >
+                                                                    <span
+                                                                        dangerouslySetInnerHTML={{
+                                                                            __html: DOMPurify.sanitize(
+                                                                                link.label
+                                                                            ),
+                                                                        }}
+                                                                    />
+                                                                </Link>
+                                                            )
+                                                        )}
+                                                    </div>
                                                 )}
                                         </div>
                                     </div>

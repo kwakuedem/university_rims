@@ -56,9 +56,22 @@ const Index = ({ auth, publications }) => {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             {/* Button to add a new publication */}
-                            <div className="mb-3 flex justify-end">
+                            <div className="mb-3 flex justify-between">
+                                <div className="items-center justify-center border w-[50%] m-auto  border-slate-800 focus-within:border-slate-900 rounded-md ">
+                                    <input
+                                        // value={data.search}
+                                        autoComplete="off"
+                                        type="text"
+                                        className="flex-1 w-full text-gray-600  rounded-md"
+                                        name="search"
+                                        placeholder="Search author ...."
+                                        // onChange={(e) =>
+                                        //     setData("search", e.target.value)
+                                        // }
+                                    />
+                                </div>
                                 <Link
-                                    className="py-1 px-2 rounded-md bg-blue-900 text-white/60"
+                                    className=" px-2 rounded-md bg-blue-900 text-white/60 w-[15%] flex items-center justify-center"
                                     href={route("publications.create")}
                                 >
                                     Add Publication

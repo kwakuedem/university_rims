@@ -17,11 +17,12 @@ class AdminController extends Controller
    
     public function index()
     {
+        $publication=Publication::count();
          $statistics = [
             'months' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             'publications' => [5, 15, 15, 20, 10, 20, 35, 40, 30, 50, 55, 60],
     ];
-        return Inertia::render('Admin/Dashboard',compact('statistics'));
+        return Inertia::render('Admin/Dashboard',compact('statistics','publication'));
     }
 
     public function users()
@@ -61,7 +62,7 @@ class AdminController extends Controller
      public function publications()
 {
     // Get the authenticated user
-    $publications = Publication::all()->latest();
+    $publications = Publication::all();
     return inertia('Publications/Index',compact('publications'));
      }
    

@@ -48,13 +48,16 @@ export default function Contact({ successfull }) {
                         <header className="flex w-full justify-between bg-white shadow-sm shadow-red-500 sticky top-0  p-5 ">
                             <div className="flex w-full lg:w-[80%] m-auto justify-between gap-6 bg-white ">
                                 <div className="flex w-full items-center">
-                                    <Link className="flex lg:justify-center lg:col-start-2 gap-4">
+                                    <Link
+                                        href={route("home")}
+                                        className="flex lg:justify-center lg:col-start-2 gap-4"
+                                    >
                                         <img
                                             src={Logo}
                                             alt="Logo"
                                             className="w-16"
                                         />
-                                        h
+
                                         <div className="htu hidden lg:flex items-center">
                                             <h2 className="text-blue-900 font-bold">
                                                 RESEARCH REPOSITORY HTU
