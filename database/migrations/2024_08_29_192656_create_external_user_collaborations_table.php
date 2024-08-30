@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('collaborations', function (Blueprint $table) {
+        Schema::create('external_user_collaborations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('publication_id')->onDelete('cascade'); // References the 'researches' table
-            $table->foreignId('collaborator_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('publication_id')->onDelete('cascade');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('collaborations');
+        Schema::dropIfExists('external_user_collaborations');
     }
 };

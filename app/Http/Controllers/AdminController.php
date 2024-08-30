@@ -101,7 +101,7 @@ class AdminController extends Controller
 
     //admin edit
     public function edit(Publication $publication){
-         return inertia('Admin/Publications/Edit',compact('publication'));
+         return inertia('Publications/Edit',compact('publication'));
     }
 
 

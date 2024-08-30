@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('linkedin')->nullable();
             $table->string('whatsapp')->nullable();
             $table->string('facebook')->nullable();
+            $table->boolean('system_use')->default(true);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

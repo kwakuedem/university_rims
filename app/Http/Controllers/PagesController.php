@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\Route;
 class PagesController extends Controller
 {
     public function index(){
-        $publications = Publication::with(['author', 'collaborations'=>function($query) {
-            $query->select('name');
-        }])->where('status', 'published')->latest()->paginate(10);
+       $publications = Publication::with(['author', 'collaborations' => function($query) {
+        $query->select('name', 'publication_id');
+    },'externalCollaborations' => function($query) {
+        $query->select('name', 'publication_id');
+    }])->where('status', 'published')->distinct()->latest()->paginate(10);
 
+    $authors = User::select('name', 'profile_photo', 'research_area', 'bio')->distinct()->get();
 
-    $authors=User::select('name','profile_photo','research_area','bio')->get();
     // Return the publications data to the Inertia component, along with login/register route availability
     return inertia('Index', [
         'publications' => $publications,

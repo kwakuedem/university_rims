@@ -36,6 +36,11 @@ class Publication extends Model
         return $this->belongsToMany(User::class, 'collaborations', 'publication_id', 'collaborator_id');
     }
 
+    public function externalCollaborations()
+    {
+        return $this->hasMany(ExternalUserCollaboration::class);
+    }
+
     // Define the relationship with the owner
     public function author() {
     return $this->belongsTo(User::class, 'author_id');

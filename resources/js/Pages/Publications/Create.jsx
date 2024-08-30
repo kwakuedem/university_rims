@@ -13,7 +13,6 @@ const Create = ({ auth }) => {
             abstract: "",
             file_path: null,
         });
-    console.log();
 
     const submit = (e) => {
         e.preventDefault();

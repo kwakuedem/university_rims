@@ -14,6 +14,7 @@ export default function Welcome({ authors, publications }) {
         search: "",
     });
 
+    console.log(publications);
     const formatDate = (dateString) => {
         return format(new Date(dateString), "yyyy-MM-dd");
     };
@@ -245,6 +246,26 @@ export default function Welcome({ authors, publications }) {
                                                                                         ) =>
                                                                                             "" +
                                                                                                 collaboration?.name ??
+                                                                                            ""
+                                                                                    )
+                                                                                    .join(
+                                                                                        ", "
+                                                                                    )}
+                                                                            </>
+                                                                        )}
+                                                                    {publication.external_collaborations &&
+                                                                        publication
+                                                                            .external_collaborations
+                                                                            .length >
+                                                                            0 && (
+                                                                            <>
+                                                                                {publication.external_collaborations
+                                                                                    .map(
+                                                                                        (
+                                                                                            external_collaboration
+                                                                                        ) =>
+                                                                                            "" +
+                                                                                                external_collaboration?.name ??
                                                                                             ""
                                                                                     )
                                                                                     .join(

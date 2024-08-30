@@ -86,7 +86,7 @@ class PublicationController extends Controller
 
     //get publication edit page
     public function edit(Publication $publication){
-        $collaborators=User::where('id', '!=', Auth::id())->get();
+        $collaborators=User::where('id', '!=', Auth::id())->where('name','!=','none')->get();
          return inertia('Publications/Edit',compact('publication','collaborators'));
     }
 

@@ -12,6 +12,7 @@ import Collaborator from "./partials/Collaborator";
 const Edit = ({ auth, publication, collaborators }) => {
     const { props } = usePage();
     const message = props.success;
+    const error_message = props.error;
     // Initialize useForm with existing publication data
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
@@ -32,6 +33,15 @@ const Edit = ({ auth, publication, collaborators }) => {
         }
     }, [message]);
 
+    useEffect(() => {
+        if (error_message && error_message) {
+            setShowMessage(true);
+            setTimeout(() => {
+                setShowMessage(false);
+            }, 5000);
+        }
+    }, [error_message]);
+
     const submit = (e) => {
         e.preventDefault();
         console.log(data);
@@ -51,6 +61,11 @@ const Edit = ({ auth, publication, collaborators }) => {
             {showMessage && (
                 <span className="bg-green-500 z-20 absolute top-6  rounded-md text-white right-10 p-3">
                     {message}
+                </span>
+            )}
+            {showMessage && (
+                <span className="bg-red-400 z-20 absolute top-6  rounded-md text-white right-10 p-3">
+                    {error_message}
                 </span>
             )}
 
@@ -207,6 +222,7 @@ const Edit = ({ auth, publication, collaborators }) => {
                     collaborators={collaborators}
                     setIsModalOpen={setIsModalOpen}
                     setIsModalOpenTrue={() => setIsModalOpen(true)}
+                    Error_message={error_message}
                 />
             )}
         </AuthenticatedLayout>
