@@ -1,29 +1,15 @@
-import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import React from "react";
+import { Head, Link, useForm } from "@inertiajs/react";
+import AdminLayout from "../../../Layouts/AdminLayout ";
 import { format } from "date-fns";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { GrView } from "react-icons/gr";
-import { useEffect, useState } from "react";
-import { useAuthorizations } from "@/utils";
 
-const Index = ({ auth, publications }) => {
-    const { data, delete: destroy, processing } = useForm({});
-    const [showMessage, setShowMessage] = useState(false);
-    const { props } = usePage();
-    const message = props.success;
-
-    const { hasRole } = useAuthorizations(auth.roles);
-    console.log(hasRole("admin"));
-
-    useEffect(() => {
-        if (message && message) {
-            setShowMessage(true);
-            setTimeout(() => {
-                setShowMessage(false);
-            }, 3000);
-        }
-    }, [message]);
+const Collaborations = ({ publications, auth }) => {
+    const { data, setData, post, patch, processing, errors } = useForm({
+        status: "", // To determine whether the action is 'accept' or 'reject'
+    });
 
     // Helper function to format the date
     const formatDate = (dateString) => {
@@ -35,55 +21,21 @@ const Index = ({ auth, publications }) => {
         return `${window.location.origin}/storage/${path}`;
     };
 
-    const deletePublication = (publication_id) => {
-        destroy(route("publications.destroy", publication_id));
-    };
-
     return (
-        <AuthenticatedLayout
+        <AdminLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-sm text-gray-500 leading-tight">
-                    Publications
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                    Collaborations
                 </h2>
             }
         >
-            <Head title="Publications" />
-            {showMessage && (
-                <span className="bg-green-500 z-20 absolute top-6  rounded-md text-white right-10 p-3">
-                    {message}
-                </span>
-            )}
-
+            <Head title="Invitations" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            {/* Button to add a new publication */}
-                            <div className="mb-3 flex justify-between">
-                                <div className="items-center justify-center border w-[50%] m-auto  border-slate-800 focus-within:border-slate-900 rounded-md ">
-                                    <input
-                                        // value={data.search}
-                                        autoComplete="off"
-                                        type="text"
-                                        className="flex-1 w-full text-gray-600  rounded-md"
-                                        name="search"
-                                        placeholder="Search author ...."
-                                        // onChange={(e) =>
-                                        //     setData("search", e.target.value)
-                                        // }
-                                    />
-                                </div>
-                                <Link
-                                    className=" px-2 rounded-md bg-blue-900 text-white/60 w-[15%] flex items-center justify-center"
-                                    href={route("publications.create")}
-                                >
-                                    Add Publication
-                                </Link>
-                            </div>
-
-                            {/* Table to display publications */}
-                            {publications.length > 0 ? (
+                            {publications && publications.length > 0 ? (
                                 <div className="overflow-x-auto mt-4">
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-blue-900/80">
@@ -119,7 +71,7 @@ const Index = ({ auth, publications }) => {
                                                         <td className="px-4 py-2 whitespace-nowrap">
                                                             <Link
                                                                 href={route(
-                                                                    "publications.show",
+                                                                    "admin.publications.show",
                                                                     publication.id
                                                                 )}
                                                                 className="text-blue-600 hover:underline"
@@ -165,7 +117,7 @@ const Index = ({ auth, publications }) => {
                                                         <td className="flex justify-center gap-2 px-4 py-2 whitespace-nowrap text-sm font-medium">
                                                             <Link
                                                                 href={route(
-                                                                    "publications.show",
+                                                                    "admin.publications.show",
                                                                     publication.id
                                                                 )}
                                                                 className="text-blue-600 hover:underline"
@@ -173,24 +125,15 @@ const Index = ({ auth, publications }) => {
                                                                 <GrView className="!text-green-400 text-[20px]" />
                                                             </Link>
                                                             <Link
-                                                                href={
-                                                                    hasRole(
-                                                                        "admin"
-                                                                    )
-                                                                        ? route(
-                                                                              "admin.publications.edit",
-                                                                              publication.id
-                                                                          )
-                                                                        : route(
-                                                                              "publications.edit",
-                                                                              publication.id
-                                                                          )
-                                                                }
+                                                                href={route(
+                                                                    "admin.publications.edit",
+                                                                    publication.id
+                                                                )}
                                                                 className="text-blue-600 hover:underline"
                                                             >
                                                                 <FaRegEdit className="text-[20px] !text-indigo-500" />
                                                             </Link>
-                                                            <button
+                                                            {/* <button
                                                                 onClick={() =>
                                                                     deletePublication(
                                                                         publication.id
@@ -199,7 +142,7 @@ const Index = ({ auth, publications }) => {
                                                                 className="text-red-600 hover:text-red-900"
                                                             >
                                                                 <MdDeleteForever className="text-[25px] !text-red-500" />
-                                                            </button>
+                                                            </button> */}
                                                         </td>
                                                     </tr>
                                                 )
@@ -209,15 +152,15 @@ const Index = ({ auth, publications }) => {
                                 </div>
                             ) : (
                                 <p>
-                                    Awww! You do not have any publication yet!
+                                    You do not have any collaborated work yet!
                                 </p>
                             )}
                         </div>
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 };
 
-export default Index;
+export default Collaborations;

@@ -5,6 +5,7 @@ import Footer from "@/Components/Footer";
 import NavLink from "@/Components/NavLink";
 import NavMenu from "@/Components/NavMenu";
 import { useEffect, useState } from "react";
+import Header from "@/Components/Header";
 
 export default function Contact({ successfull }) {
     const { data, setData, post, processing, errors, recentlySuccessful } =
@@ -45,41 +46,7 @@ export default function Contact({ successfull }) {
                             </span>
                         )}
 
-                        <header className="flex w-full justify-between bg-white shadow-sm shadow-red-500 sticky top-0  p-5 ">
-                            <div className="flex w-full lg:w-[80%] m-auto justify-between gap-6 bg-white ">
-                                <div className="flex w-full items-center">
-                                    <Link
-                                        href={route("home")}
-                                        className="flex lg:justify-center lg:col-start-2 gap-4"
-                                    >
-                                        <img
-                                            src={Logo}
-                                            alt="Logo"
-                                            className="w-16"
-                                        />
-
-                                        <div className="htu hidden lg:flex items-center">
-                                            <h2 className="text-blue-900 font-bold">
-                                                RESEARCH REPOSITORY HTU
-                                            </h2>
-                                        </div>
-                                    </Link>
-                                </div>
-
-                                <NavMenu />
-
-                                <nav className="-mx-3 flex justify-end w-full">
-                                    <div className="flex items-center">
-                                        <Link
-                                            href={route("login")}
-                                            className="rounded-md px-3 py-2 font-bold text-blue-900 ring-1 ring-transparent transition hover:text-blue-900/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-blue-900 hover:border-b-2 border-b-blue-900 dark:hover:text-blue-900/80 dark:focus-visible:ring-white"
-                                        >
-                                            Log in
-                                        </Link>
-                                    </div>
-                                </nav>
-                            </div>
-                        </header>
+                        <Header />
                         <div className="h-2 bg-blue-900/90 border-spacing-10" />
                         <div className="h-2 bg-red-600 border-spacing-10" />
 

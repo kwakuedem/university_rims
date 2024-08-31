@@ -3,7 +3,7 @@ import NavLink from "@/Components/NavLink";
 
 function NavMenu() {
     return (
-        <div className="flex w-full">
+        <div className="hidden lg:flex w-full">
             <NavLink
                 href={route("home")}
                 active={route().current("home")}

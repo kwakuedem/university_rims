@@ -6,8 +6,11 @@ import { format } from "date-fns";
 import NavMenu from "@/Components/NavMenu";
 import DOMPurify from "dompurify";
 import { FaFileDownload, FaUsers } from "react-icons/fa";
+import { FaHamburger } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import NavLink from "@/Components/NavLink";
+import SideNav from "@/Components/SideNav";
+import Header from "@/Components/Header";
 
 export default function Welcome({ authors, publications }) {
     const { data, setData, get, processing } = useForm({
@@ -46,37 +49,7 @@ export default function Welcome({ authors, publications }) {
             <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
                 <div className="relative bg-white min-h-screen flex flex-col items-center selection:bg-[#FF2D20] selection:text-white">
                     <div className=" w-full bg-white  ">
-                        <header className="flex w-full justify-between bg-white shadow-sm shadow-red-500 sticky top-0  p-5 ">
-                            <div className="flex w-full lg:w-[80%] m-auto justify-between gap-6 bg-white ">
-                                <div className="flex w-full items-center">
-                                    <Link className="flex lg:justify-center lg:col-start-2 gap-4">
-                                        <img
-                                            src={Logo}
-                                            alt="Logo"
-                                            className="w-16"
-                                        />
-                                        <div className="htu hidden lg:flex items-center">
-                                            <h2 className="text-blue-900 font-bold">
-                                                RESEARCH REPOSITORY HTU
-                                            </h2>
-                                        </div>
-                                    </Link>
-                                </div>
-
-                                <NavMenu />
-
-                                <nav className=" -mx-3 flex justify-end w-full">
-                                    <div className="flex items-center">
-                                        <Link
-                                            href={route("login")}
-                                            className="lg:mr-0 rounded-md px-3 py-2 font-bold text-blue-900 ring-1 ring-transparent transition hover:text-blue-900/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-blue-900 hover:border-b-2 border-b-blue-900 dark:hover:text-blue-900/80 dark:focus-visible:ring-white"
-                                        >
-                                            Log in
-                                        </Link>
-                                    </div>
-                                </nav>
-                            </div>
-                        </header>
+                        <Header />
                         <div className="h-2 bg-red-600 border-spacing-10" />
                         <main className="w-full bg-white mb-16">
                             <div className="content  bg-white">
@@ -88,7 +61,7 @@ export default function Welcome({ authors, publications }) {
                                                 Welcome to Research Repository
                                                 HTU
                                             </h2>
-                                            <p className="text-lg text-white/70">
+                                            <p className="text-sm  lg:text-lg text-white/70">
                                                 Research Repository HTU is a
                                                 digital collection of open
                                                 access scholarly research
@@ -132,7 +105,7 @@ export default function Welcome({ authors, publications }) {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 items-center justify-center border  border-slate-800 focus-within:border-slate-900 rounded-md w-[30%] m-auto">
+                                <div className="mt-6 w-[60%] items-center justify-center border  border-slate-800 focus-within:border-slate-900 rounded-md lg:w-[30%] m-auto">
                                     <input
                                         autoComplete="off"
                                         value={data.search}
@@ -155,7 +128,7 @@ export default function Welcome({ authors, publications }) {
                                                         "author.profile",
                                                         author.name
                                                     )}
-                                                    className=" flex flex-row bg-white mt-2 rounded-md p-3 "
+                                                    className=" flex flex-col items-center lg:flex-row bg-white mt-2 rounded-md p-3 "
                                                     key={author.id}
                                                 >
                                                     <img
@@ -163,15 +136,18 @@ export default function Welcome({ authors, publications }) {
                                                             author.profile_photo
                                                         )}
                                                         alt="author"
-                                                        className="w-24 h-24 rounded-full"
+                                                        className="w-16 h-16 lg:w-24 lg:h-24 rounded-full"
                                                     />
-                                                    <div className="text-blue-900 font-bold text-lg  py-4 px-4 mt-2">
-                                                        <span>
+                                                    <div className="flex flex-col text-blue-900 font-bold text-lg  py-4 px-4 mt-2">
+                                                        <span className="text-sm lg:text-md">
                                                             {" "}
                                                             {author.name}
                                                         </span>
-                                                        <span>
-                                                            {author.bio}
+                                                        <span className="text-sm lg:text-md">
+                                                            {author.bio.substring(
+                                                                0,
+                                                                200
+                                                            )}
                                                         </span>
                                                     </div>
                                                 </Link>
@@ -362,6 +338,7 @@ export default function Welcome({ authors, publications }) {
                         </main>
                     </div>
                 </div>
+
                 <Footer />
             </div>
         </>

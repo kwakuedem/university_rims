@@ -1,10 +1,10 @@
 import React from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AdminLayout from "../../Layouts/AdminLayout ";
 
 const Users = ({ auth, users }) => {
     const { post } = useForm();
-    console.log(auth);
+
     const handleAssignRole = (userId, role) => {
         post(route("admin.assignRole"), {
             user_id: userId,
@@ -12,7 +12,7 @@ const Users = ({ auth, users }) => {
         });
     };
 
-    console.log(auth);
+    console.log(users);
     const handleRevokeRole = (userId, role) => {
         post(route("admin.revokeRole"), {
             user_id: userId,
@@ -21,15 +21,15 @@ const Users = ({ auth, users }) => {
     };
 
     return (
-        <AuthenticatedLayout
+        <AdminLayout
             user={auth}
             header={
                 <h2 className="font-semibold text-sm text-gray-500 leading-tight">
-                    Reviews
+                    Users
                 </h2>
             }
         >
-            <Head title="Reviews" />
+            <Head title="Users" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 h-screen overflow-hidden">
@@ -69,15 +69,15 @@ const Users = ({ auth, users }) => {
                                                     {user.email}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {user.role_id}
+                                                    {user.roles.map(
+                                                        (role) => role.name
+                                                    )}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                     <div className="flex gap-2">
                                                         {[
                                                             "admin",
-                                                            "editor",
                                                             "author",
-                                                            "reviewer",
                                                         ].map((role) => (
                                                             <button
                                                                 key={role}
@@ -100,9 +100,7 @@ const Users = ({ auth, users }) => {
                                                         ))}
                                                         {[
                                                             "admin",
-                                                            "editor",
                                                             "author",
-                                                            "reviewer",
                                                         ].map((role) => (
                                                             <button
                                                                 key={`revoke-${role}`}
@@ -134,7 +132,7 @@ const Users = ({ auth, users }) => {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 };
 

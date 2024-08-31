@@ -39,7 +39,7 @@ public function store(LoginRequest $request): RedirectResponse
 
     if ($user->hasRole('admin')) {
        
-        return redirect()->route('admin.index');
+        return redirect()->route('admin.dashboard');
     }
 
     return redirect()->route('dashboard');

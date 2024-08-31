@@ -1,10 +1,16 @@
 import React from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
 import Chart from "react-apexcharts";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AdminLayout from "../../Layouts/AdminLayout ";
 
-const Dashboard = ({ auth, statistics, publication }) => {
-    // Example data for the chart
+const Dashboard = ({
+    auth,
+    statistics,
+
+    numberOfResearch,
+    numberOfpublicationsWithCollaborations,
+    numberOfpublicationsWithoutCollaborations,
+}) => {
     const chartOptions = {
         chart: {
             type: "bar",
@@ -146,7 +152,7 @@ const Dashboard = ({ auth, statistics, publication }) => {
 
     // console.log(auth);
     return (
-        <AuthenticatedLayout
+        <AdminLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-sm text-gray-800/60 leading-tight">
@@ -164,16 +170,28 @@ const Dashboard = ({ auth, statistics, publication }) => {
                                 Welcome, {auth.user.name}!
                             </h3>
 
-                            <div className="cards flex w-[50%] m-auto gap-3 py-3">
+                            <div className="cards flex w-[70%] m-auto gap-3 py-3">
                                 <Link
                                     href={route("publications.index")}
                                     className="flex flex-col py-4 border-b-4 w-full rounded-b-md border-blue-900/80 items-center justify-center  shadow-md shadow-blue-600/70"
                                 >
                                     <p className="text-lg font-extrabold text-blue-900">
-                                        {publication}
+                                        {numberOfResearch}
                                     </p>
                                     <p className="text-sm font-bold text-blue-900">
-                                        Publications
+                                        Total Publications
+                                    </p>
+                                </Link>
+
+                                <Link
+                                    href={route("publications.index")}
+                                    className="flex flex-col py-4 border-b-4 w-full rounded-b-md border-blue-900/80 items-center justify-center  shadow-md shadow-blue-600/70"
+                                >
+                                    <p className="text-lg font-extrabold text-blue-900">
+                                        {numberOfpublicationsWithCollaborations}
+                                    </p>
+                                    <p className="text-sm font-bold text-blue-900">
+                                        Collaborated Work
                                     </p>
                                 </Link>
 
@@ -182,10 +200,12 @@ const Dashboard = ({ auth, statistics, publication }) => {
                                     className="flex w-full flex-col border-b-4 rounded-b-md py-4 border-blue-300 items-center justify-center rounded-md shadow-md shadow-blue-600/70"
                                 >
                                     <p className="text-lg font-extrabold text-blue-900">
-                                        {publication}
+                                        {
+                                            numberOfpublicationsWithoutCollaborations
+                                        }
                                     </p>
                                     <p className="text-sm font-bold text-blue-900">
-                                        Collaboration Works
+                                        Without Collaboration
                                     </p>
                                 </Link>
                             </div>
@@ -201,6 +221,7 @@ const Dashboard = ({ auth, statistics, publication }) => {
                                         height={200}
                                     />
                                 </div>
+
                                 {/* Add more sections here as needed */}
                                 <div className="bg-white p-4 shadow rounded-lg">
                                     <h4 className="text-md font-semibold mb-2">
@@ -231,7 +252,7 @@ const Dashboard = ({ auth, statistics, publication }) => {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 };
 

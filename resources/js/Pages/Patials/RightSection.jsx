@@ -17,8 +17,8 @@ const RightSection = ({ researchOut, about, research }) => {
     };
 
     return (
-        <div className=" w-full bg-gray-100 h-screen overflow-auto flex-1 overflow-y-auto">
-            <div className="w-full  bg-red-500 rounded-tr-md">
+        <div className=" w-full bg-gray-100 h-screen overflow-auto flex-1 lg:overflow-y-auto">
+            <div className="w-full   bg-red-500 lg:rounded-tr-md">
                 <ul className="flex p-4 w-full ">
                     <li className="mr-4 mb-4 md:mb-0 ">
                         <button
@@ -58,22 +58,22 @@ const RightSection = ({ researchOut, about, research }) => {
                     </li>
                 </ul>
             </div>
-            <div className="mt-6 p-3 bg-gray-100 w-[90%] m-auto rounded-md">
+            <div className="mt-6 p-3 bg-gray-100 w-full lg:w-[90%] m-auto rounded-md">
                 <div className="w-full overflow-auto">
                     {activeTab === "about" && (
-                        <div className="bg-gray-100 w-full flex gap-3">
-                            <div className="w-[70%]">
+                        <div className="bg-gray-100 w-full flex flex-col lg:flex-row gap-3">
+                            <div className="w-full lg:w-[70%]">
                                 <h2 className="text-md py-1 font-bold  text-blue-900">
                                     {"Bio"}
                                 </h2>
                                 <div className=" bg-white mb-2  p-3 rounded-md">
-                                    <p className="text-md text-gray-600/90 ">
+                                    <p className="text-md text-gray-600/90 text-justify">
                                         {about.bio}
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="rounded-md p-3 w-[30%]">
+                            <div className="rounded-md p-3 w-full lg:w-[30%]">
                                 <h2 className="text-blue-900 font-bold text-md">
                                     Degree
                                 </h2>
@@ -97,7 +97,7 @@ const RightSection = ({ researchOut, about, research }) => {
                         </div>
                     )}
                     {activeTab === "researchout" && (
-                        <div>
+                        <div className="w-full">
                             <h2 className="text-blue-900 font-bold text-md">
                                 {"Research"}
                             </h2>
@@ -112,7 +112,7 @@ const RightSection = ({ researchOut, about, research }) => {
                                     researchOut.data.map((publication) => (
                                         <div
                                             key={publication.id}
-                                            className="flex flex-col gap-3 px-4 pt-4 border m-2"
+                                            className="flex flex-col gap-3 px-1 lg:px-4 pt-4 border m-2"
                                         >
                                             <Link
                                                 href={`/publications/${publication.id}/read`}
@@ -125,7 +125,7 @@ const RightSection = ({ researchOut, about, research }) => {
                                                     )}
                                                 </span>
                                             </Link>
-                                            <span className="text-blue-900/90">
+                                            <span className="text-blue-900/90 text-sm lg:text-base">
                                                 {publication.abstract.substring(
                                                     0,
                                                     300
@@ -145,7 +145,7 @@ const RightSection = ({ researchOut, about, research }) => {
                                             </span>
                                             <span className="flex justify-between gap-3 py-2">
                                                 <div className="flex gap-3">
-                                                    <span className="bg-blue-300 text-white rounded-md px-2">
+                                                    <span className="bg-blue-300 text-sm lg:text-lg text-white rounded-md px-2">
                                                         {publication.downloads +
                                                             " "}{" "}
                                                         downloads
@@ -227,7 +227,7 @@ const RightSection = ({ researchOut, about, research }) => {
                             <h2 className="text-lg font-bold text-black">
                                 {"Research Areas"}
                             </h2>
-                            <div className="text-md bg-white text-gray-500 p-2 rounded-md w-[30rem]">
+                            <div className="text-md bg-white text-gray-500 p-2 rounded-md lg:w-[30rem]">
                                 {about.research_area}
                             </div>
                         </div>

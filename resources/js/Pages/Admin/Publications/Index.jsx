@@ -6,15 +6,13 @@ import { MdDeleteForever } from "react-icons/md";
 import { GrView } from "react-icons/gr";
 import { useEffect, useState } from "react";
 import { useAuthorizations } from "@/utils";
+import AdminLayout from "../../../Layouts/AdminLayout ";
 
 const Index = ({ auth, publications }) => {
     const { data, delete: destroy, processing } = useForm({});
     const [showMessage, setShowMessage] = useState(false);
     const { props } = usePage();
     const message = props.success;
-
-    const { hasRole } = useAuthorizations(auth.roles);
-    console.log(hasRole("admin"));
 
     useEffect(() => {
         if (message && message) {
@@ -36,11 +34,11 @@ const Index = ({ auth, publications }) => {
     };
 
     const deletePublication = (publication_id) => {
-        destroy(route("publications.destroy", publication_id));
+        destroy(route("admin.publications.destroy", publication_id));
     };
 
     return (
-        <AuthenticatedLayout
+        <AdminLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-sm text-gray-500 leading-tight">
@@ -76,7 +74,7 @@ const Index = ({ auth, publications }) => {
                                 </div>
                                 <Link
                                     className=" px-2 rounded-md bg-blue-900 text-white/60 w-[15%] flex items-center justify-center"
-                                    href={route("publications.create")}
+                                    href={route("admin.publications.create")}
                                 >
                                     Add Publication
                                 </Link>
@@ -119,7 +117,7 @@ const Index = ({ auth, publications }) => {
                                                         <td className="px-4 py-2 whitespace-nowrap">
                                                             <Link
                                                                 href={route(
-                                                                    "publications.show",
+                                                                    "admin.publications.show",
                                                                     publication.id
                                                                 )}
                                                                 className="text-blue-600 hover:underline"
@@ -165,7 +163,7 @@ const Index = ({ auth, publications }) => {
                                                         <td className="flex justify-center gap-2 px-4 py-2 whitespace-nowrap text-sm font-medium">
                                                             <Link
                                                                 href={route(
-                                                                    "publications.show",
+                                                                    "admin.publications.show",
                                                                     publication.id
                                                                 )}
                                                                 className="text-blue-600 hover:underline"
@@ -173,19 +171,10 @@ const Index = ({ auth, publications }) => {
                                                                 <GrView className="!text-green-400 text-[20px]" />
                                                             </Link>
                                                             <Link
-                                                                href={
-                                                                    hasRole(
-                                                                        "admin"
-                                                                    )
-                                                                        ? route(
-                                                                              "admin.publications.edit",
-                                                                              publication.id
-                                                                          )
-                                                                        : route(
-                                                                              "publications.edit",
-                                                                              publication.id
-                                                                          )
-                                                                }
+                                                                href={route(
+                                                                    "admin.publications.edit",
+                                                                    publication.id
+                                                                )}
                                                                 className="text-blue-600 hover:underline"
                                                             >
                                                                 <FaRegEdit className="text-[20px] !text-indigo-500" />
@@ -216,7 +205,7 @@ const Index = ({ auth, publications }) => {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 };
 

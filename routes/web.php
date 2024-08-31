@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminCollaborationController;
+use App\Http\Controllers\Admin\AdminPublicationController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CollaborationController;
@@ -11,14 +13,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/',[PagesController::class,'index'])->name('home');
 Route::post('/contact',[PagesController::class,'store']);
-
 Route::get('/contact',[PagesController::class,'contact'])->name('contact');
 Route::get('/about',[PagesController::class,'about'])->name('about');
 Route::get('/authors/{authorName}', [AuthorController::class, 'show'])->name('author.profile');
 Route::get('/publication/{title}',[PagesController::class,'show'])->name('read');
 Route::get('/publications/{publicationName}/download', [PublicationController::class, 'download'])->name('publication.download');
 
-Route::get('/author', [AuthorController::class, 'test'])->name('author.test');
 
 
 Route::middleware('auth')->group(function () {
@@ -29,32 +29,31 @@ Route::middleware('auth')->group(function () {
 });
 
 //publications route
-Route::middleware('auth')->group(function () {
+Route::middleware('auth','role:author')->group(function () {
    Route::resource('publications',PublicationController::class);
 });
 
 
 //collaboration route
-Route::middleware('auth')->group(function () {
+Route::middleware('auth','role:author')->group(function () {
     Route::resource('collaborations', CollaborationController::class)->only(['index','store']);
 });
 
+// //collaboration route
+// Route::post('/publications/{publication}/collaborators', [CollaborationController::class, 'store'])
+//     ->name('collaborations.store');
 
 //Admin routes
 Route::middleware(['auth', 'verified','role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('index');
-    Route::get('/publications',[AdminController::class,'publications'])->name('publications');
-    Route::get('/collaborations',[AdminController::class,'collaborations'])->name('collaborations');
-    Route::resource('/publications',AdminController::class)->except('index');
+    Route::get('/',[AdminPublicationController::class,'dashboard'])->name('dashboard');
+    Route::resource('/publications',AdminPublicationController::class);
+    Route::resource('/collaborations',AdminCollaborationController::class)->except('edit','create','destroy','update','show');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::get('/roles', [AdminController::class, 'roles'])->name('roles');
     Route::post('/assign-role', [AdminController::class, 'assignRole'])->name('assignRole');
     Route::post('/revoke-role', [AdminController::class, 'revokeRole'])->name('revokeRole'); 
 });
 
-//collaboration route
-Route::post('/publications/{publication}/collaborators', [CollaborationController::class, 'store'])
-    ->name('collaborations.store');
 
 
 
