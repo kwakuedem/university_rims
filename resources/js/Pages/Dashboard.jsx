@@ -9,56 +9,15 @@ const Dashboard = ({
     numberOfCollaborations,
     numberOfResearch,
 }) => {
-    // Example data for the chart
-    const chartOptions = {
+    const commonChartOptions = {
         chart: {
             type: "bar",
-            height: 200,
+            height: 350,
         },
         plotOptions: {
             bar: {
                 horizontal: false,
-                columnWidth: "55%",
-                endingShape: "rounded",
-            },
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ["transparent"],
-            fillColor: "#EB8C87",
-            strokeColor: "#C23829",
-        },
-        xaxis: {
-            categories: statistics.months,
-        },
-        yaxis: {
-            title: {
-                text: "Publications",
-            },
-        },
-        fill: {
-            opacity: 1,
-        },
-        tooltip: {
-            y: {
-                formatter: (val) => `${val} publications`,
-            },
-        },
-    };
-    //second
-    const chartOptions2 = {
-        chart: {
-            type: "bar",
-            height: 200,
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: "55%",
+                columnWidth: "40%",
                 endingShape: "rounded",
             },
         },
@@ -71,11 +30,11 @@ const Dashboard = ({
             colors: ["transparent"],
         },
         xaxis: {
-            categories: statistics.months,
+            categories: statistics.years,
         },
         yaxis: {
             title: {
-                text: "Submissions",
+                text: "Publications of the Year",
             },
         },
         fill: {
@@ -83,71 +42,66 @@ const Dashboard = ({
         },
         tooltip: {
             y: {
-                formatter: (val) => `${val} publications`,
+                formatter: (val) => val,
             },
         },
     };
 
-    const chartSeries = [
+    const collaborationChartOptions = {
+        chart: {
+            type: "bar",
+            height: 350,
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: "40%",
+                endingShape: "rounded",
+            },
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ["transparent"],
+        },
+        xaxis: {
+            categories: statistics.years,
+        },
+        yaxis: {
+            title: {
+                text: "Collaboration works for the Year",
+            },
+        },
+        fill: {
+            colors: ["#FFA500"], // Orange color
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: (val) => val,
+            },
+        },
+    };
+
+    const publicationChartSeries = [
         {
             name: "Publications",
             data: statistics.publications,
         },
     ];
 
-    //second
-    const chartSeries2 = [
-        {
-            name: "Submissions",
-            data: statistics.publications,
-        },
-    ];
-
-    //third
-    const chartSeries3 = [
+    const collaborationChartSeries = [
         {
             name: "Collaborations",
-            data: statistics.publications,
+            data: statistics.collaborations,
         },
     ];
 
-    const chartOptions3 = {
-        chart: {
-            type: "bar",
-            height: 200,
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: "55%",
-                endingShape: "rounded",
-            },
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ["transparent"],
-        },
-        xaxis: {
-            categories: statistics.months,
-        },
-        yaxis: {
-            title: {
-                text: "Collaborations",
-            },
-        },
-        fill: {
-            opacity: 1,
-        },
-        tooltip: {
-            y: {
-                formatter: (val) => `${val} publications`,
-            },
-        },
-    };
+    // const publicationChartSeries = statistics.publications;
+    // const collaborationChartSeries = statistics.collaborations;
 
     return (
         <AuthenticatedLayout
@@ -193,41 +147,23 @@ const Dashboard = ({
                                     </p>
                                 </Link>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                            <div className="grid justify-center items-center grid-cols-1 md:grid-cols-2 lg:w-[80%] lg:m-auto gap-6 mt-6">
                                 <div className="bg-white p-4 shadow rounded-lg">
-                                    <h4 className="text-md font-semibold mb-2">
-                                        Publication Statistics
-                                    </h4>
                                     <Chart
-                                        options={chartOptions}
-                                        series={chartSeries}
+                                        options={commonChartOptions}
+                                        series={publicationChartSeries}
                                         type="bar"
-                                        height={200}
-                                    />
-                                </div>
-                                {/* Add more sections here as needed */}
-                                <div className="bg-white p-4 shadow rounded-lg">
-                                    <h4 className="text-md font-semibold mb-2">
-                                        Submission Statistics
-                                    </h4>
-                                    <Chart
-                                        options={chartOptions2}
-                                        series={chartSeries2}
-                                        type="bar"
-                                        height={200}
+                                        height={300}
                                     />
                                 </div>
 
                                 {/* Add more sections here as needed */}
                                 <div className="bg-white p-4 shadow rounded-lg">
-                                    <h4 className="text-md font-semibold mb-2">
-                                        Collaboration Statistics
-                                    </h4>
                                     <Chart
-                                        options={chartOptions3}
-                                        series={chartSeries3}
+                                        options={collaborationChartOptions}
+                                        series={collaborationChartSeries}
                                         type="bar"
-                                        height={200}
+                                        height={300}
                                     />
                                 </div>
                             </div>

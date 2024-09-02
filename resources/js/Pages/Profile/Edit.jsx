@@ -2,9 +2,29 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import DeleteUserForm from "./Partials/DeleteUserForm";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
-import { Head } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { MdDeleteForever } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
+import { useState } from "react";
 
-export default function Edit({ auth, mustVerifyEmail, status }) {
+export default function Edit({
+    auth,
+    mustVerifyEmail,
+    status,
+    qualifications,
+}) {
+    const { delete: destroy } = useForm({});
+
+    const deleteQualification = (publication_id) => {
+        destroy(route("qualifications.destroy", publication_id));
+    };
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+    const openModal = () => {
+        setIsEditModalOpen(true);
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -24,6 +44,49 @@ export default function Edit({ auth, mustVerifyEmail, status }) {
                             status={status}
                             className="w-full "
                         />
+                    </div>
+                    <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                        <h2 className="font-bold text-black">Qualifications</h2>
+                        <div className="grid grid-cols-4 gap-3">
+                            {qualifications && qualifications.length > 0 ? (
+                                qualifications.map((qualification) => (
+                                    <div
+                                        className="flex flex-col gap-1 shadow py-1 px-2 mt-2 w-full border-2 rounded-md"
+                                        key={qualification.id}
+                                    >
+                                        <span className="font-bold text-blue-800 flex justify-between items-center">
+                                            {qualification.degree}
+                                            <button
+                                                onClick={() =>
+                                                    deleteQualification(
+                                                        qualification.id
+                                                    )
+                                                }
+                                                className="text-red-600 hover:text-red-900"
+                                            >
+                                                <MdDeleteForever className="text-[15px] !text-red-500" />
+                                            </button>
+                                        </span>
+                                        <span>{qualification.institution}</span>
+                                        <span className="flex justify-between items-center">
+                                            {qualification.year}
+                                            <button
+                                                onClick={openModal}
+                                                className="text-blue-600 hover:underline"
+                                            >
+                                                <FaRegEdit className="text-[15px] !text-indigo-500" />
+                                            </button>
+                                        </span>
+                                    </div>
+                                ))
+                            ) : (
+                                <div>
+                                    <p className="py-3 text-gray-700">
+                                        Ooops! No Qualification Updated
+                                    </p>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">

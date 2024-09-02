@@ -5,7 +5,7 @@ import DOMPurify from "dompurify";
 import { format } from "date-fns";
 import { FaFileDownload } from "react-icons/fa";
 
-const RightSection = ({ researchOut, about, research }) => {
+const RightSection = ({ researchOut, about, author_qualifications }) => {
     const [activeTab, setActiveTab] = useState("about");
 
     const formatDate = (dateString) => {
@@ -15,6 +15,8 @@ const RightSection = ({ researchOut, about, research }) => {
     const handleMenuClick = (tab) => {
         setActiveTab(tab);
     };
+
+    console.log(author_qualifications);
 
     return (
         <div className=" w-full bg-gray-100 h-screen overflow-auto flex-1 lg:overflow-y-auto">
@@ -77,21 +79,34 @@ const RightSection = ({ researchOut, about, research }) => {
                                 <h2 className="text-blue-900 font-bold text-md">
                                     Degree
                                 </h2>
-                                <div className=" bg-white  flex flex-col gap-1 mb-2 w-full  p-3 rounded-md">
-                                    <div className="text-md text-gray-600/90 flex flex-col ">
-                                        <span className="text-blue-900">
-                                            BSc
-                                        </span>
-                                        <p className="w-full">
-                                            Ho Technical University
-                                        </p>
-                                    </div>
-                                    <p className="text-md text-gray-600/90 flex flex-col ">
-                                        <span className="text-blue-900">
-                                            MSc
-                                        </span>
-                                        <span>University of Ghana</span>
-                                    </p>
+                                <div className=" bg-white  flex flex-col gap-2 mb-2 w-full  p-3 rounded-md">
+                                    {author_qualifications &&
+                                    author_qualifications.length > 0 ? (
+                                        author_qualifications.map(
+                                            (qualification) => (
+                                                <div className="text-md text-gray-600/90 flex flex-col border-2 px-2 py-2 shadow-md border-gray-200 rounded-md">
+                                                    <span className="text-blue-900">
+                                                        {qualification.degree}
+                                                    </span>
+                                                    <p className="w-full">
+                                                        {
+                                                            qualification.institution
+                                                        }
+                                                    </p>
+                                                    <span>
+                                                        {qualification.year}
+                                                    </span>
+                                                </div>
+                                            )
+                                        )
+                                    ) : (
+                                        <div>
+                                            <p>
+                                                Ooops! No Qualication for this
+                                                Author
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

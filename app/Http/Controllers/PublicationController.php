@@ -23,11 +23,28 @@ class PublicationController extends Controller
     $numberOfCollaborations=$collaborations->count();
 
 
-    // Example statistics data
-    $statistics = [
-        'months' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        'publications' => [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+   // Dynamic statistics for publications per month
+     $statistics = [
+        'years' => [],
+        'publications' => [],
+        'collaborations' => [],
     ];
+
+    $years = Publication::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year')->pluck('year');
+
+    foreach ($years as $year) {
+        $statistics['years'][] = $year;
+        $statistics['publications'][] = Publication::where('author_id', Auth::user()->id)
+            ->whereYear('created_at', $year)
+            ->count();
+
+        $statistics['collaborations'][] = Publication::whereHas('collaborations', function($query){
+            $query->where('collaborator_id', Auth::user()->id);
+        })->whereYear('created_at', $year)
+        ->count();
+    }
+
+
 
     return inertia('Dashboard', compact('statistics','numberOfResearch','numberOfCollaborations'));
 }

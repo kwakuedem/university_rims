@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Collaboration;
 use App\Models\Publication;
+use App\Models\Qualification;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -24,11 +25,15 @@ class AuthorController extends Controller
     $collaborations = Collaboration::where('collaborator_id', $author->id)
         ->with('publication')
         ->get();
+    
+    $qualifications=Qualification::where('user_id',$author->id)->get();
+
 
     return inertia('AuthorShow', [
         'author' => $author,
         'publications' => $publications,
         'collaborations' => $collaborations,
+        'qualifications'=>$qualifications
     ]);
 }
 }

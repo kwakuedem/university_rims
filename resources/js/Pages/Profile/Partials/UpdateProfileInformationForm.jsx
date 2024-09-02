@@ -6,14 +6,18 @@ import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
 import { useEffect, useRef, useState } from "react";
 import { FaFacebook, FaWhatsapp, FaLinkedin } from "react-icons/fa";
+import QualificationForm from "./Qualification";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
     status,
+
     className = "",
 }) {
     const user = usePage().props.auth.user;
     const message = usePage().props.success;
+    const { props } = usePage();
+    const { success } = props;
 
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
@@ -36,6 +40,7 @@ export default function UpdateProfileInformation({
     };
 
     const [showMessage, setShowMessage] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         if (message && message) {
@@ -56,6 +61,12 @@ export default function UpdateProfileInformation({
                 <span className="bg-green-500 z-20 absolute top-6  rounded-md text-white right-10 p-3">
                     {message}
                 </span>
+            )}
+
+            {success && (
+                <div className="bg-green-500 text-white p-4 mb-4 rounded">
+                    {success}
+                </div>
             )}
 
             <header className="flex justify-between">
@@ -86,8 +97,8 @@ export default function UpdateProfileInformation({
                 className="mt-2 space-y-6"
                 encType="multipart/form-data"
             >
-                <div className="">
-                    <div className="image-upload">
+                <div className="flex items-center gap-20">
+                    <div className="image-upload w-full">
                         <InputLabel
                             htmlFor="profile_photo"
                             value="Profile Image"
@@ -105,7 +116,19 @@ export default function UpdateProfileInformation({
                         <InputError
                             className="mt-2"
                             message={errors.profile_photo}
+                            hidden
                         />
+                    </div>
+                    <div className="flex w-full flex-col items-center justify-end">
+                        <label htmlFor="" className="text-sm text-gray-100">
+                            Hello
+                        </label>
+                        <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="bg-blue-900 hover:bg-blue-600 px-2 py-2 rounded-md"
+                        >
+                            Add Qualification(s)
+                        </button>
                     </div>
                 </div>
                 <div className="flex gap-4">
@@ -280,7 +303,7 @@ export default function UpdateProfileInformation({
                         disabled={processing}
                         className="!w-[20%] items-center justify-center"
                     >
-                        Save
+                        Save Changes
                     </PrimaryButton>
 
                     <Transition
@@ -294,6 +317,13 @@ export default function UpdateProfileInformation({
                     </Transition>
                 </div>
             </form>
+
+            {isModalOpen && (
+                <QualificationForm
+                    setIsModalOpen={setIsModalOpen}
+                    setIsModalOpenTrue={() => setIsModalOpen(true)}
+                />
+            )}
         </section>
     );
 }

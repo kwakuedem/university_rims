@@ -44,7 +44,6 @@ const Edit = ({ auth, publication, collaborators }) => {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data);
         post(route("publications.update", publication.id), {});
     };
 

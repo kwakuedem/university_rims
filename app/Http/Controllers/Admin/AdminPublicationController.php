@@ -19,11 +19,28 @@ class AdminPublicationController extends Controller
     $numberOfpublicationsWithCollaborations=Publication::whereHas('collaborations')->count();
 
 
-    // Example statistics data
-    $statistics = [
-        'months' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        'publications' => [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+    // Dynamic statistics for publications per month
+     $statistics = [
+        'years' => [],
+        'publications' => [],
+        'collaborations' => [],
+        'notcollaborations' => [],
     ];
+
+    $years = Publication::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year')->pluck('year');
+
+    foreach ($years as $year) {
+        $statistics['years'][] = $year;
+        $statistics['publications'][] = Publication::whereYear('created_at', $year)
+        ->count();
+
+        $statistics['collaborations'][] = Publication::whereHas('collaborations')->whereYear('created_at', $year)
+        ->count();
+
+
+        $statistics['notcollaborations'][] = Publication::doesntHave('collaborations')->whereYear('created_at', $year)
+        ->count();
+    }
 
     return inertia('Admin/Dashboard', compact('statistics','numberOfResearch','numberOfpublicationsWithCollaborations','numberOfpublicationsWithoutCollaborations'));
 }

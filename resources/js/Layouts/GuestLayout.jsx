@@ -5,7 +5,7 @@ import Footer from "@/Components/Footer";
 
 export default function Guest({ children }) {
     return (
-        <div className="min-h-screen relative bg-black">
+        <div className="min-h-screen lg:max-h-screen overflow-hidden relative bg-black">
             <header className="flex w-full sticky top-0 bg-white  p-5 ">
                 <div className="flex w-full lg:w-[70%] m-auto  bg-white ">
                     <Link
@@ -22,14 +22,14 @@ export default function Guest({ children }) {
                 </div>
             </header>
 
-            <div className=" flex flex-col h-[74vh] lg:h-screen lg:p-36 items-center sm:pt-0 lg:pt-6  bg-gray-100">
-                <div className="mt-16">
+            <div className=" flex flex-col h-[74vh] lg:h-screen lg:px-36 lg:py-10 items-center sm:pt-0  bg-gray-100">
+                <div className="mt-16 lg:mt-0 hidden">
                     <Link href="/">
                         <ApplicationLogo className=" w-20 h-20 fill-current text-gray-500" />
                     </Link>
                 </div>
 
-                <div className="w-[80%] m-auto mt-6 px-3 lg:px-6 py-4 bg-white shadow-md  sm:rounded-lg">
+                <div className="w-[80%] lg:w-[40%] m-auto mt-6 px-3 lg:px-6 py-4 bg-white shadow-md  sm:rounded-lg">
                     {children}
                 </div>
             </div>

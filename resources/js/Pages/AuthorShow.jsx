@@ -9,10 +9,12 @@ import RightSection from "@/Pages/Patials/RightSection";
 import { FaWhatsapp, FaLinkedin, FaFacebook } from "react-icons/fa";
 import Header from "@/Components/Header";
 
-export default function Welcome({ collaborations, author, publications }) {
+export default function Welcome({ author, publications, qualifications }) {
     const formatDate = (dateString) => {
         return format(new Date(dateString), "yyyy-MM-dd");
     };
+
+    console.log(qualifications);
     const getAssetUrl = (path) => {
         return `${window.location.origin}/storage/${path}`;
     };
@@ -97,6 +99,7 @@ export default function Welcome({ collaborations, author, publications }) {
                                         researchOut={publications}
                                         about={author}
                                         research={author}
+                                        author_qualifications={qualifications}
                                     />
                                 </div>
                                 {/* </div> */}

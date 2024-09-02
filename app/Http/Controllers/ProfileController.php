@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Qualification;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -21,9 +22,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $qualifications=Qualification::where('user_id',$request->user()->id)->get();
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'qualifications'=>$qualifications,
         ]);
     }
 

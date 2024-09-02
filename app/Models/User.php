@@ -66,15 +66,8 @@ class User extends Authenticatable
         return $this->hasMany(Collaboration::class);
     }
 
-    /**
-     * Many-to-Many relationship with Research through Collaborations.
-     */
-    // public function collaboratedResearches()
-    // {
-    //     return $this->belongsToMany(Research::class, 'collaborations', 'collaborator_id', 'research_id')
-    //                 ->withPivot('status')
-    //                 ->withTimestamps();
-    // }
-
-   
+     public function qualifications()
+    {
+        return $this->hasMany(Qualification::class);
+    }
 }
