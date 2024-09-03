@@ -25,7 +25,7 @@ export default function Show({ publication, auth }) {
 
             <div className="py-10">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg w-[80%] m-auto">
                         <div className="p-4 text-gray-900">
                             <div className="submission-section grid lg:m-auto pt-8">
                                 <h2 className="title text-black/80 text-3xl font-bold">
@@ -46,7 +46,7 @@ export default function Show({ publication, auth }) {
                                         )}
                                         target="_blank"
                                         rel="noopenernoreferrer"
-                                        className="bg-gray-700 flex justify-center py-1 text-white px-2 rounded-full w-[15%]"
+                                        className="bg-gray-700 flex justify-center py-1 text-white px-2 rounded-full w-[20%]"
                                     >
                                         View Document
                                     </a>

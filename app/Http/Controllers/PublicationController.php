@@ -55,8 +55,9 @@ class PublicationController extends Controller
         $user = Auth::user();
 
         // Get research works owned by the user or where the user is a collaborator
-        $publications = Publication::where('author_id', $user->id)
-            ->get();
+     $publications = Publication::with('author:id,name') // Load author relationship with only id and name columns
+    ->where('author_id', Auth::user()->id) // Filter by the authenticated user's ID
+    ->get();
 
         return inertia('Publications/Index', compact('publications'));
     }
@@ -109,45 +110,124 @@ class PublicationController extends Controller
 
 
 
-    //update publication function
-    public function update(Request $request, Publication $publication){
-    
-        // Validate the request
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'abstract' => 'required|string',
-            'file_path' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,odp,odt|max:2048',
-            'status'=>'required|string|in:published,unpublished',
-        ]);
+public function update(Request $request, Publication $publication)
+{
+    // Validate the request
+    $data = $request->validate([
+        'title' => 'required|string|max:255',
+        'abstract' => 'required|string',
+        'status' => 'required|string|in:published,unpublished',
+    ]);
 
-        // Handle file upload if a new file is provided
-        if ($request->hasFile('file_path')) {
-        // Delete old file if it exists
-            if ($publication->file_path) {
-                Storage::disk('public')->delete($publication->file_path);
-            }
-            $fileName = $request->file('file_path')->getClientOriginalName();
-            $file = $request->file('file_path')->storeAs('research_files', $fileName, 'public');
-        } else {
-            // Keep the old file path if no new file is uploaded
-            $file = $publication->file_path;
+    // Check if 'file_path' is present and it's a file, not a string
+    if ($request->hasFile('file_path')) {
+        // Handle file upload
+        if ($publication->file_path) {
+            Storage::disk('public')->delete($publication->file_path);
         }
+        $fileName = $request->file('file_path')->getClientOriginalName();
+        $file = $request->file('file_path')->storeAs('research_files', $fileName, 'public');
+        $data['file_path'] = $file;
+    } else {
+        // Keep the old file path if no new file is uploaded
+        $data['file_path'] = $publication->file_path;
+    }
 
-        // Update the data
-        $publication->update([
-            'title' => $data['title'],
-            'abstract' => $data['abstract'],
-            'file_path' => $file,
-            'status'=>$data['status']
-        ]);
+    // Update the publication
+    $publication->update($data);
 
-        $user = Auth::user();
+    // Return response...
+
+     $user = Auth::user();
         $success= 'Publication Updated Successfully.';
             // Get research works owned by the user or where the user is a collaborator
             $publications = Publication::where('author_id', $user->id)
                 ->get();
         return inertia('Publications/Index',compact('success','publications'));
-    }
+}
+
+
+    // //update publication function
+    // public function update(Request $request, Publication $publication){
+    
+    //     // Validate the request
+    //     $data = $request->validate([
+    //         'title' => 'required|string|max:255',
+    //         'abstract' => 'required|string',
+    //         // 'file_path' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,odp,odt|max:2048',
+    //         'status'=>'required|string|in:published,unpublished',
+    //     ]);
+
+    //     // Handle file upload if a new file is provided
+    //     if ($request->hasFile('file_path')) {
+    //     // Delete old file if it exists
+    //         if ($publication->file_path) {
+    //             Storage::disk('public')->delete($publication->file_path);
+    //         }
+    //         $fileName = $request->file('file_path')->getClientOriginalName();
+    //         $file = $request->file('file_path')->storeAs('research_files', $fileName, 'public');
+    //     } else {
+    //         // Keep the old file path if no new file is uploaded
+    //         $file = $publication->file_path;
+    //     }
+
+    //     // Update the data
+    //     $publication->update([
+    //         'title' => $data['title'],
+    //         'abstract' => $data['abstract'],
+    //         'file_path' => $file,
+    //         'status'=>$data['status']
+    //     ]);
+
+    //     $user = Auth::user();
+    //     $success= 'Publication Updated Successfully.';
+    //         // Get research works owned by the user or where the user is a collaborator
+    //         $publications = Publication::where('author_id', $user->id)
+    //             ->get();
+    //     return inertia('Publications/Index',compact('success','publications'));
+    // }
+
+//     public function update(Request $request, Publication $publication)
+// {
+//     // Validate the request
+//     // dd($request->all());
+//     $data = $request->validate([
+//         'title' => 'required|string|max:255',
+//         'abstract' => 'required|string',
+//         'file_path' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,odp,odt|max:2048', // nullable makes this optional
+//         'status' => 'required|string|in:published,unpublished',
+//     ]);
+//     // dd($data);
+//     // Handle file upload if a new file is provided
+//     if ($request->hasFile('file_path')) {
+//         // Delete old file if it exists
+//         if ($publication->file_path) {
+//             Storage::disk('public')->delete($publication->file_path);
+//         }
+//         $fileName = $request->file('file_path')->getClientOriginalName();
+//         $file = $request->file('file_path')->storeAs('research_files', $fileName, 'public');
+//     } else {
+//         // Keep the old file path if no new file is uploaded
+//         $file = $publication->file_path;
+//     }
+
+//     // Update the data
+//     $publication->update([
+//         'title' => $data['title'],
+//         'abstract' => $data['abstract'],
+//         'file_path' => $file,
+//         'status' => $data['status'],
+//     ]);
+
+//     $user = Auth::user();
+//     $success = 'Publication Updated Successfully.';
+
+//     // Get research works owned by the user or where the user is a collaborator
+//     $publications = Publication::where('author_id', $user->id)->get();
+
+//     return inertia('Publications/Index', compact('success', 'publications'));
+// }
+
 
     //show particular publication
     public function show(Publication $publication){

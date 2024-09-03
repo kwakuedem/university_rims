@@ -49,7 +49,7 @@ class AdminPublicationController extends Controller
     public function index(){
 
         // Get research works owned by the user or where the user is a collaborator
-        $publications = Publication::latest()->get();
+        $publications = Publication::with('author:id,name')->get();
         return inertia('Admin/Publications/Index',compact('publications'));
     }
 

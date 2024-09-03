@@ -14,6 +14,29 @@ const Index = ({ auth, publications }) => {
     const { props } = usePage();
     const message = props.success;
 
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const filteredPublications = publications.filter((publication) => {
+        const authorName = publication.author.name.toLowerCase();
+        const title = publication.title.toLowerCase();
+        const publicationStatus = publication.status.toLowerCase();
+        const searchLower = searchQuery.toLowerCase();
+        const publicationYear = new Date(publication.created_at)
+            .getFullYear()
+            .toString();
+
+        return (
+            authorName.includes(searchLower) ||
+            title.includes(searchLower) ||
+            publicationYear.includes(searchLower) ||
+            publicationStatus.includes(searchLower)
+        );
+    });
+
     useEffect(() => {
         if (message && message) {
             setShowMessage(true);
@@ -38,7 +61,7 @@ const Index = ({ auth, publications }) => {
     };
 
     return (
-        <AdminLayout
+        <AuthenticatedLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-sm text-gray-500 leading-tight">
@@ -48,7 +71,7 @@ const Index = ({ auth, publications }) => {
         >
             <Head title="Publications" />
             {showMessage && (
-                <span className="bg-green-500 z-20 absolute top-6  rounded-md text-white right-10 p-3">
+                <span className="bg-green-500 z-20 absolute top-6 rounded-md text-white right-10 p-3">
                     {message}
                 </span>
             )}
@@ -57,23 +80,21 @@ const Index = ({ auth, publications }) => {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            {/* Button to add a new publication */}
+                            {/* Search Input */}
                             <div className="mb-3 flex justify-between">
-                                <div className="items-center justify-center border w-[50%] m-auto  border-slate-800 focus-within:border-slate-900 rounded-md ">
+                                <div className="items-center justify-center border w-[50%] m-auto border-slate-800 focus-within:border-slate-900 rounded-md">
                                     <input
-                                        // value={data.search}
+                                        value={searchQuery}
                                         autoComplete="off"
                                         type="text"
-                                        className="flex-1 w-full text-gray-600  rounded-md"
+                                        className="flex-1 w-full text-gray-600 rounded-md"
                                         name="search"
-                                        placeholder="Search author ...."
-                                        // onChange={(e) =>
-                                        //     setData("search", e.target.value)
-                                        // }
+                                        placeholder="Search by author, title, or year ...."
+                                        onChange={handleSearchChange}
                                     />
                                 </div>
                                 <Link
-                                    className=" px-2 rounded-md bg-blue-900 text-white/60 w-[15%] flex items-center justify-center"
+                                    className="px-2 rounded-md bg-blue-900 text-white/60 w-[15%] flex items-center justify-center"
                                     href={route("admin.publications.create")}
                                 >
                                     Add Publication
@@ -81,7 +102,7 @@ const Index = ({ auth, publications }) => {
                             </div>
 
                             {/* Table to display publications */}
-                            {publications.length > 0 ? (
+                            {filteredPublications.length > 0 ? (
                                 <div className="overflow-x-auto mt-4">
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-blue-900/80">
@@ -104,7 +125,7 @@ const Index = ({ auth, publications }) => {
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white divide-y divide-gray-200">
-                                            {publications.map(
+                                            {filteredPublications.map(
                                                 (publication, index) => (
                                                     <tr
                                                         key={publication.id}
@@ -148,11 +169,11 @@ const Index = ({ auth, publications }) => {
 
                                                         <td className="px-4 py-2 whitespace-nowrap">
                                                             <span
-                                                                className={`rounded-md  text-sm p-2 ${
+                                                                className={`rounded-md text-sm p-2 ${
                                                                     publication.status ===
                                                                     "published"
-                                                                        ? "bg-green-500 text-white "
-                                                                        : " bg-orange-100 text-orange-600"
+                                                                        ? "bg-green-500 text-white"
+                                                                        : "bg-orange-100 text-orange-600"
                                                                 }`}
                                                             >
                                                                 {
@@ -205,7 +226,7 @@ const Index = ({ auth, publications }) => {
                     </div>
                 </div>
             </div>
-        </AdminLayout>
+        </AuthenticatedLayout>
     );
 };
 

@@ -1,4 +1,4 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AdminLayout from "../../../Layouts/AdminLayout ";
 import DeleteUserForm from "./Partials/DeleteUserForm";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
@@ -28,7 +28,7 @@ export default function Edit({
     };
 
     return (
-        <AuthenticatedLayout
+        <AdminLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold  text-sm text-gray-500 leading-tight">
@@ -118,6 +118,6 @@ export default function Edit({
                     />
                 )}
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 }

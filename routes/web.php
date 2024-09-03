@@ -31,13 +31,13 @@ Route::middleware('auth')->group(function () {
 });
 
 //publications route
-Route::middleware('auth','role:author')->group(function () {
+Route::middleware('auth')->group(function () {
    Route::resource('publications',PublicationController::class);
 });
 
 
 //collaboration route
-Route::middleware('auth','role:author')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::resource('collaborations', CollaborationController::class)->only(['index','store']);
 });
 

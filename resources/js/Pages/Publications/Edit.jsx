@@ -44,6 +44,7 @@ const Edit = ({ auth, publication, collaborators }) => {
 
     const submit = (e) => {
         e.preventDefault();
+        console.log(data);
         post(route("publications.update", publication.id), {});
     };
 
@@ -71,7 +72,7 @@ const Edit = ({ auth, publication, collaborators }) => {
             <div className="bg-gray-300 py-6">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-4 text-gray-900">
+                        <div className="p-4 text-gray-900 w-[80%] m-auto">
                             <header className="flex justify-between">
                                 <div className="profile-heading flex flex-col">
                                     <p className="mt-1 text-sm text-blue-900">
@@ -91,7 +92,7 @@ const Edit = ({ auth, publication, collaborators }) => {
                             </header>
                             <form
                                 onSubmit={submit}
-                                className="mt-4 space-y-6"
+                                className="mt-4 space-y-6 "
                                 encType="multipart/form-data"
                             >
                                 <input
@@ -155,10 +156,11 @@ const Edit = ({ auth, publication, collaborators }) => {
                                             type="file"
                                             className="file-input file-input-bordered file-input-primary w-full max-w-xs !text-white"
                                             // className="file-input bg-slate-900/20 file-input-bordered file-input-primary outline outline-1 outline-blue-900"
+
                                             onChange={(e) =>
                                                 setData(
                                                     "file_path",
-                                                    e.target.files[0] // Set file object
+                                                    e.target.files[0]
                                                 )
                                             }
                                         />
@@ -167,6 +169,16 @@ const Edit = ({ auth, publication, collaborators }) => {
                                             message={errors.file_path}
                                         />
                                     </div>
+
+                                    {/* <div className="w-full">
+                                        <TextInput
+                                            id="file_path"
+                                            name="file_path"
+                                            className="mt-1 block w-full !pointer-events-auto outline outline-1 outline-blue-900 h-8 bg-slate-50 shadow-inner"
+                                            value={data.file_path}
+                                            isFocused
+                                        />
+                                    </div> */}
 
                                     <div className="w-full flex flex-col justify-end items-end">
                                         <div className="flex justify-start items-start">

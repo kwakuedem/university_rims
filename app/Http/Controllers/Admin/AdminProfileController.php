@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Qualification;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -15,11 +14,9 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class ProfileController extends Controller
+class AdminProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+    
     public function edit(Request $request): Response
     {
         $qualifications=Qualification::where('user_id',$request->user()->id)->get();
@@ -44,7 +41,7 @@ class ProfileController extends Controller
         'facebook'=>'string',
         'linkedin'=>'string',
         'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $request->user()->id,
-        // 'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'bio' => 'nullable|string|max:2000',
         'research_area'=>'string|max:400',
         'password' => 'nullable|string|min:8|confirmed',
@@ -53,16 +50,14 @@ class ProfileController extends Controller
     // Handle file upload if a new file is provided
     if ($request->hasFile('profile_photo')) {
     // Delete old file if it exists
-        if ($user->profile_photo) {
-            Storage::disk('public')->delete($user->profile_photo);
-        }
-        $fileName = $request->file('profile_photo')->getClientOriginalName();
-        $photo = $request->file('profile_photo')->storeAs('profile_photos', $fileName, 'public');
-        $validUserDate['profile_photo'] = $photo;
+    if ($user->profile_photo) {
+        Storage::disk('public')->delete($user->profile_photo);
+    }
+    $fileName = $request->file('profile_photo')->getClientOriginalName();
+    $photo = $request->file('profile_photo')->storeAs('profile_photos', $fileName, 'public');
     } else {
         // Keep the old file path if no new file is uploaded
-        
-        $validUserDate['profile_photo'] = $user->file_path;
+        $photo = $request->profile_photo;
     }
 
     // Check if email is changed and reset email verification if necessary
@@ -79,7 +74,18 @@ class ProfileController extends Controller
     }
 
     // Save the updated user information
-    $user->update($validUserDate);
+    $user->update([
+        'title'=>$validUserDate['title'],
+        'name'=> $validUserDate['name'],
+        'email' => $validUserDate['email'],
+        'bio' => $validUserDate['bio'],
+        'title' => $validUserDate['title'],
+        'research_area'=>$validUserDate['research_area'],
+        'whatsapp'=>$validUserDate['whatsapp'],
+        'facebook'=>$validUserDate['facebook'],
+        'linkedin'=>$validUserDate['linkedin'],
+        'profile_photo'=>$photo,
+    ]);
 
     return redirect()->back()->with('success', 'Profile updated successfully!');
         
