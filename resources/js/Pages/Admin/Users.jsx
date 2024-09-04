@@ -1,28 +1,86 @@
-import React from "react";
-import { Head, Link, useForm } from "@inertiajs/react";
+import React, { useState } from "react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "../../Layouts/AdminLayout ";
 
-const Users = ({ auth, users }) => {
-    const { post } = useForm();
+const Users = ({ auth, users, roles }) => {
+    const { data, setData, post, processing, errors, reset } = useForm({
+        user_id: "",
+        role: "",
+    });
 
-    const handleAssignRole = (userId, role) => {
+    const [message, setMessage] = useState(null);
+    const [messageType, setMessageType] = useState("");
+
+    const handleAssignRole = (userId, roleName) => {
+        setData({ ...data, user_id: userId, role: roleName });
         post(route("admin.assignRole"), {
-            user_id: userId,
-            role: role,
+            onSuccess: (page) => {
+                alert("Role assigned successfully.");
+            },
+            onError: (page) => {
+                alert("Failed to assign role.");
+            },
         });
     };
 
-    console.log(users);
-    const handleRevokeRole = (userId, role) => {
+    const handleRevokeRole = (userId, roleName) => {
+        setData({ ...data, user_id: userId, role: roleName });
         post(route("admin.revokeRole"), {
-            user_id: userId,
-            role: role,
+            onSuccess: (page) => {
+                alert(page.props.flash.success);
+                reset();
+            },
+            onError: (page) => {
+                alert(page.props.flash.error);
+            },
         });
     };
+
+    const renderRoleButtons = (user) => {
+        const userRoles = user.roles.map((role) => role.name);
+
+        return (
+            <div className="flex gap-2">
+                {roles.map((role) =>
+                    userRoles.includes(role) ? (
+                        <button
+                            key={`revoke-${role}`}
+                            onClick={() => handleRevokeRole(user.id, role)}
+                            className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                            disabled={processing}
+                        >
+                            {processing
+                                ? "Revoking..."
+                                : `Revoke ${
+                                      role.charAt(0).toUpperCase() +
+                                      role.slice(1)
+                                  }`}
+                        </button>
+                    ) : (
+                        <button
+                            key={`assign-${role}`}
+                            onClick={() => handleAssignRole(user.id, role)}
+                            className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                            disabled={processing}
+                        >
+                            {processing
+                                ? "Assigning..."
+                                : `Assign ${
+                                      role.charAt(0).toUpperCase() +
+                                      role.slice(1)
+                                  }`}
+                        </button>
+                    )
+                )}
+            </div>
+        );
+    };
+
+    const { flash } = usePage().props;
 
     return (
         <AdminLayout
-            user={auth}
+            user={auth.user}
             header={
                 <h2 className="font-semibold text-sm text-gray-500 leading-tight">
                     Users
@@ -32,6 +90,16 @@ const Users = ({ auth, users }) => {
             <Head title="Users" />
 
             <div className="py-12">
+                {/* {flash.success && (
+                    <div className="bg-green-500 text-white p-4 rounded mb-4">
+                        {flash.success}
+                    </div>
+                )}
+                {flash.error && (
+                    <div className="bg-red-500 text-white p-4 rounded mb-4">
+                        {flash.error}
+                    </div>
+                )} */}
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 h-screen overflow-hidden">
                     <div className="bg-white shadow-sm sm:rounded-lg max-h-full flex flex-col">
                         <div className="p-6 text-gray-900 flex-grow">
@@ -54,7 +122,7 @@ const Users = ({ auth, users }) => {
                                             <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">
                                                 Roles
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider flex justify-center">
                                                 Actions
                                             </th>
                                         </tr>
@@ -69,59 +137,14 @@ const Users = ({ auth, users }) => {
                                                     {user.email}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {user.roles.map(
-                                                        (role) => role.name
-                                                    )}
+                                                    {user.roles
+                                                        .map(
+                                                            (role) => role.name
+                                                        )
+                                                        .join(", ")}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    <div className="flex gap-2">
-                                                        {[
-                                                            "admin",
-                                                            "author",
-                                                        ].map((role) => (
-                                                            <button
-                                                                key={role}
-                                                                onClick={() =>
-                                                                    handleAssignRole(
-                                                                        user.id,
-                                                                        role
-                                                                    )
-                                                                }
-                                                                className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-                                                            >
-                                                                Assign{" "}
-                                                                {role
-                                                                    .charAt(0)
-                                                                    .toUpperCase() +
-                                                                    role.slice(
-                                                                        1
-                                                                    )}
-                                                            </button>
-                                                        ))}
-                                                        {[
-                                                            "admin",
-                                                            "author",
-                                                        ].map((role) => (
-                                                            <button
-                                                                key={`revoke-${role}`}
-                                                                onClick={() =>
-                                                                    handleRevokeRole(
-                                                                        user.id,
-                                                                        role
-                                                                    )
-                                                                }
-                                                                className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                                                            >
-                                                                Revoke{" "}
-                                                                {role
-                                                                    .charAt(0)
-                                                                    .toUpperCase() +
-                                                                    role.slice(
-                                                                        1
-                                                                    )}
-                                                            </button>
-                                                        ))}
-                                                    </div>
+                                                <td className="px-6 py-4 whitespace-nowrap w-full flex text-sm font-medium items-end justify-end">
+                                                    {renderRoleButtons(user)}
                                                 </td>
                                             </tr>
                                         ))}

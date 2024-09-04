@@ -44,8 +44,14 @@ const Edit = ({ auth, publication, collaborators }) => {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data);
-        post(route("publications.update", publication.id), {});
+        post(route("publications.update", publication.id), {
+            onSuccess: (page) => {
+                alert("Publication Updated successfully.");
+            },
+            onError: (page) => {
+                alert("Failed to Update Publication!");
+            },
+        });
     };
 
     return (

@@ -30,6 +30,16 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function editadmin(Request $request): Response
+    {
+        $qualifications=Qualification::where('user_id',$request->user()->id)->get();
+        return Inertia::render('Admin/Profile/Edit', [
+            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'status' => session('status'),
+            'qualifications'=>$qualifications,
+        ]);
+    }
+
     /**
      * Update the user's profile information.
      */
@@ -46,7 +56,7 @@ class ProfileController extends Controller
         'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $request->user()->id,
         // 'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'bio' => 'nullable|string|max:2000',
-        'research_area'=>'string|max:400',
+        'research_area'=>'nullable|string|max:400',
         'password' => 'nullable|string|min:8|confirmed',
     ]);
 
@@ -61,7 +71,6 @@ class ProfileController extends Controller
         $validUserDate['profile_photo'] = $photo;
     } else {
         // Keep the old file path if no new file is uploaded
-        
         $validUserDate['profile_photo'] = $user->file_path;
     }
 

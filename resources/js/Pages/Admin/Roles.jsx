@@ -5,7 +5,7 @@ import AdminLayout from "@/Layouts/AdminLayout ";
 const Roles = ({ auth, roles }) => {
     return (
         <AdminLayout
-            user={auth}
+            user={auth.user}
             header={
                 <h2 className="font-semibold text-sm text-gray-500 leading-tight">
                     User Roles
@@ -16,7 +16,7 @@ const Roles = ({ auth, roles }) => {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 h-screen overflow-hidden">
-                    <div className="bg-white shadow-sm sm:rounded-lg max-h-full flex flex-col">
+                    <div className="bg-white shadow-sm sm:rounded-lg max-h-full flex flex-col w-[80%] m-auto">
                         <div className="p-6 text-gray-900 flex-grow">
                             <h2 className="font-semibold text-xl text-gray-800 leading-tight mb-4">
                                 Manage Roles

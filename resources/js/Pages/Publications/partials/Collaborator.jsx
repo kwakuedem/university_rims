@@ -13,6 +13,7 @@ function Collaborator({
                 id: c.id || "",
                 name: c.name || "",
             })) || [],
+        method: "_post",
     });
 
     const addCollaborator = () => {
@@ -35,7 +36,14 @@ function Collaborator({
 
     const submitCollaborator = (e) => {
         e.preventDefault();
-        post(route("collaborations.store", publication.id));
+        post(route("collaborations.store", publication.id), {
+            onSuccess: (page) => {
+                alert("Collaborator(s) Added Successfully.");
+            },
+            onError: (page) => {
+                alert("Ooops! Failed to Add Collaborator(s).");
+            },
+        });
 
         if (Error_message) {
             setIsModalOpen(true);

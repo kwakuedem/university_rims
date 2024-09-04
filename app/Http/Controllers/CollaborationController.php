@@ -23,6 +23,7 @@ class CollaborationController extends Controller
     //add  collaborators to publication
  public function store(Request $request, Publication $publication)
 {
+  
     // Validate the request
     $request->validate([
         'collaborators' => 'array',
@@ -38,6 +39,7 @@ class CollaborationController extends Controller
                         ->exists();
 
             if (!$exists) {
+                dd('external ',$publication->id, $collaborator['name']);
                 ExternalUserCollaboration::create([
                     'publication_id' => $publication->id,
                     'name' => $collaborator['name']
@@ -52,17 +54,16 @@ class CollaborationController extends Controller
                         ->exists();
 
             if (!$exists) {
+                dd('internal',$publication->id);
                 Collaboration::create([
                     'publication_id' => $publication->id,
                     'collaborator_id' => $collaborator['id']
-                ]);}
-            // }else{
-            //     return inertia('Publications/Edit', ['error' => $collaborator['name'] .' is Already a Collaborator!']);
-            // }
+                ]);
+            }
         }
     }
 
-    return inertia('Publications/Edit', ['success' => 'Collaborators updated successfully!']);
+    return redirect()->route('publications.index');
 }
 
 }

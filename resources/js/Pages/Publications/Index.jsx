@@ -42,7 +42,14 @@ const Index = ({ auth, publications }) => {
     };
 
     const deletePublication = (publication_id) => {
-        destroy(route("publications.destroy", publication_id));
+        destroy(route("publications.destroy", publication_id), {
+            onSuccess: (page) => {
+                alert("Publication deleted Successfully.");
+            },
+            onError: (page) => {
+                alert("Failed to delete Publication.");
+            },
+        });
     };
 
     const filteredPublications = publications.filter((publication) => {

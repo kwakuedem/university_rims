@@ -54,6 +54,9 @@ Route::middleware(['auth', 'verified','role:admin'])->prefix('admin')->name('adm
     Route::get('/roles', [AdminController::class, 'roles'])->name('roles');
     Route::post('/assign-role', [AdminController::class, 'assignRole'])->name('assignRole');
     Route::post('/revoke-role', [AdminController::class, 'revokeRole'])->name('revokeRole'); 
+    Route::get('/profile', [ProfileController::class, 'editadmin'])->name('profile.editadmin');
+    Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 

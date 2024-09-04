@@ -94,7 +94,7 @@ class AdminPublicationController extends Controller
 
     //get publication edit page
     public function edit(Publication $publication){
-        $collaborators=User::all();
+        $collaborators=User::where('id', '!=', Auth::id())->where('name','!=','admin')->get();
          return inertia('Admin/Publications/Edit',compact('publication','collaborators'));
     }
 
@@ -105,38 +105,34 @@ class AdminPublicationController extends Controller
     
         // Validate the request
         $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'abstract' => 'required|string',
-            'file_path' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,odp,odt|max:2048',
-            'status'=>'required|string|in:published,unpublished',
-        ]);
+        'title' => 'required|string|max:255',
+        'abstract' => 'required|string',
+        'status' => 'required|string|in:published,unpublished',
+    ]);
 
-        // Handle file upload if a new file is provided
-        if ($request->hasFile('file_path')) {
-        // Delete old file if it exists
-            if ($publication->file_path) {
-                Storage::disk('public')->delete($publication->file_path);
-            }
-            $fileName = $request->file('file_path')->getClientOriginalName();
-            $file = $request->file('file_path')->storeAs('research_files', $fileName, 'public');
-        } else {
-            // Keep the old file path if no new file is uploaded
-            $file = $publication->file_path;
+    // Check if 'file_path' is present and it's a file, not a string
+    if ($request->hasFile('file_path')) {
+        // Handle file upload
+        if ($publication->file_path) {
+            Storage::disk('public')->delete($publication->file_path);
         }
+        $fileName = $request->file('file_path')->getClientOriginalName();
+        $file = $request->file('file_path')->storeAs('research_files', $fileName, 'public');
+        $data['file_path'] = $file;
+    } else {
+        // Keep the old file path if no new file is uploaded
+        $data['file_path'] = $publication->file_path;
+    }
 
-        // Update the data
-        $publication->update([
-            'title' => $data['title'],
-            'abstract' => $data['abstract'],
-            'file_path' => $file,
-            'status'=>$data['status']
-        ]);
+    // Update the publication
+    $publication->update($data);
 
-        $user = Auth::user();
+    // Return response...
+
+     $user = Auth::user();
         $success= 'Publication Updated Successfully.';
             // Get research works owned by the user or where the user is a collaborator
-        $publications = Publication::all()->latest();
-              
+          $publications = Publication::with('author:id,name')->get();
         return inertia('Admin/Publications/Index',compact('success','publications'));
     }
 

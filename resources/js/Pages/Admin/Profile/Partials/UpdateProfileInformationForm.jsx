@@ -36,7 +36,14 @@ export default function UpdateProfileInformation({
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("profile.update", user.id));
+        post(route("admin.profile.update", user.id), {
+            onSuccess: (page) => {
+                alert("Profile Updated Successfully.");
+            },
+            onError: (page) => {
+                alert("Ooops! Failed to Updated profile.");
+            },
+        });
     };
 
     const [showMessage, setShowMessage] = useState(false);
@@ -128,7 +135,6 @@ export default function UpdateProfileInformation({
                             className="mt-1 block w-full h-8"
                             value={data.title}
                             onChange={(e) => setData("title", e.target.value)}
-                            required
                             autoComplete="title"
                         />
 
@@ -176,7 +182,6 @@ export default function UpdateProfileInformation({
                             className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
                             value={data.bio}
                             onChange={(e) => setData("bio", e.target.value)}
-                            required
                         />
 
                         <InputError className="mt-2" message={errors.bio} />
@@ -196,7 +201,6 @@ export default function UpdateProfileInformation({
                             onChange={(e) =>
                                 setData("research_area", e.target.value)
                             }
-                            required
                         />
 
                         <InputError
@@ -217,7 +221,6 @@ export default function UpdateProfileInformation({
                             onChange={(e) =>
                                 setData("whatsapp", e.target.value)
                             }
-                            required
                             autoComplete="What'sApp"
                         />
 
@@ -233,7 +236,6 @@ export default function UpdateProfileInformation({
                             onChange={(e) =>
                                 setData("facebook", e.target.value)
                             }
-                            required
                             autoComplete="facebook"
                         />
 
@@ -252,7 +254,6 @@ export default function UpdateProfileInformation({
                             onChange={(e) =>
                                 setData("linkedin", e.target.value)
                             }
-                            required
                             autoComplete="linkedin"
                         />
 

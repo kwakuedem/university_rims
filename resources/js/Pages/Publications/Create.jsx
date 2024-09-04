@@ -18,6 +18,12 @@ const Create = ({ auth }) => {
         e.preventDefault();
         post(route("publications.store"), {
             forceFormData: true,
+            onSuccess: (page) => {
+                alert("Publication Created Successfully.");
+            },
+            onError: (page) => {
+                alert("Failed to Create Publication.");
+            },
         });
     };
 

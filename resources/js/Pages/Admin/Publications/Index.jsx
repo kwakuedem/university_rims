@@ -61,7 +61,7 @@ const Index = ({ auth, publications }) => {
     };
 
     return (
-        <AuthenticatedLayout
+        <AdminLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-sm text-gray-500 leading-tight">
@@ -226,7 +226,7 @@ const Index = ({ auth, publications }) => {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 };
 

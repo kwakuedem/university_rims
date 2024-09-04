@@ -22,12 +22,14 @@ class AdminCollaborationController extends Controller
    //add  collaborators to publication
  public function store(Request $request, Publication $publication)
 {
+   
     // Validate the request
     $request->validate([
         'collaborators' => 'array',
         'collaborators.*.id' => 'nullable|exists:users,id',
         'collaborators.*.name' => 'nullable|string',
     ]);
+
 
     foreach ($request->input('collaborators', []) as $collaborator) {
         if ($collaborator['name'] && $collaborator['name'] !== null) {
@@ -37,7 +39,9 @@ class AdminCollaborationController extends Controller
                         ->exists();
 
             if (!$exists) {
+                
                 ExternalUserCollaboration::create([
+                    
                     'publication_id' => $publication->id,
                     'name' => $collaborator['name']
                 ]);
@@ -51,6 +55,7 @@ class AdminCollaborationController extends Controller
                         ->exists();
 
             if (!$exists) {
+                
                 Collaboration::create([
                     'publication_id' => $publication->id,
                     'collaborator_id' => $collaborator['id']
