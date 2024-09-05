@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class DepartmentController extends Controller
 {
@@ -13,7 +15,8 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        //
+        $departments=Department::select('id','name','description')->latest()->get();
+        return Inertia::render('Admin/Departments/Index',compact('departments'));
     }
 
     /**
@@ -21,7 +24,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Admin/Departments/Create');
     }
 
     /**
@@ -29,7 +32,21 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $data=$request->validate([
+            'name'=>'required|string|unique:departments,name|max:50',
+            'description'=>'nullable|string|max:150'
+        ]);
+// 'dd(!$data['description'] || $data['description']==" ");'
+        if(!$data['description'] || $data['description']==" "){
+            $data['description']="";
+        }
+
+        Department::create([
+            'name'=>$data['name'],
+            'description'=>$data['description']
+        ]);
+        return redirect()->route('admin.departments.index');
     }
 
     /**
@@ -37,7 +54,7 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        //
+        return inertia('Admin/Departments/Show',compact('department'));
     }
 
     /**
@@ -45,7 +62,7 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        //
+        return inertia('Admin/Departments/Edit',compact('department'));
     }
 
     /**
@@ -53,7 +70,19 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, Department $department)
     {
-        //
+        $data=$request->validate([
+           'name'=>'required|string|max:50',
+            'description'=>'nullable|string|max:150'
+        ]);
+         if(!$data['description'] || $data['description']==" "){
+            $data['description']="";
+        }
+        $department->update([
+            $department->name=$data['name'],
+            $department->description=$data['description']
+        ]);
+
+        return redirect()->route('admin.departments.index');
     }
 
     /**
@@ -61,6 +90,7 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
-        //
+        $department->delete();
+        return redirect()->back();
     }
 }

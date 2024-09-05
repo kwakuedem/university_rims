@@ -279,9 +279,7 @@ const Dashboard = ({
                                                 </p>
                                             </Link>
                                             <Link
-                                                href={route(
-                                                    "admin.publications.index"
-                                                )}
+                                                href={route("admin.users")}
                                                 className="flex flex-col py-4 border-b-4 w-full rounded-b-md border-green-900 items-center justify-center  shadow-md shadow-blue-600/70"
                                             >
                                                 <p className="text-lg font-extrabold text-green-900">

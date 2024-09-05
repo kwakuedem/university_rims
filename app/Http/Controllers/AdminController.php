@@ -19,7 +19,7 @@ class AdminController extends Controller
     public function users()
     {
         // $users = User::with('roles')->get();
-       $users = User::with('roles')->get();
+       $users = User::with('roles')->where('name','!=','Developer')->get();
       $roles = Role::where('name', '!=', 'developer')->pluck('name');
 
         return Inertia::render('Admin/Users', compact('users','roles'));

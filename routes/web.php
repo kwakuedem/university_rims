@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminCollaborationController;
 use App\Http\Controllers\Admin\AdminPublicationController;
+use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CollaborationController;
@@ -51,6 +52,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified','role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/',[AdminPublicationController::class,'dashboard'])->name('dashboard');
     Route::resource('/publications',AdminPublicationController::class);
+    Route::resource('/departments',DepartmentController::class);
     Route::resource('/collaborations',AdminCollaborationController::class)->except('edit','create','destroy','update','show');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::get('/roles', [AdminController::class, 'roles'])->name('roles');

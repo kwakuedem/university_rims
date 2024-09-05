@@ -90,16 +90,6 @@ const Users = ({ auth, users, roles }) => {
             <Head title="Users" />
 
             <div className="py-12">
-                {/* {flash.success && (
-                    <div className="bg-green-500 text-white p-4 rounded mb-4">
-                        {flash.success}
-                    </div>
-                )}
-                {flash.error && (
-                    <div className="bg-red-500 text-white p-4 rounded mb-4">
-                        {flash.error}
-                    </div>
-                )} */}
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 h-screen overflow-hidden">
                     <div className="bg-white shadow-sm sm:rounded-lg max-h-full flex flex-col">
                         <div className="p-6 text-gray-900 flex-grow">
@@ -130,20 +120,20 @@ const Users = ({ auth, users, roles }) => {
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {users.map((user) => (
                                             <tr key={user.id}>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                <td className="px-6 py-1 whitespace-nowrap text-sm font-medium text-gray-900">
                                                     {user.name}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <td className="px-6 py-1 whitespace-nowrap text-sm text-gray-500">
                                                     {user.email}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <td className="px-6 py-1 whitespace-nowrap text-sm text-gray-500">
                                                     {user.roles
                                                         .map(
                                                             (role) => role.name
                                                         )
                                                         .join(", ")}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap w-full flex text-sm font-medium items-end justify-end">
+                                                <td className="px-6 py-1 whitespace-nowrap w-full flex text-sm font-medium items-end justify-end">
                                                     {renderRoleButtons(user)}
                                                 </td>
                                             </tr>

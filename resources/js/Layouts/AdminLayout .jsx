@@ -15,8 +15,6 @@ export default function Authenticated({ user, header, children }) {
         return `${window.location.origin}/storage/${path}`;
     };
 
-    const { hasRole, hasAnyRole } = useAuthorizations(user.roles);
-
     return (
         <div className="p-3 overflow-hidden h-screen bg-gradient-to-br from-blue-900/90 via-purple-500 to-red-700/80">
             <div className="h-full flex overflow-hidden ring-2 ring-white shadow-lg shadow-red-400  rounded-md 2xl:w-[90%] m-auto">
@@ -60,6 +58,16 @@ export default function Authenticated({ user, header, children }) {
                                         className="!text-sm !font-bold !text-white mt-5 "
                                     >
                                         Collaboration
+                                    </NavLink>
+
+                                    <NavLink
+                                        href={route("admin.departments.index")}
+                                        active={route().current(
+                                            "admin.departments.index"
+                                        )}
+                                        className="!text-sm !font-bold !text-white mt-5 "
+                                    >
+                                        Departments
                                     </NavLink>
 
                                     <div className="flex items-center justify-center mt-4">
