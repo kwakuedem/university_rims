@@ -40,7 +40,7 @@ const Create = ({ auth }) => {
 
             <div className="py-10">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg lg:w-[80%] m-auto lg:px-3">
                         <div className="p-4 text-gray-900">
                             <header className="flex justify-between">
                                 <div className="profile-heading flex flex-col">

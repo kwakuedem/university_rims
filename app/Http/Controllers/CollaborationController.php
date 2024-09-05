@@ -21,9 +21,12 @@ class CollaborationController extends Controller
     }
 
     //add  collaborators to publication
- public function store(Request $request, Publication $publication)
+
+public function store(Request $request, Publication $publication)
 {
-  
+    // // Debugging to ensure the correct Publication object is being passed
+    // dd($publication); // Remove this line once you're sure it's correct
+
     // Validate the request
     $request->validate([
         'collaborators' => 'array',
@@ -32,38 +35,43 @@ class CollaborationController extends Controller
     ]);
 
     foreach ($request->input('collaborators', []) as $collaborator) {
-        if ($collaborator['name'] && $collaborator['name'] !== null) {
+        // If the collaborator has a name but no ID, it's an external collaborator
+        if ($collaborator['name'] && !$collaborator['id']) {
             // Check if the external collaborator is already added
             $exists = ExternalUserCollaboration::where('publication_id', $publication->id)
                         ->where('name', $collaborator['name'])
                         ->exists();
 
             if (!$exists) {
-                dd('external ',$publication->id, $collaborator['name']);
+                // Create a new external collaborator entry
                 ExternalUserCollaboration::create([
                     'publication_id' => $publication->id,
-                    'name' => $collaborator['name']
+                    'name' => $collaborator['name'],
                 ]);
-            }else{
-                return inertia('Publications/Edit', ['error' => $collaborator['name'] .' is Already a Collaborator!']);
+            } else {
+                // If the collaborator already exists, redirect back with an error message
+                return redirect()->back()->withErrors(['error' => $collaborator['name'] . ' is already a collaborator!']);
             }
-        } else {
+        } else if ($collaborator['id']) {
+            // If the collaborator has an ID, it's an internal collaborator
             // Check if the collaborator is already added
             $exists = Collaboration::where('publication_id', $publication->id)
                         ->where('collaborator_id', $collaborator['id'])
                         ->exists();
 
             if (!$exists) {
-                dd('internal',$publication->id);
+                // Create a new internal collaborator entry
                 Collaboration::create([
                     'publication_id' => $publication->id,
-                    'collaborator_id' => $collaborator['id']
+                    'collaborator_id' => $collaborator['id'],
                 ]);
             }
         }
     }
 
-    return redirect()->route('publications.index');
+    // Redirect to the publications index with a success message
+    return redirect()->route('publications.index')->with('success', 'Collaborators added successfully.');
 }
+
 
 }

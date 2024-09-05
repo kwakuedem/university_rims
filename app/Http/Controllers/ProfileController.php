@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Department;
 use App\Models\Qualification;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -22,11 +23,18 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $userr=User::with('department')->find($request->user()->id);
         $qualifications=Qualification::where('user_id',$request->user()->id)->get();
+        $departments=Department::where('name','!=','administrator')->get();
+      
+        // $user_department=Department::where('user_id',$request->user()->id)->get();
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'qualifications'=>$qualifications,
+            'departments'=>$departments,
+            'userr'=>$userr
+            // 'user_department'=>$user_department
         ]);
     }
 
@@ -50,9 +58,10 @@ class ProfileController extends Controller
     $validUserDate=$request->validate([
         'title' => 'nullable|string|max:255',
         'name' => 'required|string|max:255',
-        'whatsapp'=>'string|max:15',
-        'facebook'=>'string',
-        'linkedin'=>'string',
+        'whatsapp'=>'nullable|string|max:15',
+        'facebook'=>'nullable|string',
+        'linkedin'=>'nullable|string',
+        'department_id'=>'required|exists:departments,id',
         'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $request->user()->id,
         // 'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'bio' => 'nullable|string|max:2000',

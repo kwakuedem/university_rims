@@ -7,6 +7,8 @@ use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
 class PublicationController extends Controller
@@ -19,8 +21,13 @@ class PublicationController extends Controller
         $query->where('collaborator_id',Auth::User()->id);
     })->get();
 
+    $notcollaborations = Publication::where('author_id', Auth::user()->id)  // Publications owned by the logged-in user
+    ->whereDoesntHave('collaborations')  // No collaborators
+    ->get();
+
     $numberOfResearch=$publications->count();
     $numberOfCollaborations=$collaborations->count();
+    $numberOfNoCollaborations=$notcollaborations->count();
 
 
    // Dynamic statistics for publications per month
@@ -28,6 +35,7 @@ class PublicationController extends Controller
         'years' => [],
         'publications' => [],
         'collaborations' => [],
+        'notcollaborations' => [],
     ];
 
     $years = Publication::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year')->pluck('year');
@@ -42,11 +50,17 @@ class PublicationController extends Controller
             $query->where('collaborator_id', Auth::user()->id);
         })->whereYear('created_at', $year)
         ->count();
+
+         $statistics['notcollaborations'][] = Publication::where('author_id', Auth::user()->id)  // Publications owned by the user
+    ->whereDoesntHave('collaborations')  // No collaborators
+    ->whereYear('created_at', $year)  // Filter by year
+    ->count();
+
     }
 
 
 
-    return inertia('Dashboard', compact('statistics','numberOfResearch','numberOfCollaborations'));
+    return inertia('Dashboard', compact('statistics','numberOfResearch','numberOfNoCollaborations','numberOfCollaborations'));
 }
 
      // Get all research work
@@ -92,13 +106,9 @@ class PublicationController extends Controller
             'author_id' => Auth::user()->id
         ]);
 
-        // Get research works owned by the user or where the user is a collaborator
-        $publications = Publication::where('author_id', Auth::user()->id)
-            ->get();
-        $success= 'Publication Created Successfully.';
-
+        
         // Return response (for example, redirect or Inertia response)
-        return inertia('Publications/Index',compact('success', 'publications'));
+        return redirect()->route('publications.index');
     }
 
 
@@ -139,10 +149,6 @@ public function update(Request $request, Publication $publication)
     // Return response...
 
      $user = Auth::user();
-        $success= 'Publication Updated Successfully.';
-            // Get research works owned by the user or where the user is a collaborator
-            $publications = Publication::with('author:id,name')->where('author_id', $user->id)
-                ->get();
         // return inertia('Publications/Index',compact('success','publications'));
         return redirect()->route('publications.index');
 }
@@ -172,19 +178,33 @@ public function update(Request $request, Publication $publication)
     }
 
 
-// function that handles document download
-public function download($publicationName)
+
+
+public function download(Publication $publication)
 {
-    $publicationName=Publication::where('title', 'LIKE', "%{$publicationName}%")->firstOrFail();
+    // Log the request
+    Log::info('Download requested for publication ID: ' . $publication->id);
 
-   
+    // Check if the file exists
+    if ($publication->file_path && Storage::disk('public')->exists($publication->file_path)) {
+        Log::info('File exists: ' . $publication->file_path);
 
-    if ($publicationName->file_path && Storage::disk('public')->exists($publicationName->file_path)) {
-         $publicationName->increamentDownloads();
-        return Storage::disk('public')->download($publicationName->file_path);
+        // Increment the download count
+        $publication->incrementDownloads();
+
+        // Generate the full file path
+        $filePath = storage_path('app/public/' . $publication->file_path);
+
+        // Return the file as a download
+        return response()->download($filePath, $publication->title . '.pdf');
     }
+
+    // Log an error if the file is not found
+    Log::error('File not found for publication ID: ' . $publication->id);
     return redirect()->back()->with('error', 'File not found.');
 }
+
+
 
 
 }

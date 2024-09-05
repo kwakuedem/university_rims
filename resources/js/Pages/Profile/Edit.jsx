@@ -12,6 +12,9 @@ export default function Edit({
     auth,
     mustVerifyEmail,
     status,
+    // user_department,
+    userr,
+    departments,
     qualifications,
 }) {
     const { delete: destroy } = useForm({});
@@ -19,6 +22,8 @@ export default function Edit({
     const deleteQualification = (publication_id) => {
         destroy(route("qualifications.destroy", publication_id));
     };
+
+    console.log(userr);
 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,6 +49,9 @@ export default function Edit({
                         <UpdateProfileInformationForm
                             mustVerifyEmail={mustVerifyEmail}
                             status={status}
+                            departments={departments}
+                            loggedinuser={userr}
+                            // user_department={user_department}
                             className="w-full "
                         />
                     </div>

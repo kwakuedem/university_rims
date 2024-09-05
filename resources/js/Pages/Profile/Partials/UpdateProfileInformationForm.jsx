@@ -6,18 +6,17 @@ import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
 import { useEffect, useRef, useState } from "react";
 import { FaFacebook, FaWhatsapp, FaLinkedin } from "react-icons/fa";
-import QualificationForm from "./Qualification";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
     status,
-
+    departments,
+    loggedinuser,
     className = "",
 }) {
     const user = usePage().props.auth.user;
     const message = usePage().props.success;
-    const { props } = usePage();
-    const { success } = props;
+    const { success } = usePage().props;
 
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
@@ -29,9 +28,11 @@ export default function UpdateProfileInformation({
             research_area: user.research_area ?? "",
             whatsapp: user.whatsapp ?? "",
             linkedin: user.linkedin ?? "",
+            department_id: loggedinuser.department?.id ?? "",
             facebook: user.facebook ?? "",
             _method: "patch",
         });
+
     const photoRef = useRef(data.profile_photo);
 
     const submit = (e) => {
@@ -41,7 +42,7 @@ export default function UpdateProfileInformation({
                 alert("Profile Updated Successfully.");
             },
             onError: (page) => {
-                alert("Ooops! Failed to Updated profile.");
+                alert("Ooops! Failed to Update profile.");
             },
         });
     };
@@ -49,7 +50,7 @@ export default function UpdateProfileInformation({
     const [showMessage, setShowMessage] = useState(false);
 
     useEffect(() => {
-        if (message && message) {
+        if (message) {
             setShowMessage(true);
             setTimeout(() => {
                 setShowMessage(false);
@@ -64,7 +65,7 @@ export default function UpdateProfileInformation({
     return (
         <section className={className}>
             {showMessage && (
-                <span className="bg-green-500 z-20 absolute top-6  rounded-md text-white right-10 p-3">
+                <span className="bg-green-500 z-20 absolute top-6 rounded-md text-white right-10 p-3">
                     {message}
                 </span>
             )}
@@ -88,7 +89,7 @@ export default function UpdateProfileInformation({
                 </div>
 
                 <div className="">
-                    <div className="ring-primary ring-offset-base-100 w-24  rounded-full ring ring-offset-2">
+                    <div className="ring-primary ring-offset-base-100 w-24 rounded-full ring ring-offset-2">
                         <img
                             className="rounded-full"
                             src={getAssetUrl(user.profile_photo)}
@@ -103,7 +104,7 @@ export default function UpdateProfileInformation({
                 className="mt-2 space-y-6"
                 encType="multipart/form-data"
             >
-                <div className="flex items-center gap-20">
+                <div className="flex items-center justify-between gap-20">
                     <div className="image-upload w-full">
                         <InputLabel
                             htmlFor="profile_photo"
@@ -118,18 +119,46 @@ export default function UpdateProfileInformation({
                                 setData("profile_photo", e.target.files[0])
                             }
                         />
-
                         <InputError
                             className="mt-2"
                             message={errors.profile_photo}
                             hidden
                         />
                     </div>
+
+                    <div className="w-full flex flex-col justify-end items-end">
+                        <div className="flex justify-start items-start">
+                            <InputLabel
+                                value="Department"
+                                className="!text-blue-900 py-1"
+                            />
+                        </div>
+                        <select
+                            name="department_id"
+                            value={data.department_id}
+                            onChange={(e) =>
+                                setData("department_id", e.target.value)
+                            }
+                            className="select select-primary select-md w-full max-w-xs !bg-orange-100 text-green-600"
+                        >
+                            <option value="" disabled>
+                                Select a Department
+                            </option>
+                            {departments &&
+                                departments.map((department) => (
+                                    <option
+                                        key={department.id}
+                                        value={department.id}
+                                    >
+                                        {department.name}
+                                    </option>
+                                ))}
+                        </select>
+                    </div>
                 </div>
                 <div className="flex gap-4">
                     <div className="w-full">
                         <InputLabel htmlFor="title" value="Title" />
-
                         <TextInput
                             id="title"
                             className="mt-1 block w-full h-8"
@@ -137,12 +166,10 @@ export default function UpdateProfileInformation({
                             onChange={(e) => setData("title", e.target.value)}
                             autoComplete="title"
                         />
-
                         <InputError className="mt-2" message={errors.title} />
                     </div>
                     <div className="w-full">
                         <InputLabel htmlFor="name" value="Name" />
-
                         <TextInput
                             id="name"
                             className="mt-1 block w-full h-8"
@@ -151,12 +178,10 @@ export default function UpdateProfileInformation({
                             required
                             autoComplete="name"
                         />
-
                         <InputError className="mt-2" message={errors.name} />
                     </div>
                     <div className="w-full">
                         <InputLabel htmlFor="email" value="Email" />
-
                         <TextInput
                             id="email"
                             type="email"
@@ -166,7 +191,6 @@ export default function UpdateProfileInformation({
                             required
                             autoComplete="username"
                         />
-
                         <InputError className="mt-2" message={errors.email} />
                     </div>
                 </div>
@@ -174,7 +198,6 @@ export default function UpdateProfileInformation({
                 <div className="flex flex-col lg:flex-row w-full gap-3">
                     <div className="w-full">
                         <InputLabel htmlFor="bio" value="Biography" />
-
                         <textarea
                             cols={10}
                             rows={5}
@@ -183,15 +206,13 @@ export default function UpdateProfileInformation({
                             value={data.bio}
                             onChange={(e) => setData("bio", e.target.value)}
                         />
-
                         <InputError className="mt-2" message={errors.bio} />
                     </div>
                     <div className="w-full">
                         <InputLabel
-                            htmlFor="research_area "
-                            value="Research Areas (please seperate areas with comma . eg AI, Machine learning)"
+                            htmlFor="research_area"
+                            value="Research Areas (please separate areas with comma, e.g., AI, Machine learning)"
                         />
-
                         <textarea
                             cols={10}
                             rows={5}
@@ -202,7 +223,6 @@ export default function UpdateProfileInformation({
                                 setData("research_area", e.target.value)
                             }
                         />
-
                         <InputError
                             className="mt-2"
                             message={errors.research_area}
@@ -212,25 +232,25 @@ export default function UpdateProfileInformation({
 
                 <div className="flex gap-4">
                     <div className="w-full flex gap-3 items-center">
-                        {/* <InputLabel htmlFor="What'sApp" value="What'sApp" /> */}
                         <FaWhatsapp className="text-green-600 text-2xl" />
                         <TextInput
-                            id="What'sApp"
+                            id="whatsapp"
                             className="mt-1 block w-full h-8"
                             value={data.whatsapp}
                             onChange={(e) =>
                                 setData("whatsapp", e.target.value)
                             }
-                            autoComplete="What'sApp"
+                            autoComplete="whatsapp"
                         />
-
-                        <InputError className="mt-2" message={errors.title} />
+                        <InputError
+                            className="mt-2"
+                            message={errors.whatsapp}
+                        />
                     </div>
                     <div className="w-full flex gap-3 items-center">
-                        {/* <InputLabel htmlFor="Face Book" value="Facebook" /> */}
                         <FaFacebook className="text-blue-600 text-2xl" />
                         <TextInput
-                            id="Facebook"
+                            id="facebook"
                             className="mt-1 block w-full h-8"
                             value={data.facebook}
                             onChange={(e) =>
@@ -238,14 +258,12 @@ export default function UpdateProfileInformation({
                             }
                             autoComplete="facebook"
                         />
-
                         <InputError
                             className="mt-2"
                             message={errors.facebook}
                         />
                     </div>
-                    <div className="w-full flex gap-3  items-center">
-                        {/* <InputLabel htmlFor="Linkedin" value="Linkedin Link" /> */}
+                    <div className="w-full flex gap-3 items-center">
                         <FaLinkedin className="text-blue-600 text-2xl" />
                         <TextInput
                             id="linkedin"
@@ -256,7 +274,6 @@ export default function UpdateProfileInformation({
                             }
                             autoComplete="linkedin"
                         />
-
                         <InputError
                             className="mt-2"
                             message={errors.linkedin}
@@ -288,19 +305,13 @@ export default function UpdateProfileInformation({
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton
-                        disabled={processing}
-                        className="!w-[20%] items-center justify-center"
-                    >
-                        Save Changes
-                    </PrimaryButton>
+                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
-                        enter="transition ease-in-out"
                         enterFrom="opacity-0"
-                        leave="transition ease-in-out"
                         leaveTo="opacity-0"
+                        className="transition ease-in-out"
                     >
                         <p className="text-sm text-gray-600">Saved.</p>
                     </Transition>

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('profile_photo')->nullable();
             $table->text('bio')->nullable();
             $table->text('research_area')->nullable();
+            $table->foreignId('department_id')->default(1)->constrained('departments')->onDelete('cascade');
             $table->string('title')->nullable();
             $table->string('linkedin')->nullable();
             $table->string('whatsapp')->nullable();

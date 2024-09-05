@@ -26,11 +26,11 @@ class Publication extends Model
     }
 
     //handles download count
-    public function increamentDownloads(){
-        $this->downloads +=1;
-        $this->save();
-    }
-
+  public function incrementDownloads()
+{
+    $this->downloads += 1;
+    $this->save();
+}
     public function collaborations()
     {
         return $this->belongsToMany(User::class, 'collaborations', 'publication_id', 'collaborator_id');

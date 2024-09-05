@@ -6,29 +6,57 @@ use App\Models\ContactUs;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 class PagesController extends Controller
 {
-    public function index(){
-       $publications = Publication::with(['author', 'collaborations' => function($query) {
-        $query->select('name', 'publication_id');
-    },'externalCollaborations' => function($query) {
-        $query->select('name', 'publication_id');
-    }])->where('status', 'published')->distinct()->latest()->paginate(10);
+    public function index()
+{
+    $publications = Publication::with([
+        'author' => function ($query) {
+            $query->select('id', 'name', 'department_id')->with([
+                'department' => function ($query) {
+                    $query->select('id', 'name');
+                }
+            ]);
+        },
+        'collaborations' => function ($query) {
+            $query->select('name', 'publication_id');
+        },
+        'externalCollaborations' => function ($query) {
+            $query->select('name', 'publication_id');
+        }
+    ])->where('status', 'published')
+      ->latest() // Removed distinct() as it's not needed in this context
+      ->paginate(10);
 
-    $authors = User::select('name', 'profile_photo', 'research_area', 'bio')->distinct()->get();
+    // Cache the authors list if it does not change often
+  $authors = Cache::remember('distinct_authors', now()->addMinutes(60), function () {
+    return User::with('department:name,id')  // Load the department relationship
+        ->select('name', 'profile_photo', 'research_area', 'bio', 'department_id')  // Include department_id to join with
+        ->distinct()
+        ->where('name', '!=', 'Developer')
+        ->where('name', '!=', 'Admin')
+        ->get()
+        ->map(function ($user) {
+            return [
+                'name' => $user->name,
+                'profile_photo' => $user->profile_photo,
+                'research_area' => $user->research_area,
+                'bio' => $user->bio,
+                'department_name' => $user->department->name,  // Add department name
+            ];
+        });
+});
 
-    // Return the publications data to the Inertia component, along with login/register route availability
     return inertia('Index', [
         'publications' => $publications,
-        'authors'=>$authors,
+        'authors' => $authors,
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
-    }
-
-
+}
     //get about page
     public function about(){
         return inertia('About');

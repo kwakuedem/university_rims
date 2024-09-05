@@ -18,12 +18,13 @@ Route::get('/contact',[PagesController::class,'contact'])->name('contact');
 Route::get('/about',[PagesController::class,'about'])->name('about');
 Route::get('/authors/{authorName}', [AuthorController::class, 'show'])->name('author.profile');
 Route::get('/publication/{title}',[PagesController::class,'show'])->name('read');
-Route::get('/publications/{publicationName}/download', [PublicationController::class, 'download'])->name('publication.download');
+Route::get('/publications/{publication}/download', [PublicationController::class, 'download'])->name('publication.download');
 
-
+Route::middleware('auth','role:author')->group(function () {
+    Route::get('/dashboard',[PublicationController::class,'dashboard'])->name('dashboard');
+   });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard',[PublicationController::class,'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -38,7 +39,8 @@ Route::middleware('auth')->group(function () {
 
 //collaboration route
 Route::middleware('auth')->group(function () {
-    Route::resource('collaborations', CollaborationController::class)->only(['index','store']);
+    Route::post('/collaborations/{publication}', [CollaborationController::class, 'store'])->name('collaborations.store');
+    Route::resource('collaborations', CollaborationController::class)->only(['index']);
 });
 
 // //collaboration route

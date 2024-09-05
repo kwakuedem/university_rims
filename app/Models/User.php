@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'profile_photo',
+        'department_id',
         'bio',
         'title',
         'password',
@@ -53,10 +54,9 @@ class User extends Authenticatable
         ];
     }
 
-    // /**
-    //  * Relationship with Research model.
-    //  */
-
+   public function department(){
+    return $this->belongsTo(Department::class);
+   }
 
     /**
      * Relationship with Collaboration model.

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Chat;
 use App\Models\Collaboration;
+use App\Models\Department;
 use App\Models\Research;
 use App\Models\User;
 use Collator;
@@ -19,9 +20,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Department::create([
+            'name'=>'administrator',
+            'description'=>'department for administrating the system',
+        ]);
+
         $user=User::create([
             'name' => 'Admin',
             'email' => 'admin@hturims.com',
+            'department_id'=>1,
             'email_verified_at' => now(),
             'password' => Hash::make('Admin@123'),
             'facebook'=>'facebook.com/edemkwaku',
@@ -38,9 +45,17 @@ class DatabaseSeeder extends Seeder
         //     'password' => Hash::make('Admin@123'),
         // ]);
 
-        // User::factory(1)->create();
-        // Research::factory(20)->create();
-        // Collaboration::factory(5)->create();
-        // Chat::factory(10)->create();
+       $user=User::create([
+            'name' => 'Developer',
+            'email' => 'dev@hturims.com',
+            'department_id'=>1,
+            'email_verified_at' => now(),
+            'password' => Hash::make('dev@@123'),
+            'facebook'=>'facebook.com/edemkwaku',
+            'linkedin'=>'linkedin.com/edem-kwaku-98',
+            'whatsapp'=>'0540908248',
+            'remember_token' => Str::random(10),
+        ]);
+        $user->assignRole('developer');
     }
 }

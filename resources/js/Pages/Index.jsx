@@ -3,21 +3,16 @@ import Logo from "../Images/Logo.png";
 import { FaSearch } from "react-icons/fa";
 import Footer from "@/Components/Footer";
 import { format } from "date-fns";
-import NavMenu from "@/Components/NavMenu";
 import DOMPurify from "dompurify";
 import { FaFileDownload, FaUsers } from "react-icons/fa";
-import { FaHamburger } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import NavLink from "@/Components/NavLink";
-import SideNav from "@/Components/SideNav";
 import Header from "@/Components/Header";
 
 export default function Welcome({ authors, publications }) {
-    const { data, setData, get, processing } = useForm({
+    const { data, setData, processing } = useForm({
         search: "",
     });
 
-    console.log(publications);
     const formatDate = (dateString) => {
         return format(new Date(dateString), "yyyy-MM-dd");
     };
@@ -27,21 +22,58 @@ export default function Welcome({ authors, publications }) {
     };
 
     const [filteredAuthors, setFilteredAuthors] = useState("");
+    const [filteredPublications, setFilteredPublications] = useState(
+        publications.data
+    );
 
-    // Filter authors based on search input
+    // Filter authors based on search input and department name
     useEffect(() => {
-        if (data.search.trim() !== "") {
-            setFilteredAuthors(
-                authors.filter((author) =>
-                    author.name
-                        .toLowerCase()
-                        .includes(data.search.toLowerCase())
-                )
-            );
+        const searchQuery = data.search.trim().toLowerCase();
+
+        if (searchQuery === "") {
+            setFilteredAuthors(""); // If search input is empty, clear the filtered authors
         } else {
-            setFilteredAuthors("");
+            const filteredAuthors = authors.filter((author) => {
+                const matchesName = author.name
+                    .toLowerCase()
+                    .includes(searchQuery);
+                const matchesDepartment = author.department?.name
+                    .toLowerCase()
+                    .includes(searchQuery);
+                return matchesName || matchesDepartment;
+            });
+
+            setFilteredAuthors(filteredAuthors);
         }
     }, [data.search, authors]);
+
+    // Filter publications based on search input
+    useEffect(() => {
+        const searchQuery = data.search.trim().toLowerCase();
+
+        const filteredPublications = publications.data.filter((publication) => {
+            const matchesTitle = publication.title
+                .toLowerCase()
+                .includes(searchQuery);
+            const matchesAbstract = publication.abstract
+                ?.toLowerCase()
+                .includes(searchQuery);
+            const matchesAuthor = publication.author.name
+                .toLowerCase()
+                .includes(searchQuery);
+            const matchesDepartment = publication.author.department?.name
+                .toLowerCase()
+                .includes(searchQuery);
+            return (
+                matchesTitle ||
+                matchesAbstract ||
+                matchesAuthor ||
+                matchesDepartment
+            );
+        });
+
+        setFilteredPublications(filteredPublications);
+    }, [data.search, publications.data]);
 
     return (
         <>
@@ -52,16 +84,15 @@ export default function Welcome({ authors, publications }) {
                         <Header />
                         <div className="h-2 bg-red-600 border-spacing-10" />
                         <main className="w-full bg-white mb-16">
-                            <div className="content  bg-white">
-                                <div className="htu-blue-background ">
-                                    <div className="w-full lg:w-[90%] 2xl:w-[90%]  htu-blue-background justify-center items-center lg:flex  lg:gap-4 lg:m-auto lg:justify-center px-2 py-8 lg:items-center lg:px-32 lg:py-8">
+                            <div className="content bg-white">
+                                <div className="htu-blue-background">
+                                    <div className="w-full lg:w-[90%] 2xl:w-[90%] htu-blue-background justify-center items-center lg:flex lg:gap-4 lg:m-auto lg:justify-center px-2 py-8 lg:items-center lg:px-32 lg:py-8">
                                         <div className="text flex flex-col flex-3">
                                             <h2 className="font-bold text-center text-white/70 text-lg lg:text-left lg:text-2xl">
-                                                {" "}
                                                 Welcome to Research Repository
                                                 HTU
                                             </h2>
-                                            <p className="text-sm  lg:text-lg text-white/70">
+                                            <p className="text-sm lg:text-lg text-white/70">
                                                 Research Repository HTU is a
                                                 digital collection of open
                                                 access scholarly research
@@ -94,7 +125,7 @@ export default function Welcome({ authors, publications }) {
                                                 .
                                             </p>
                                         </div>
-                                        <div className="logo  hidden lg:flex">
+                                        <div className="logo hidden lg:flex">
                                             <img
                                                 src={Logo}
                                                 alt="logo"
@@ -105,14 +136,14 @@ export default function Welcome({ authors, publications }) {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 w-[60%] items-center justify-center border  border-slate-800 focus-within:border-slate-900 rounded-md lg:w-[30%] m-auto">
+                                <div className="mt-6 w-[60%] items-center justify-center border border-slate-800 focus-within:border-slate-900 rounded-md lg:w-[30%] m-auto">
                                     <input
                                         autoComplete="off"
                                         value={data.search}
                                         type="text"
-                                        className="flex-1 w-full text-gray-600  rounded-md"
+                                        className="flex-1 w-full text-gray-600 rounded-md"
                                         name="search"
-                                        placeholder="Search author ...."
+                                        placeholder="Search by author or department..."
                                         onChange={(e) =>
                                             setData("search", e.target.value)
                                         }
@@ -121,69 +152,70 @@ export default function Welcome({ authors, publications }) {
 
                                 {filteredAuthors && (
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 bg-gray-200 w-[80%] m-auto p-3 z-10 mt-3">
-                                        {filteredAuthors &&
-                                            filteredAuthors.map((author) => (
-                                                <Link
-                                                    href={route(
-                                                        "author.profile",
-                                                        author.name
+                                        {filteredAuthors.map((author) => (
+                                            <Link
+                                                href={route(
+                                                    "author.profile",
+                                                    author.name
+                                                )}
+                                                className="flex flex-col items-center lg:flex-row bg-white mt-2 rounded-md p-3"
+                                                key={author.id}
+                                            >
+                                                <img
+                                                    src={getAssetUrl(
+                                                        author.profile_photo
                                                     )}
-                                                    className=" flex flex-col items-center lg:flex-row bg-white mt-2 rounded-md p-3 "
-                                                    key={author.id}
-                                                >
-                                                    <img
-                                                        src={getAssetUrl(
-                                                            author.profile_photo
-                                                        )}
-                                                        alt="author"
-                                                        className="w-16 h-16 lg:w-24 lg:h-24 rounded-full"
-                                                    />
-                                                    <div className="flex flex-col text-blue-900 font-bold text-lg  py-4 px-4 mt-2">
-                                                        <span className="text-sm lg:text-md">
-                                                            {" "}
-                                                            {author.name}
-                                                        </span>
-                                                        <span className="text-sm lg:text-md">
-                                                            {author.bio.substring(
+                                                    alt="author"
+                                                    className="w-16 h-16 lg:w-24 lg:h-24 rounded-full"
+                                                />
+                                                <div className="flex flex-col text-blue-900 font-bold text-lg py-4 px-4 mt-2">
+                                                    <span className="text-sm lg:text-md">
+                                                        {author.name}
+                                                    </span>
+                                                    <span className="text-sm lg:text-md">
+                                                        {author.bio &&
+                                                            author.bio.substring(
                                                                 0,
                                                                 200
                                                             )}
-                                                        </span>
-                                                    </div>
-                                                </Link>
-                                            ))}
+                                                    </span>
+                                                </div>
+                                            </Link>
+                                        ))}
                                     </div>
                                 )}
+
                                 <div className="submission-section grid lg:w-[80%] lg:m-auto pt-8">
                                     <div className="border-2">
-                                        <div className=" bg-gray-200 p-3 rounded-t-md recent-submissions">
+                                        <div className="bg-gray-200 p-3 rounded-t-md recent-submissions">
                                             <h2 className="text-lg text-blue-900/80 font-bold">
                                                 Recent Publications
                                             </h2>
                                         </div>
                                         <div className="grid grid-1 lg:grid-cols-2">
-                                            {publications.data &&
-                                            publications.data.length === 0 ? (
+                                            {filteredPublications &&
+                                            filteredPublications.length ===
+                                                0 ? (
                                                 <p className="text-blue-800 font-bold mt-6 p-4">
                                                     No publications available
                                                 </p>
                                             ) : (
-                                                publications.data &&
-                                                publications.data.map(
+                                                filteredPublications.map(
                                                     (publication) => (
                                                         <div
                                                             key={publication.id}
                                                             className="flex flex-col gap-3 px-4 pt-4 border m-2"
                                                         >
-                                                            <span className="htu-blue-background w-24 flex justify-center rounded-lg font-bold text-white">
+                                                            <span className="bg-blue-900/50 w-24 flex justify-center rounded-lg font-bold text-white">
                                                                 publication
                                                             </span>
                                                             <Link
                                                                 href={`/publication/${publication.title}`}
                                                                 className="text-lg text-blue-900/90 font-bold"
                                                             >
-                                                                {publication.title +
-                                                                    "  "}
+                                                                {
+                                                                    publication.title
+                                                                }{" "}
                                                                 <span className="text-gray-500 text-md">
                                                                     {formatDate(
                                                                         publication.created_at
@@ -191,84 +223,60 @@ export default function Welcome({ authors, publications }) {
                                                                 </span>
                                                             </Link>
                                                             <span className="text-blue-900/90">
-                                                                {publication.abstract.substring(
-                                                                    0,
-                                                                    300
-                                                                )}
+                                                                {publication.abstract &&
+                                                                    publication.abstract.substring(
+                                                                        0,
+                                                                        300
+                                                                    )}
                                                             </span>
                                                             <span className="text-blue-900/90 flex gap-2">
                                                                 By:{" "}
-                                                                <Link
-                                                                    href={route(
-                                                                        "author.profile",
-                                                                        publication.author_id
-                                                                    )}
-                                                                    className="text-blue-900/90 "
-                                                                >
-                                                                    {publication
+                                                                {
+                                                                    publication
                                                                         .author
-                                                                        .name +
-                                                                        ", "}
-                                                                    {publication.collaborations &&
-                                                                        publication
-                                                                            .collaborations
-                                                                            .length >
-                                                                            0 && (
-                                                                            <>
-                                                                                {publication.collaborations
-                                                                                    .map(
-                                                                                        (
-                                                                                            collaboration
-                                                                                        ) =>
-                                                                                            "" +
-                                                                                                collaboration?.name ??
-                                                                                            ""
-                                                                                    )
-                                                                                    .join(
-                                                                                        ", "
-                                                                                    )}
-                                                                            </>
-                                                                        )}
-                                                                    {publication.external_collaborations &&
-                                                                        publication
-                                                                            .external_collaborations
-                                                                            .length >
-                                                                            0 && (
-                                                                            <>
-                                                                                {publication.external_collaborations
-                                                                                    .map(
-                                                                                        (
-                                                                                            external_collaboration
-                                                                                        ) =>
-                                                                                            "" +
-                                                                                                external_collaboration?.name ??
-                                                                                            ""
-                                                                                    )
-                                                                                    .join(
-                                                                                        ", "
-                                                                                    )}
-                                                                            </>
-                                                                        )}
-                                                                </Link>
+                                                                        .name
+                                                                }
+                                                                ,{" "}
+                                                                {publication.collaborations
+                                                                    ?.map(
+                                                                        (
+                                                                            collaboration
+                                                                        ) =>
+                                                                            collaboration?.name
+                                                                    )
+                                                                    .join(", ")}
+                                                                {publication.external_collaborations
+                                                                    ?.map(
+                                                                        (
+                                                                            external_collaboration
+                                                                        ) =>
+                                                                            external_collaboration.name
+                                                                    )
+                                                                    .join(", ")}
                                                             </span>
                                                             <span className="flex justify-between gap-3 py-2">
                                                                 <div className="flex gap-3">
                                                                     <span className="bg-blue-300 text-white rounded-md px-2">
-                                                                        {publication.downloads +
-                                                                            " "}{" "}
+                                                                        {
+                                                                            publication.downloads
+                                                                        }{" "}
                                                                         downloads
                                                                     </span>
                                                                     <span className="bg-gray-600 text-white rounded-md px-2">
-                                                                        {publication.views +
-                                                                            " "}{" "}
+                                                                        {
+                                                                            publication.views
+                                                                        }{" "}
                                                                         views
                                                                     </span>
                                                                 </div>
                                                                 <Link
                                                                     className="flex gap-1 items-center bg-blue-700 text-white/70 rounded-md px-2"
-                                                                    href={`/publications/${publication.title}/download`}
+                                                                    href={route(
+                                                                        "publication.download",
+                                                                        publication.id
+                                                                    )}
                                                                 >
-                                                                    <FaFileDownload className=" text-white text-lg rounded-md" />
+                                                                    <FaFileDownload className="text-white text-lg rounded-md" />
                                                                     Download
                                                                 </Link>
                                                             </span>
@@ -284,7 +292,6 @@ export default function Welcome({ authors, publications }) {
                                                 publications.links.length >
                                                     0 && (
                                                     <div className="lg:col-span-2 mt-4 flex justify-center space-x-2 py-3">
-                                                        {/* Page Numbers */}
                                                         <div className="text-gray-500 px-2 pt-2">
                                                             {publications?.from ??
                                                                 0}{" "}

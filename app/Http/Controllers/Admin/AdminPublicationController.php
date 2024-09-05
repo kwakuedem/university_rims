@@ -3,17 +3,55 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role;
 
 class AdminPublicationController extends Controller
 {
      public function dashboard()
 {
+    $excludedRoles = ['admin', 'developer'];
+    $excludedRoleIds = Role::whereIn('name', $excludedRoles)->pluck('id');
 
+    // Exclude users with the "admin" role
+    $excludedRoles = ['admin'];
+
+    $departmentCounts = User::select('department_id', DB::raw('count(*) as total'))
+        ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+        ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+        ->whereNotIn('roles.name', $excludedRoles)
+        ->groupBy('department_id')
+        ->get()
+        ->mapWithKeys(function ($item) {
+            $departmentName = Department::find($item->department_id)->name ?? 'Unknown';
+            return [
+                $departmentName => $item->total
+            ];
+        });
+
+    // Exclude departments with the name "Administrator"
+    $excludedDepartmentIds = Department::where('name', 'Administrator')->pluck('id');
+
+    $filteredDepartmentCounts = $departmentCounts->filter(function ($total, $departmentName) use ($excludedDepartmentIds) {
+        $departmentId = Department::where('name', $departmentName)->pluck('id')->first();
+        return !in_array($departmentId, $excludedDepartmentIds->toArray());
+    });
+
+    
+
+  
+
+   
+    $numberOfUsers = User::whereDoesntHave('roles', function ($query) use ($excludedRoleIds) {
+        $query->whereIn('id', $excludedRoleIds);
+    })->count();
+    $numberOfDepartments=Department::where('name','!=','administrator')->count();
     $numberOfResearch=Publication::count();
     $numberOfpublicationsWithoutCollaborations=Publication::doesntHave('collaborations')->count();
     $numberOfpublicationsWithCollaborations=Publication::whereHas('collaborations')->count();
@@ -25,6 +63,8 @@ class AdminPublicationController extends Controller
         'publications' => [],
         'collaborations' => [],
         'notcollaborations' => [],
+        'departments'=>[],
+        'users'=>[],
     ];
 
     $years = Publication::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year')->pluck('year');
@@ -42,7 +82,27 @@ class AdminPublicationController extends Controller
         ->count();
     }
 
-    return inertia('Admin/Dashboard', compact('statistics','numberOfResearch','numberOfpublicationsWithCollaborations','numberOfpublicationsWithoutCollaborations'));
+        // Fetch departments excluding "Administrator"
+    $excludedDepartments = Department::where('name', 'Administrator')->pluck('id');
+
+    $departments = Department::whereNotIn('id', $excludedDepartments)->get();
+
+    // Fetch roles to exclude
+    $excludedRoles = ['admin', 'developer'];
+
+    // Fetch department-wise user statistics
+    foreach ($departments as $department) {
+        $userCount = User::where('department_id', $department->id)
+            ->whereDoesntHave('roles', function ($query) use ($excludedRoles) {
+                $query->whereIn('name', $excludedRoles);
+            })
+            ->count();
+
+        $statistics['departments'][] = $department->name;
+        $statistics['users'][] = $userCount;
+    }
+
+    return inertia('Admin/Dashboard', compact('statistics','numberOfResearch','numberOfUsers','numberOfDepartments','numberOfpublicationsWithCollaborations','numberOfpublicationsWithoutCollaborations'));
 }
 
      // Get all research work
