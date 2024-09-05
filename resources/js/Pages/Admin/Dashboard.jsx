@@ -267,7 +267,7 @@ const Dashboard = ({
                                         <div className="right-side grid grid-cols-2 w-[25%] m-auto gap-3">
                                             <Link
                                                 href={route(
-                                                    "admin.publications.index"
+                                                    "admin.departments.index"
                                                 )}
                                                 className="flex flex-col py-4 border-b-4 w-full rounded-b-md border-indigo-900 items-center justify-center  shadow-md shadow-blue-600/70"
                                             >
