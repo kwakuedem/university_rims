@@ -27,11 +27,10 @@ const Users = ({ auth, users, roles }) => {
         setData({ ...data, user_id: userId, role: roleName });
         post(route("admin.revokeRole"), {
             onSuccess: (page) => {
-                alert(page.props.flash.success);
-                reset();
+                alert("Role revoke successfully.");
             },
             onError: (page) => {
-                alert(page.props.flash.error);
+                alert("Failed to revoke role.");
             },
         });
     };
