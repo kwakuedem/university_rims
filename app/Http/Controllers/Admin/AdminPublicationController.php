@@ -45,10 +45,6 @@ class AdminPublicationController extends Controller
     });
 
     
-
-  
-
-   
     $numberOfUsers = User::whereDoesntHave('roles', function ($query) use ($excludedRoleIds) {
         $query->whereIn('id', $excludedRoleIds);
     })->count();
@@ -56,7 +52,8 @@ class AdminPublicationController extends Controller
     $numberOfResearch=Publication::count();
     $numberOfpublicationsWithoutCollaborations=Publication::doesntHave('collaborations')->count();
     $numberOfpublicationsWithCollaborations=Publication::whereHas('collaborations')->count();
-
+    $numberOfPublished=Publication::where('status','published')->count();
+    $numberOfUnpublished=Publication::where('status','unpublished')->count();
 
     // Dynamic statistics for publications per month
      $statistics = [
@@ -66,6 +63,13 @@ class AdminPublicationController extends Controller
         'notcollaborations' => [],
         'departments'=>[],
         'users'=>[],
+        'published'=>[],
+        'unpublished'=>[]
+    ];
+
+    $statusstatistics = [
+        'published' => Publication::where('status', 'published')->count(),
+        'unpublished' => Publication::where('status', 'unpublished')->count(),
     ];
 
     $years = Publication::selectRaw('YEAR(created_at) as year')->distinct()->orderBy('year')->pluck('year');
@@ -103,7 +107,20 @@ class AdminPublicationController extends Controller
         $statistics['users'][] = $userCount;
     }
 
-    return inertia('Admin/Dashboard', compact('statistics','numberOfResearch','numberOfUsers','numberOfDepartments','numberOfpublicationsWithCollaborations','numberOfpublicationsWithoutCollaborations'));
+    $publicationByDepartmentstatistics = Publication::whereHas('author.department', function ($query) {
+            $query->where('name', '!=', 'Administrator');
+        })
+        ->selectRaw('departments.name as department, count(*) as publication_count')
+        ->join('users', 'publications.author_id', '=', 'users.id')  // Join with users (authors)
+        ->join('departments', 'users.department_id', '=', 'departments.id')  // Join with author's department
+        ->groupBy('departments.name')
+        ->get()
+        ->toArray();
+    
+
+    return inertia('Admin/Dashboard', compact('statistics','numberOfPublished','publicationByDepartmentstatistics',
+    'numberOfUnpublished','numberOfResearch','numberOfUsers','numberOfDepartments',
+    'numberOfpublicationsWithCollaborations','numberOfpublicationsWithoutCollaborations','statusstatistics'));
 }
 
      // Get all research work
