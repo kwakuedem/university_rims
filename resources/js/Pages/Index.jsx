@@ -7,6 +7,7 @@ import DOMPurify from "dompurify";
 import { FaFileDownload, FaUsers } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import Header from "@/Components/Header";
+import { Bounce, Fade, Slide } from "react-awesome-reveal";
 
 export default function Welcome({ authors, publications }) {
     const { data, setData, processing } = useForm({
@@ -88,67 +89,92 @@ export default function Welcome({ authors, publications }) {
                                 <div className="htu-blue-background">
                                     <div className="w-full lg:w-[90%] 2xl:w-[90%] htu-blue-background justify-center items-center lg:flex lg:gap-4 lg:m-auto lg:justify-center px-2 py-8 lg:items-center lg:px-32 lg:py-8">
                                         <div className="text flex flex-col flex-3">
-                                            <h2 className="font-bold text-center text-white/70 text-lg lg:text-left lg:text-2xl">
-                                                Welcome to Research Repository
-                                                HTU
-                                            </h2>
-                                            <p className="text-sm lg:text-lg text-white/70">
-                                                Research Repository HTU is a
-                                                digital collection of open
-                                                access scholarly research
-                                                publications from{" "}
-                                                <br className=" hidden lg:visible" />
-                                                <a
-                                                    className="htu-red"
-                                                    href="htu.edu.gh"
-                                                >
-                                                    Ho Technical University
-                                                </a>
-                                                . Research Repository HTU
-                                                collects, preserves and makes
-                                                freely available publications
-                                                including peer-reviewed
-                                                articles, working papers and
-                                                conference papers created by HTU
-                                                researchers. Where material has
-                                                already been published it is
-                                                made available subject to the
-                                                open-access policies of the
-                                                original publishers. This
-                                                service is maintained by{" "}
-                                                <a
-                                                    className="htu-red"
-                                                    href="htu.edu.gh/elibrary"
-                                                >
-                                                    HTU Library
-                                                </a>
-                                                .
-                                            </p>
+                                            <Fade
+                                                duration={1500}
+                                                direction="left"
+                                            >
+                                                <h2 className="font-bold text-center text-white/70 text-lg lg:text-left lg:text-2xl">
+                                                    Welcome to Research
+                                                    Repository HTU
+                                                </h2>
+                                            </Fade>
+                                            <Fade
+                                                duration={2000}
+                                                direction="left"
+                                            >
+                                                {" "}
+                                                <p className="text-sm lg:text-lg text-white/70">
+                                                    Research Repository HTU is a
+                                                    digital collection of open
+                                                    access scholarly research
+                                                    publications from{" "}
+                                                    <br className=" hidden lg:visible" />
+                                                    <Link
+                                                        className="htu-red"
+                                                        href="htu.edu.gh"
+                                                    >
+                                                        Ho Technical University
+                                                    </Link>
+                                                    . Research Repository HTU
+                                                    collects, preserves and
+                                                    makes freely available
+                                                    publications including
+                                                    peer-reviewed articles,
+                                                    working papers and
+                                                    conference papers created by
+                                                    HTU researchers. Where
+                                                    material has already been
+                                                    published it is made
+                                                    available subject to the
+                                                    open-access policies of the
+                                                    original publishers. This
+                                                    service is maintained by{" "}
+                                                    <a
+                                                        className="htu-red"
+                                                        href="htu.edu.gh/elibrary"
+                                                    >
+                                                        HTU Library
+                                                    </a>
+                                                    .
+                                                </p>
+                                            </Fade>
                                         </div>
                                         <div className="logo hidden lg:flex">
-                                            <img
-                                                src={Logo}
-                                                alt="logo"
-                                                srcSet=""
-                                                className="lg:w-[800px]"
-                                            />
+                                            <Fade
+                                                direction="right"
+                                                duration={2000}
+                                                delay={100}
+                                            >
+                                                {" "}
+                                                <img
+                                                    src={Logo}
+                                                    alt="logo"
+                                                    srcSet=""
+                                                    className="lg:w-[800px]"
+                                                />
+                                            </Fade>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="mt-6 w-[60%] items-center justify-center border border-slate-800 focus-within:border-slate-900 rounded-md lg:w-[30%] m-auto">
-                                    <input
-                                        autoComplete="off"
-                                        value={data.search}
-                                        type="text"
-                                        className="flex-1 w-full text-gray-600 rounded-md"
-                                        name="search"
-                                        placeholder="Search by author or department..."
-                                        onChange={(e) =>
-                                            setData("search", e.target.value)
-                                        }
-                                    />
-                                </div>
+                                <Bounce duration={2000}>
+                                    <div className="mt-6 w-[60%] items-center justify-center border border-slate-800 focus-within:border-slate-900 rounded-md lg:w-[30%] m-auto">
+                                        <input
+                                            autoComplete="off"
+                                            value={data.search}
+                                            type="text"
+                                            className="flex-1 w-full text-gray-600 rounded-md"
+                                            name="search"
+                                            placeholder="Search by author or department..."
+                                            onChange={(e) =>
+                                                setData(
+                                                    "search",
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>{" "}
+                                </Bounce>
 
                                 {filteredAuthors && (
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 bg-gray-200 w-[80%] m-auto p-3 z-10 mt-3">
@@ -202,85 +228,98 @@ export default function Welcome({ authors, publications }) {
                                             ) : (
                                                 filteredPublications.map(
                                                     (publication) => (
-                                                        <div
-                                                            key={publication.id}
-                                                            className="flex flex-col gap-3 px-4 pt-4 border m-2"
+                                                        <Fade
+                                                            direction="left"
+                                                            duration={2000}
+                                                            triggerOnce={false}
                                                         >
-                                                            <span className="bg-blue-900/50 w-24 flex justify-center rounded-lg font-bold text-white">
-                                                                publication
-                                                            </span>
-                                                            <Link
-                                                                href={`/publication/${publication.title}`}
-                                                                className="text-lg text-blue-900/90 font-bold"
-                                                            >
-                                                                {
-                                                                    publication.title
-                                                                }{" "}
-                                                                <span className="text-gray-500 text-md">
-                                                                    {formatDate(
-                                                                        publication.created_at
-                                                                    )}
-                                                                </span>
-                                                            </Link>
-                                                            <span className="text-blue-900/90">
-                                                                {publication.abstract &&
-                                                                    publication.abstract.substring(
-                                                                        0,
-                                                                        300
-                                                                    )}
-                                                            </span>
-                                                            <span className="text-blue-900/90 flex gap-2">
-                                                                By:{" "}
-                                                                {
-                                                                    publication
-                                                                        .author
-                                                                        .name
+                                                            {" "}
+                                                            <div
+                                                                key={
+                                                                    publication.id
                                                                 }
-                                                                ,{" "}
-                                                                {publication.collaborations
-                                                                    ?.map(
-                                                                        (
-                                                                            collaboration
-                                                                        ) =>
-                                                                            collaboration?.name
-                                                                    )
-                                                                    .join(", ")}
-                                                                {publication.external_collaborations
-                                                                    ?.map(
-                                                                        (
-                                                                            external_collaboration
-                                                                        ) =>
-                                                                            external_collaboration.name
-                                                                    )
-                                                                    .join(", ")}
-                                                            </span>
-                                                            <span className="flex justify-between gap-3 py-2">
-                                                                <div className="flex gap-3">
-                                                                    <span className="bg-blue-300 text-white rounded-md px-2">
-                                                                        {
-                                                                            publication.downloads
-                                                                        }{" "}
-                                                                        downloads
-                                                                    </span>
-                                                                    <span className="bg-gray-600 text-white rounded-md px-2">
-                                                                        {
-                                                                            publication.views
-                                                                        }{" "}
-                                                                        views
-                                                                    </span>
-                                                                </div>
+                                                                className="flex flex-col gap-3 px-4 pt-4 border m-2"
+                                                            >
+                                                                <span className="bg-blue-900/50 w-24 flex justify-center rounded-lg font-bold text-white">
+                                                                    publication
+                                                                </span>
                                                                 <Link
-                                                                    className="flex gap-1 items-center bg-blue-700 text-white/70 rounded-md px-2"
-                                                                    href={route(
-                                                                        "publication.download",
-                                                                        publication.id
-                                                                    )}
+                                                                    href={`/publication/${publication.title}`}
+                                                                    className="text-lg text-blue-900/90 font-bold"
                                                                 >
-                                                                    <FaFileDownload className="text-white text-lg rounded-md" />
-                                                                    Download
+                                                                    {
+                                                                        publication.title
+                                                                    }{" "}
+                                                                    <span className="text-gray-500 text-md">
+                                                                        {formatDate(
+                                                                            publication.created_at
+                                                                        )}
+                                                                    </span>
                                                                 </Link>
-                                                            </span>
-                                                        </div>
+                                                                <span className="text-blue-900/90">
+                                                                    {publication.abstract &&
+                                                                        publication.abstract.substring(
+                                                                            0,
+                                                                            300
+                                                                        )}
+                                                                </span>
+                                                                <span className="text-blue-900/90 flex gap-2">
+                                                                    By:{" "}
+                                                                    {
+                                                                        publication
+                                                                            .author
+                                                                            .name
+                                                                    }
+                                                                    ,{" "}
+                                                                    {publication.collaborations
+                                                                        ?.map(
+                                                                            (
+                                                                                collaboration
+                                                                            ) =>
+                                                                                collaboration?.name
+                                                                        )
+                                                                        .join(
+                                                                            ", "
+                                                                        )}
+                                                                    {publication.external_collaborations
+                                                                        ?.map(
+                                                                            (
+                                                                                external_collaboration
+                                                                            ) =>
+                                                                                external_collaboration.name
+                                                                        )
+                                                                        .join(
+                                                                            ", "
+                                                                        )}
+                                                                </span>
+                                                                <span className="flex justify-between gap-3 py-2">
+                                                                    <div className="flex gap-3">
+                                                                        <span className="bg-blue-300 text-white rounded-md px-2">
+                                                                            {
+                                                                                publication.downloads
+                                                                            }{" "}
+                                                                            downloads
+                                                                        </span>
+                                                                        <span className="bg-gray-600 text-white rounded-md px-2">
+                                                                            {
+                                                                                publication.views
+                                                                            }{" "}
+                                                                            views
+                                                                        </span>
+                                                                    </div>
+                                                                    <Link
+                                                                        className="flex gap-1 items-center bg-blue-700 text-white/70 rounded-md px-2"
+                                                                        href={route(
+                                                                            "publication.download",
+                                                                            publication.id
+                                                                        )}
+                                                                    >
+                                                                        <FaFileDownload className="text-white text-lg rounded-md" />
+                                                                        Download
+                                                                    </Link>
+                                                                </span>
+                                                            </div>
+                                                        </Fade>
                                                     )
                                                 )
                                             )}

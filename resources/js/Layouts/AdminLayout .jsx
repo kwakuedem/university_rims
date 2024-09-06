@@ -161,7 +161,7 @@ export default function Authenticated({ user, header, children }) {
                 )}
 
                 <div className="main w-svw bg-gray-50 overflow-auto">
-                    <nav className="bg-white sticky top-0 border-b rounded-r-md flex-1 border-gray-100">
+                    <nav className="bg-white sticky top-0 border-b rounded-r-md flex-1 border-gray-100 z-50">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div className="flex justify-between items-center h-16">
                                 <p className="!text-sm !text-gray-500">

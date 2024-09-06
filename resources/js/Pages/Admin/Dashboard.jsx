@@ -2,6 +2,7 @@ import React from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
 import Chart from "react-apexcharts";
 import AdminLayout from "../../Layouts/AdminLayout ";
+import { Bounce, Fade, Slide } from "react-awesome-reveal";
 
 const Dashboard = ({
     auth,
@@ -52,6 +53,7 @@ const Dashboard = ({
                 fontFamily: "Arial, sans-serif",
                 colors: ["#FFFF00"],
             },
+
             offset: -8, // Adjust this value to move the labels closer or further away from the chart
         },
         legend: {
@@ -322,105 +324,155 @@ const Dashboard = ({
 
                             <div className="flex flex-row">
                                 <div className="w-[95%] flex flex-col gap-3 m-auto">
-                                    <div className="cards w-full flex flex-row">
-                                        <div className="cards flex w-[65%] m-auto gap-3 py-3">
-                                            <Link
-                                                href={route(
-                                                    "admin.publications.index"
-                                                )}
-                                                className="flex flex-col pt-4 pb-2 border-b-4 w-full rounded-b-md border-blue-900 items-center justify-center   shadow-blue-600/70"
+                                    <div className="full flex flex-row">
+                                        {" "}
+                                        <div className="cards flex w-[65%] m-auto gap-3">
+                                            <Bounce
+                                                direction="top"
+                                                duration={2000}
+                                                triggerOnce={false}
+                                                className="pt-6  border-b-4 w-full rounded-b-md border-blue-900 items-center justify-center   shadow-blue-600/70"
                                             >
-                                                <p className="text-sm font-extrabold text-blue-900">
-                                                    {numberOfResearch}
-                                                </p>
-                                                <p className="text-xs font-bold text-blue-900">
-                                                    Total Submissions
-                                                </p>
-                                            </Link>
-                                            <Link
-                                                href={route(
-                                                    "admin.publications.index"
-                                                )}
-                                                className="flex flex-col pt-4 pb-2 border-b-4 w-full rounded-b-md border-blue-600 items-center justify-center   shadow-blue-600/70"
-                                            >
-                                                <p className="text-sm font-extrabold text-blue-900">
-                                                    {numberOfPublished}
-                                                </p>
-                                                <p className="text-xs font-bold text-blue-600">
-                                                    Published
-                                                </p>
-                                            </Link>
-                                            <Link
-                                                href={route(
-                                                    "admin.publications.index"
-                                                )}
-                                                className="flex flex-col pt-4 pb-2 border-b-4 w-full rounded-b-md border-purple-500 items-center justify-center   shadow-blue-600/70"
-                                            >
-                                                <p className="text-sm font-extrabold text-purple-500">
-                                                    {numberOfUnpublished}
-                                                </p>
-                                                <p className="text-xs font-bold text-purple-500">
-                                                    Unpublished
-                                                </p>
-                                            </Link>
+                                                <Link
+                                                    href={route(
+                                                        "admin.publications.index"
+                                                    )}
+                                                    className="flex flex-col items-center"
+                                                >
+                                                    <p className="text-sm font-extrabold text-blue-900">
+                                                        {numberOfResearch}
+                                                    </p>
+                                                    <p className="text-xs font-bold text-blue-900">
+                                                        Total Submissions
+                                                    </p>
+                                                </Link>
+                                            </Bounce>
 
-                                            <Link
-                                                href={route(
-                                                    "admin.collaborations.index"
-                                                )}
-                                                className="flex w-full flex-col border-b-4 rounded-b-md py-4 border-purple-900 items-center justify-center rounded-md  shadow-blue-600/70"
+                                            <Bounce
+                                                direction="top"
+                                                duration={2000}
+                                                triggerOnce={false}
+                                                className="pt-6  border-b-4 w-full rounded-b-md border-blue-600 items-center justify-center   shadow-blue-600/70"
                                             >
-                                                <p className="text-sm font-extrabold text-purple-900">
-                                                    {
-                                                        numberOfpublicationsWithoutCollaborations
-                                                    }
-                                                </p>
-                                                <p className="text-xs font-bold text-purple-900">
-                                                    Uncollaborated
-                                                </p>
-                                            </Link>
+                                                <Link
+                                                    href={route(
+                                                        "admin.publications.index"
+                                                    )}
+                                                    className="flex flex-col items-center"
+                                                >
+                                                    <p className="text-sm font-extrabold text-blue-900">
+                                                        {numberOfPublished}
+                                                    </p>
+                                                    <p className="text-xs font-bold text-blue-600">
+                                                        Published
+                                                    </p>
+                                                </Link>
+                                            </Bounce>
+                                            <Bounce
+                                                direction="top"
+                                                duration={2000}
+                                                triggerOnce={false}
+                                                className="pt-6  border-b-4 w-full rounded-b-md border-purple-500 items-center justify-center   shadow-blue-600/70"
+                                            >
+                                                <Link
+                                                    href={route(
+                                                        "admin.publications.index"
+                                                    )}
+                                                    className="flex flex-col items-center"
+                                                >
+                                                    <p className="text-sm font-extrabold text-purple-500">
+                                                        {numberOfUnpublished}
+                                                    </p>
+                                                    <p className="text-xs font-bold text-purple-500">
+                                                        Unpublished
+                                                    </p>
+                                                </Link>
+                                            </Bounce>
+                                            <Bounce
+                                                direction="top"
+                                                duration={2000}
+                                                triggerOnce={false}
+                                                className="pt-6  border-b-4 w-full rounded-b-md border-purple-900 items-center justify-center   shadow-blue-600/70"
+                                            >
+                                                <Link
+                                                    href={route(
+                                                        "admin.collaborations.index"
+                                                    )}
+                                                    className="flex  flex-col items-center "
+                                                >
+                                                    <p className="text-sm font-extrabold text-purple-900">
+                                                        {
+                                                            numberOfpublicationsWithoutCollaborations
+                                                        }
+                                                    </p>
+                                                    <p className="text-xs font-bold text-purple-900">
+                                                        Uncollaborated
+                                                    </p>
+                                                </Link>
+                                            </Bounce>
 
-                                            <Link
-                                                href={route(
-                                                    "admin.collaborations.index"
-                                                )}
-                                                className="flex flex-col pt-4 pb-2 border-b-4 w-full rounded-b-md border-orange-400 items-center justify-center   shadow-blue-600/70"
+                                            <Bounce
+                                                direction="top"
+                                                duration={2000}
+                                                triggerOnce={true}
+                                                className="pt-6  border-b-4 w-full rounded-b-md border-orange-400 items-center justify-center   shadow-blue-600/70"
                                             >
-                                                <p className="text-sm font-extrabold text-orange-400">
-                                                    {
-                                                        numberOfpublicationsWithCollaborations
-                                                    }
-                                                </p>
-                                                <p className="text-xs font-bold text-orange-400">
-                                                    Collaborated
-                                                </p>
-                                            </Link>
+                                                <Link
+                                                    href={route(
+                                                        "admin.collaborations.index"
+                                                    )}
+                                                    className="flex flex-col pb-2 items-center"
+                                                >
+                                                    <p className="text-sm font-extrabold text-orange-400">
+                                                        {
+                                                            numberOfpublicationsWithCollaborations
+                                                        }
+                                                    </p>
+                                                    <p className="text-xs font-bold text-orange-400">
+                                                        Collaborated
+                                                    </p>
+                                                </Link>
+                                            </Bounce>
                                         </div>
                                         <div className="right-side grid grid-cols-2 w-[25%] m-auto gap-3">
-                                            <Link
-                                                href={route(
-                                                    "admin.departments.index"
-                                                )}
-                                                className="flex flex-col pt-4 pb-2 border-b-4 w-full rounded-b-md border-indigo-900 items-center justify-center   shadow-blue-600/70"
+                                            <Bounce
+                                                direction="top"
+                                                duration={2000}
+                                                triggerOnce={true}
+                                                className="pt-4 border-b-4 w-full rounded-b-md border-indigo-900 items-center justify-center   shadow-blue-600/70"
                                             >
-                                                <p className="text-sm font-extrabold text-indigo-900">
-                                                    {numberOfDepartments}
-                                                </p>
-                                                <p className="text-xs font-bold text-indigo-900">
-                                                    Departments
-                                                </p>
-                                            </Link>
-                                            <Link
-                                                href={route("admin.users")}
-                                                className="flex flex-col pt-4 pb-2 border-b-4 w-full rounded-b-md border-green-900 items-center justify-center   shadow-blue-600/70"
+                                                <Link
+                                                    href={route(
+                                                        "admin.departments.index"
+                                                    )}
+                                                    className="flex flex-col pb-2 items-center"
+                                                >
+                                                    <p className="text-sm font-extrabold text-indigo-900">
+                                                        {numberOfDepartments}
+                                                    </p>
+                                                    <p className="text-xs font-bold text-indigo-900">
+                                                        Departments
+                                                    </p>
+                                                </Link>
+                                            </Bounce>
+                                            <Bounce
+                                                direction="top"
+                                                duration={2000}
+                                                triggerOnce={true}
+                                                className="pt-4 border-b-4 w-full rounded-b-md  border-green-900 items-center justify-center   shadow-blue-600/70"
                                             >
-                                                <p className="text-sm font-extrabold text-green-900">
-                                                    {numberOfUsers}
-                                                </p>
-                                                <p className="text-xs font-bold text-green-900">
-                                                    Users
-                                                </p>
-                                            </Link>
+                                                <Link
+                                                    href={route("admin.users")}
+                                                    className="flex flex-col items-center pb-2"
+                                                >
+                                                    <p className="text-sm font-extrabold text-green-900">
+                                                        {numberOfUsers}
+                                                    </p>
+                                                    <p className="text-xs font-bold text-green-900">
+                                                        Users
+                                                    </p>
+                                                </Link>
+                                            </Bounce>
                                         </div>
                                     </div>
                                     <div className="charts flex flex-row gap-3">

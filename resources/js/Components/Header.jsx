@@ -14,7 +14,7 @@ function Header() {
     }
     return (
         <>
-            <header className="flex w-full justify-between bg-white shadow-sm shadow-red-500 sticky top-0   p-5 lg:px-5 lg:py-2">
+            <header className="flex w-full justify-between bg-white shadow-sm shadow-red-500 sticky top-0 opacity-100 z-50 p-5 lg:px-5 lg:py-2">
                 <div className="flex w-full lg:w-[80%] m-auto justify-between gap-6 bg-white ">
                     <div className="flex w-full items-center">
                         <Link
