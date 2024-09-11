@@ -3,8 +3,6 @@ import { format } from "date-fns";
 import AdminLayout from "../../../Layouts/AdminLayout ";
 
 export default function Show({ department, auth }) {
-    console.log(department);
-
     return (
         <AdminLayout
             user={auth.user}

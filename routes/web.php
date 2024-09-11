@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminCollaborationController;
 use App\Http\Controllers\Admin\AdminPublicationController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthorController;
@@ -14,8 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/',[PagesController::class,'index'])->name('home');
-Route::post('/contact',[PagesController::class,'store']);
-Route::get('/contact',[PagesController::class,'contact'])->name('contact');
+Route::post('/about',[PagesController::class,'store'])->name('contact');
 Route::get('/about',[PagesController::class,'about'])->name('about');
 Route::get('/authors/{authorName}', [AuthorController::class, 'show'])->name('author.profile');
 Route::get('/publication/{title}',[PagesController::class,'show'])->name('read');
@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
 //     ->name('collaborations.store');
 
 //Admin routes
-Route::middleware(['auth', 'verified','role:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified','role:admin|developer'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/',[AdminPublicationController::class,'dashboard'])->name('dashboard');
     Route::resource('/publications',AdminPublicationController::class);
     Route::resource('/departments',DepartmentController::class);
@@ -61,6 +61,7 @@ Route::middleware(['auth', 'verified','role:admin'])->prefix('admin')->name('adm
     Route::get('/profile', [ProfileController::class, 'editadmin'])->name('profile.editadmin');
     Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('/messages',ContactController::class);
 });
 
 

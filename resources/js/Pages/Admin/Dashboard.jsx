@@ -25,7 +25,6 @@ const Dashboard = ({
     const publicationCounts = publicationByDepartmentstatistics.map(
         (stat) => stat.publication_count
     );
-    // const users = [10, 25, 8, 15, 12];
 
     // Define chart options
     const options = {

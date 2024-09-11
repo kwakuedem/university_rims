@@ -10,9 +10,8 @@ import AdminLayout from "../../../Layouts/AdminLayout ";
 
 const Index = ({ auth, publications }) => {
     const { data, delete: destroy, processing } = useForm({});
-    const [showMessage, setShowMessage] = useState(false);
+
     const { props } = usePage();
-    const message = props.success;
 
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -37,15 +36,6 @@ const Index = ({ auth, publications }) => {
         );
     });
 
-    useEffect(() => {
-        if (message && message) {
-            setShowMessage(true);
-            setTimeout(() => {
-                setShowMessage(false);
-            }, 3000);
-        }
-    }, [message]);
-
     // Helper function to format the date
     const formatDate = (dateString) => {
         return format(new Date(dateString), "yyyy-MM-dd");
@@ -57,7 +47,14 @@ const Index = ({ auth, publications }) => {
     };
 
     const deletePublication = (publication_id) => {
-        destroy(route("admin.publications.destroy", publication_id));
+        destroy(route("admin.publications.destroy", publication_id), {
+            onSuccess: (page) => {
+                alert("Publication Deleted successfully.");
+            },
+            onError: (page) => {
+                alert("Failed to Delete Publication!");
+            },
+        });
     };
 
     return (
@@ -70,11 +67,6 @@ const Index = ({ auth, publications }) => {
             }
         >
             <Head title="Publications" />
-            {showMessage && (
-                <span className="bg-green-500 z-20 absolute top-6 rounded-md text-white right-10 p-3">
-                    {message}
-                </span>
-            )}
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -94,7 +86,7 @@ const Index = ({ auth, publications }) => {
                                     />
                                 </div>
                                 <Link
-                                    className="px-2 rounded-md bg-blue-900 text-white/60 w-[15%] flex items-center justify-center"
+                                    className="px-2 rounded-md bg-blue-900 hidden text-white/60 w-[15%]  items-center justify-center"
                                     href={route("admin.publications.create")}
                                 >
                                     Add Publication

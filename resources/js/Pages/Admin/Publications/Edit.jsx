@@ -22,30 +22,18 @@ const Edit = ({ auth, publication, collaborators }) => {
 
     // data.collaborators.length
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [showMessage, setShowMessage] = useState(false);
-
-    useEffect(() => {
-        if (message && message) {
-            setShowMessage(true);
-            setTimeout(() => {
-                setShowMessage(false);
-            }, 3000);
-        }
-    }, [message]);
-
-    useEffect(() => {
-        if (error_message && error_message) {
-            setShowMessage(true);
-            setTimeout(() => {
-                setShowMessage(false);
-            }, 5000);
-        }
-    }, [error_message]);
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data);
-        post(route("admin.publications.update", publication.id), {});
+
+        post(route("admin.publications.update", publication.id), {
+            onSuccess: (page) => {
+                alert("Publication Updated successfully.");
+            },
+            onError: (page) => {
+                alert("Failed to Update Publication!");
+            },
+        });
     };
 
     return (
@@ -58,16 +46,6 @@ const Edit = ({ auth, publication, collaborators }) => {
             }
         >
             <Head title="Publications" />
-            {showMessage && (
-                <span className="bg-green-500 z-20 absolute top-6  rounded-md text-white right-10 p-3">
-                    {message}
-                </span>
-            )}
-            {showMessage && (
-                <span className="bg-red-400 z-20 absolute top-6  rounded-md text-white right-10 p-3">
-                    {error_message}
-                </span>
-            )}
 
             <div className="bg-gray-300 py-6">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

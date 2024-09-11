@@ -37,7 +37,7 @@ class DepartmentController extends Controller
             'name'=>'required|string|unique:departments,name|max:50',
             'description'=>'nullable|string|max:150'
         ]);
-// 'dd(!$data['description'] || $data['description']==" ");'
+
         if(!$data['description'] || $data['description']==" "){
             $data['description']="";
         }

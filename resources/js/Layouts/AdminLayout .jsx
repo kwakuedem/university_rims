@@ -70,6 +70,16 @@ export default function Authenticated({ user, header, children }) {
                                         Departments
                                     </NavLink>
 
+                                    <NavLink
+                                        href={route("admin.messages.index")}
+                                        active={route().current(
+                                            "admin.messages.index"
+                                        )}
+                                        className="!text-sm !font-bold !text-white mt-5 "
+                                    >
+                                        Messages
+                                    </NavLink>
+
                                     <div className="flex items-center justify-center mt-4">
                                         <Dropdown className="flex items-center justify-center ">
                                             <Dropdown.Trigger>

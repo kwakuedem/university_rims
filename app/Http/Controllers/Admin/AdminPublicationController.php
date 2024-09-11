@@ -161,18 +161,14 @@ class AdminPublicationController extends Controller
             'author_id' => Auth::user()->id
         ]);
 
-        // Get research works owned by the user or where the user is a collaborator
-        $publications = Publication::all()->latest();
-        $success= 'Publication Created Successfully.';
-
-        // Return response (for example, redirect or Inertia response)
-        return inertia('Admin/Publications/Index',compact('success', 'publications'));
+       
+        return redirect()->route('admin.publications.index');
     }
 
 
     //get publication edit page
     public function edit(Publication $publication){
-        $collaborators=User::where('id', '!=', Auth::id())->where('name','!=','admin')->get();
+        $collaborators=User::where('id', '!=', Auth::id())->where('name','!=','admin')->where('name','!=','Developer')->get();
          return inertia('Admin/Publications/Edit',compact('publication','collaborators'));
     }
 
@@ -205,13 +201,8 @@ class AdminPublicationController extends Controller
     // Update the publication
     $publication->update($data);
 
-    // Return response...
-
-     $user = Auth::user();
-        $success= 'Publication Updated Successfully.';
-            // Get research works owned by the user or where the user is a collaborator
-          $publications = Publication::with('author:id,name')->get();
-        return inertia('Admin/Publications/Index',compact('success','publications'));
+   
+        return redirect()->route('admin.publications.index');
     }
 
     //show particular publication
@@ -228,11 +219,8 @@ class AdminPublicationController extends Controller
         }
 
         $publication->delete();
-        $user = Auth::user();
-        $success= 'Publication Updated Successfully.';
-        // Get research works owned by the user or where the user is a collaborator
-        $publications = Publication::where('author_id', $user->id)
-            ->get();
-        return inertia('Admin/Publications/Index',compact('success', 'publications'));
+       
+       
+        return redirect()->back();
     }
 }

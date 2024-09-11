@@ -7,7 +7,6 @@ import AdminLayout from "../../../Layouts/AdminLayout ";
 
 const Index = ({ auth, departments }) => {
     const { data, delete: destroy, processing } = useForm({});
-    console.log(departments);
 
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -107,7 +106,7 @@ const Index = ({ auth, departments }) => {
                                                         <td className="px-4 py-1 whitespace-nowrap">
                                                             <Link
                                                                 href={route(
-                                                                    "admin.departments.show",
+                                                                    "admin.messages.show",
                                                                     department.id
                                                                 )}
                                                                 className="text-blue-600 hover:underline"
@@ -121,7 +120,7 @@ const Index = ({ auth, departments }) => {
                                                         <td className="px-4 py-1 whitespace-nowrap">
                                                             <Link
                                                                 href={route(
-                                                                    "admin.departments.show",
+                                                                    "admin.messages.show",
                                                                     department.id
                                                                 )}
                                                                 className="text-blue-600 hover:underline"
@@ -135,7 +134,7 @@ const Index = ({ auth, departments }) => {
                                                         <td className="flex justify-center gap-2 px-4 py-1 whitespace-nowrap text-sm font-medium">
                                                             <Link
                                                                 href={route(
-                                                                    "admin.departments.show",
+                                                                    "admin.messages.show",
                                                                     department.id
                                                                 )}
                                                                 className="text-blue-600 hover:underline"
@@ -144,7 +143,7 @@ const Index = ({ auth, departments }) => {
                                                             </Link>
                                                             <Link
                                                                 href={route(
-                                                                    "admin.departments.edit",
+                                                                    "admin.messages.edit",
                                                                     department.id
                                                                 )}
                                                                 className="text-blue-600 hover:underline"

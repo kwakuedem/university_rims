@@ -45,14 +45,6 @@ function Header() {
                         >
                             About Us
                         </NavLink>
-
-                        <NavLink
-                            href={route("contact")}
-                            active={route().current("contact")}
-                            className="text-md font-bold !text-blue-900/80"
-                        >
-                            Contact Us
-                        </NavLink>
                     </div>
 
                     <nav className=" -mx-3 flex justify-end w-full">

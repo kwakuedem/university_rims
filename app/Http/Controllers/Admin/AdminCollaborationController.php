@@ -60,9 +60,7 @@ class AdminCollaborationController extends Controller
                     'publication_id' => $publication->id,
                     'collaborator_id' => $collaborator['id']
                 ]);}
-            // }else{
-            //     return inertia('Publications/Edit', ['error' => $collaborator['name'] .' is Already a Collaborator!']);
-            // }
+           
         }
     }
 

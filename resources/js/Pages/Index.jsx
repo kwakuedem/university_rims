@@ -111,7 +111,8 @@ export default function Welcome({ authors, publications }) {
                                                     <br className=" hidden lg:visible" />
                                                     <Link
                                                         className="htu-red"
-                                                        href="htu.edu.gh"
+                                                        href="https://www.htu.edu.gh"
+                                                        target="_blank"
                                                     >
                                                         Ho Technical University
                                                     </Link>

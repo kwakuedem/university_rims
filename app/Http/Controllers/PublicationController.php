@@ -120,38 +120,34 @@ class PublicationController extends Controller
 
 
 
-public function update(Request $request, Publication $publication)
-{
-    // Validate the request
-    $data = $request->validate([
-        'title' => 'required|string|max:255',
-        'abstract' => 'required|string',
-        'status' => 'required|string|in:published,unpublished',
-    ]);
+    public function update(Request $request, Publication $publication)
+    {
+        // Validate the request
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'abstract' => 'required|string',
+            'status' => 'required|string|in:published,unpublished',
+        ]);
 
-    // Check if 'file_path' is present and it's a file, not a string
-    if ($request->hasFile('file_path')) {
-        // Handle file upload
-        if ($publication->file_path) {
-            Storage::disk('public')->delete($publication->file_path);
+        // Check if 'file_path' is present and it's a file, not a string
+        if ($request->hasFile('file_path')) {
+            // Handle file upload
+            if ($publication->file_path) {
+                Storage::disk('public')->delete($publication->file_path);
+            }
+            $fileName = $request->file('file_path')->getClientOriginalName();
+            $file = $request->file('file_path')->storeAs('research_files', $fileName, 'public');
+            $data['file_path'] = $file;
+        } else {
+            // Keep the old file path if no new file is uploaded
+            $data['file_path'] = $publication->file_path;
         }
-        $fileName = $request->file('file_path')->getClientOriginalName();
-        $file = $request->file('file_path')->storeAs('research_files', $fileName, 'public');
-        $data['file_path'] = $file;
-    } else {
-        // Keep the old file path if no new file is uploaded
-        $data['file_path'] = $publication->file_path;
-    }
 
-    // Update the publication
-    $publication->update($data);
+        // Update the publication
+        $publication->update($data);
 
-    // Return response...
-
-     $user = Auth::user();
-        // return inertia('Publications/Index',compact('success','publications'));
         return redirect()->route('publications.index');
-}
+    }
 
 
 
@@ -169,10 +165,7 @@ public function update(Request $request, Publication $publication)
         }
 
         $publication->delete();
-        $user = Auth::user();
-        $success= 'Publication Updated Successfully.';
-        // Get research works owned by the user or where the user is a collaborator
-        $publications = Publication::where('author_id', $user->id)->get();
+      
         return redirect()->back();
         
     }
