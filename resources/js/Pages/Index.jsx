@@ -1,10 +1,10 @@
 import { Link, Head, useForm } from "@inertiajs/react";
 import Logo from "../Images/Logo.png";
-import { FaSearch } from "react-icons/fa";
+import { FaDownload, FaEye, FaUser } from "react-icons/fa";
 import Footer from "@/Components/Footer";
 import { format } from "date-fns";
 import DOMPurify from "dompurify";
-import { FaFileDownload, FaUsers } from "react-icons/fa";
+import { FaUserFriends, FaUsers } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import Header from "@/Components/Header";
 import { Bounce, Fade, Slide } from "react-awesome-reveal";
@@ -241,7 +241,7 @@ export default function Welcome({ authors, publications }) {
                                                                 }
                                                                 className="flex flex-col gap-3 px-4 pt-4 border m-2"
                                                             >
-                                                                <span className="bg-blue-900/50 w-24 flex justify-center rounded-lg font-bold text-white">
+                                                                <span className="bg-blue-900/50 w-24 flex justify-center text-sm rounded-md font-bold text-white">
                                                                     publication
                                                                 </span>
                                                                 <Link
@@ -257,15 +257,29 @@ export default function Welcome({ authors, publications }) {
                                                                         )}
                                                                     </span>
                                                                 </Link>
-                                                                <span className="text-blue-900/90">
+                                                                <span className="text-blue-900/90 gap-3">
                                                                     {publication.abstract &&
                                                                         publication.abstract.substring(
                                                                             0,
                                                                             300
-                                                                        )}
+                                                                        ) +
+                                                                            "     "}
+                                                                    <Link
+                                                                        href={`/publication/${publication.title}`}
+                                                                        className="text-sm bg-slate-50 px-4 py-1 text-blue-400 font-bold"
+                                                                    >
+                                                                        Read
+                                                                        More
+                                                                        .....
+                                                                    </Link>
                                                                 </span>
-                                                                <span className="text-blue-900/90 flex gap-2">
-                                                                    By:{" "}
+                                                                <span className="text-blue-900/90 flex gap-2 items-center">
+                                                                    {publication.collaborations >
+                                                                    0 ? (
+                                                                        <FaUsers className="text-gray-500 text-sm rounded-md" />
+                                                                    ) : (
+                                                                        <FaUser className="text-gray-500 text-sm rounded-md" />
+                                                                    )}
                                                                     {
                                                                         publication
                                                                             .author
@@ -295,27 +309,28 @@ export default function Welcome({ authors, publications }) {
                                                                 </span>
                                                                 <span className="flex justify-between gap-3 py-2">
                                                                     <div className="flex gap-3">
-                                                                        <span className="bg-blue-300 text-white rounded-md px-2">
+                                                                        <span className="bg-blue-300 text-white/70 text-sm rounded-md px-2 flex items-center gap-1">
                                                                             {
                                                                                 publication.downloads
                                                                             }{" "}
-                                                                            downloads
+                                                                            <FaDownload className="text-white/70 text-sm rounded-md" />
                                                                         </span>
-                                                                        <span className="bg-gray-600 text-white rounded-md px-2">
+                                                                        <span className="bg-gray-600 text-white text-sm flex items-center gap-2 rounded-md px-2">
                                                                             {
                                                                                 publication.views
                                                                             }{" "}
-                                                                            views
+                                                                            <FaEye className="text-white text-sm rounded-md" />
                                                                         </span>
                                                                     </div>
+
                                                                     <Link
-                                                                        className="flex gap-1 items-center bg-blue-700 text-white/70 rounded-md px-2"
+                                                                        className="flex gap-1 items-center bg-blue-400 text-white/80 rounded-md px-2 text-sm"
                                                                         href={route(
                                                                             "publication.download",
                                                                             publication.id
                                                                         )}
                                                                     >
-                                                                        <FaFileDownload className="text-white text-lg rounded-md" />
+                                                                        <FaDownload className="text-white/80 text-sm rounded-md" />
                                                                         Download
                                                                     </Link>
                                                                 </span>

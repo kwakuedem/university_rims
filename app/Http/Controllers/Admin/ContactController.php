@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendEmail;
 use App\Models\ContactUs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -40,6 +42,18 @@ class ContactController extends Controller
     public function update(Request $request, ContactUs $contactUs)
     {
         //
+    }
+
+     public function sendemail(Request $request)
+    {
+        $emailData=$request->validate([
+            'email'=>'required|email',
+            'message'=>'required'
+        ]);
+
+       
+        Mail::to($emailData['email'])->send(new SendEmail($emailData['message']));
+        return redirect()->back();
     }
 
     /**

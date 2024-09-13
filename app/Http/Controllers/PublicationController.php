@@ -96,7 +96,8 @@ class PublicationController extends Controller
         if ($request->hasFile('file_path')) {
             $file = $request->file('file_path');
             $fileName = $file->getClientOriginalName(); // Get the original file name
-            $file = $file->storeAs('research_files', $fileName, 'public'); // Save the file with its original name
+            // Save the file with its original name
+            $file = $file->storeAs('research_files', $fileName, 'public'); 
         }
 
         Publication::create([

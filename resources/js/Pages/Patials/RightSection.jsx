@@ -3,7 +3,13 @@ import React from "react";
 import { useState } from "react";
 import DOMPurify from "dompurify";
 import { format } from "date-fns";
-import { FaFileDownload } from "react-icons/fa";
+import {
+    FaDownload,
+    FaEye,
+    FaFileDownload,
+    FaUser,
+    FaUsers,
+} from "react-icons/fa";
 
 const RightSection = ({ researchOut, about, author_qualifications }) => {
     const [activeTab, setActiveTab] = useState("about");
@@ -84,18 +90,23 @@ const RightSection = ({ researchOut, about, author_qualifications }) => {
                                     author_qualifications.length > 0 ? (
                                         author_qualifications.map(
                                             (qualification) => (
-                                                <div className="text-md text-gray-600/90 flex flex-col border-2 px-2 py-2 shadow-md border-gray-200 rounded-md">
-                                                    <span className="text-blue-900">
-                                                        {qualification.degree}
-                                                    </span>
-                                                    <p className="w-full">
-                                                        {
-                                                            qualification.institution
-                                                        }
-                                                    </p>
-                                                    <span>
-                                                        {qualification.year}
-                                                    </span>
+                                                <div className="text-md text-gray-600/90 flex flex-col px-2 py-2 border-gray-200 rounded-md">
+                                                    <div className="pb-2">
+                                                        <span className="text-blue-900">
+                                                            {
+                                                                qualification.degree
+                                                            }
+                                                        </span>
+                                                        <p className="w-full">
+                                                            {
+                                                                qualification.institution
+                                                            }
+                                                        </p>
+                                                        <span>
+                                                            {qualification.year}
+                                                        </span>
+                                                    </div>
+                                                    <hr />
                                                 </div>
                                             )
                                         )
@@ -144,10 +155,21 @@ const RightSection = ({ researchOut, about, author_qualifications }) => {
                                                 {publication.abstract.substring(
                                                     0,
                                                     300
-                                                )}
+                                                ) + "     "}
+                                                <Link
+                                                    href={`/publication/${publication.title}`}
+                                                    className="text-sm bg-slate-50 px-4 py-1 text-blue-400 font-bold"
+                                                >
+                                                    Read More .....
+                                                </Link>
                                             </span>
-                                            <span className="text-blue-900/90 flex gap-2">
-                                                By:{" "}
+                                            <span className="text-blue-900/90 flex gap-2 items-center">
+                                                {publication.collaborations >
+                                                0 ? (
+                                                    <FaUsers className="text-gray-500 text-sm rounded-md" />
+                                                ) : (
+                                                    <FaUser className="text-gray-500 text-sm rounded-md" />
+                                                )}
                                                 <Link
                                                     href={route(
                                                         "author.profile",
@@ -160,19 +182,18 @@ const RightSection = ({ researchOut, about, author_qualifications }) => {
                                             </span>
                                             <span className="flex justify-between gap-3 py-2">
                                                 <div className="flex gap-3">
-                                                    <span className="bg-blue-300 text-sm lg:text-lg text-white rounded-md px-2">
-                                                        {publication.downloads +
-                                                            " "}{" "}
-                                                        downloads
+                                                    <span className="bg-blue-300 flex items-center gap-2 text-sm lg:text-lg text-white rounded-md px-2">
+                                                        {publication.downloads}{" "}
+                                                        <FaDownload className="text-white/80 text-sm rounded-md" />
                                                     </span>
-                                                    <span className="bg-gray-600 text-white rounded-md px-2">
+                                                    <span className="bg-gray-600 text-white flex items-center gap-2 text-sm rounded-md px-2">
                                                         {publication.views +
                                                             " "}{" "}
-                                                        views
+                                                        <FaEye className="text-white/80 text-sm rounded-md" />
                                                     </span>
                                                 </div>
                                                 <a
-                                                    className="bg-blue-700 text-white font-semibold px-2 rounded-md flex gap-2 items-center justify-center"
+                                                    className="bg-blue-400 text-white text-sm font-semibold px-2 rounded-md flex gap-1 items-center justify-center"
                                                     href={
                                                         publication.file_path
                                                             ? route(
@@ -187,7 +208,7 @@ const RightSection = ({ researchOut, about, author_qualifications }) => {
                                                             : null
                                                     }
                                                 >
-                                                    <FaFileDownload />
+                                                    <FaDownload className="text-white/80 text-sm rounded-md" />
                                                     Download
                                                 </a>
                                             </span>

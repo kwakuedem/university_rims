@@ -65,11 +65,11 @@ class CollaborationController extends Controller
                     ]);
                 }
             }
-    }
+        }
 
         // Redirect to the publications index with a success message
         return redirect()->route('publications.index')->with('success', 'Collaborators added successfully.');
-}
+    }
 
 
 }

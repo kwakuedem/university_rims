@@ -61,7 +61,9 @@ Route::middleware(['auth', 'verified','role:admin|developer'])->prefix('admin')-
     Route::get('/profile', [ProfileController::class, 'editadmin'])->name('profile.editadmin');
     Route::patch('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::resource('/messages',ContactController::class);
+    Route::resource('/messages',ContactController::class)->only('index','show','destroy');
+    Route::post('/email',[ContactController::class,'sendemail'])->name('sendmail');
+    
 });
 
 
