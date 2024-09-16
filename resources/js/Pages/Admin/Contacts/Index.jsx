@@ -128,7 +128,7 @@ const Index = ({ auth, messages }) => {
                                                                 >
                                                                     <GrView className="!text-green-400 text-[20px]" />
                                                                 </Link>
-                                                                <Link
+                                                                {/* <Link
                                                                     href={route(
                                                                         "admin.messages.edit",
                                                                         message.id
@@ -136,7 +136,7 @@ const Index = ({ auth, messages }) => {
                                                                     className="text-blue-600 hover:underline"
                                                                 >
                                                                     <FaRegEdit className="text-[20px] !text-indigo-500" />
-                                                                </Link>
+                                                                </Link> */}
                                                                 <button
                                                                     onClick={() =>
                                                                         deleteDepartment(

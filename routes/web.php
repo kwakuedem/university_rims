@@ -55,6 +55,7 @@ Route::middleware(['auth', 'verified','role:admin|developer'])->prefix('admin')-
     Route::resource('/departments',DepartmentController::class);
     Route::resource('/collaborations',AdminCollaborationController::class)->except('edit','create','destroy','update','show');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::post('/users', [AdminController::class, 'store'])->name('user_create');
     Route::get('/roles', [AdminController::class, 'roles'])->name('roles');
     Route::post('/assign-role', [AdminController::class, 'assignRole'])->name('assignRole');
     Route::post('/revoke-role', [AdminController::class, 'revokeRole'])->name('revokeRole'); 

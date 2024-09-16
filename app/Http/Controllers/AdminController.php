@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Collaboration;
-use App\Models\Publication;
+use Illuminate\Validation\Rules;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -19,7 +20,7 @@ class AdminController extends Controller
     public function users()
     {
         // $users = User::with('roles')->get();
-       $users = User::with('roles')->where('name','!=','Developer')->get();
+       $users = User::with('roles')->where('name','!=','Developer')->latest()->get();
       $roles = Role::where('name', '!=', 'developer')->pluck('name');
 
         return Inertia::render('Admin/Users', compact('users','roles'));
@@ -88,5 +89,31 @@ class AdminController extends Controller
     Log::info("Role revoked successfully.", ['user_id' => $user->id, 'role' => $request->role]);
     return redirect()->back()->with('success', 'Role revoked successfully.');
 }
+
+public function create(){
+    return inertia('Admin/UserCreate');
+}
+
+public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        $user->assignRole('author'); 
+
+        event(new Registered($user));
+
+        return redirect()->route('admin.users');
+    }
+
 
 }

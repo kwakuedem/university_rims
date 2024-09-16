@@ -67,41 +67,54 @@ export default function Show({ message, auth }) {
 
                             {openModal && (
                                 <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
-                                    <form
-                                        onSubmit={submit}
-                                        action=""
-                                        className="bg-white w-1/2 px-4 pt-6 pb-3 rounded-md"
-                                    >
-                                        <TextInput
-                                            id="email"
-                                            name="email"
-                                            className="mt-1 block w-full !pointer-events-auto outline outline-0 outline-blue-900 h-8 bg-slate-50 shadow-inner focus:outline-0 focus:border-collapse"
-                                            value={data.email}
-                                        />
-
-                                        <textarea
-                                            cols={5}
-                                            rows={3}
-                                            id="message"
-                                            className="outline outline-1 outline-blue-900 border-gray-300 bg-slate-50 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
-                                            value={data.message}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "message",
-                                                    e.target.value
-                                                )
-                                            }
-                                        />
-                                        <InputError
-                                            className="mt-2"
-                                            message={errors.message}
-                                        />
-                                        <div className="flex justify-end py-4">
-                                            <button className="bg-blue-500 rounded-md py-1 px-3 w-24 text-white">
-                                                Send
-                                            </button>
+                                    <div className="bg-white w-[40%] flex flex-col gap-3 px-4 pt-6 pb-3 rounded-md">
+                                        {" "}
+                                        <div className="flex justify-end">
+                                            <span
+                                                onClick={() => {
+                                                    setOpenModal(false);
+                                                }}
+                                                className="bg-red-400 text-white font-bold rounded-md py1` px-3 cursor-pointer"
+                                            >
+                                                x
+                                            </span>
                                         </div>
-                                    </form>
+                                        <form
+                                            onSubmit={submit}
+                                            action=""
+                                            className="bg-white "
+                                        >
+                                            <TextInput
+                                                id="email"
+                                                name="email"
+                                                className="mt-1 block w-full !pointer-events-auto outline outline-0 outline-blue-900 h-8 bg-slate-50 shadow-inner focus:outline-0 focus:border-collapse"
+                                                value={data.email}
+                                            />
+
+                                            <textarea
+                                                cols={5}
+                                                rows={3}
+                                                id="message"
+                                                className="outline outline-1 outline-blue-900 border-gray-300 bg-slate-50 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                                                value={data.message}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "message",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                            <InputError
+                                                className="mt-2"
+                                                message={errors.message}
+                                            />
+                                            <div className="flex justify-end py-4">
+                                                <button className="bg-blue-500 rounded-md py-1 px-3 w-24 text-white">
+                                                    Send
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             )}
                         </div>

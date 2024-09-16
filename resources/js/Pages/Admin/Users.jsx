@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "../../Layouts/AdminLayout ";
+import PrimaryButton from "@/Components/PrimaryButton";
+import InputError from "@/Components/InputError";
+import TextInput from "@/Components/TextInput";
+import InputLabel from "@/Components/InputLabel";
+import User from "./partials/User";
 
 const Users = ({ auth, users, roles }) => {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -8,7 +13,7 @@ const Users = ({ auth, users, roles }) => {
         role: "",
     });
 
-    const [message, setMessage] = useState(null);
+    const [openModal, setOpenModal] = useState(false);
     const [messageType, setMessageType] = useState("");
 
     const handleAssignRole = (userId, roleName) => {
@@ -22,6 +27,10 @@ const Users = ({ auth, users, roles }) => {
             },
         });
     };
+
+    function onOpenModal() {
+        setOpenModal(true);
+    }
 
     const handleRevokeRole = (userId, roleName) => {
         setData({ ...data, user_id: userId, role: roleName });
@@ -74,6 +83,21 @@ const Users = ({ auth, users, roles }) => {
             </div>
         );
     };
+    console.log(users);
+
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const filteredUsers = users.filter((user) => {
+        const username = user.name.toLowerCase();
+        const email = user.email.toLowerCase();
+        const searchLower = searchQuery.toLowerCase();
+
+        return username.includes(searchLower) || email.includes(searchLower);
+    });
 
     const { flash } = usePage().props;
 
@@ -92,9 +116,30 @@ const Users = ({ auth, users, roles }) => {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 h-screen overflow-hidden">
                     <div className="bg-white shadow-sm sm:rounded-lg max-h-full flex flex-col">
                         <div className="p-6 text-gray-900 flex-grow">
-                            <h2 className="font-semibold text-xl text-gray-800 leading-tight mb-4">
-                                Manage Users
-                            </h2>
+                            <div className="flex justify-between items-start">
+                                <h2 className="font-semibold text-xl text-slate-400 leading-tight mb-4">
+                                    Manage Users
+                                </h2>
+                                <div className="items-center mb-3 justify-center  w-[40%] m-auto  focus-within:border-slate-900 rounded-md">
+                                    <input
+                                        value={searchQuery}
+                                        autoComplete="off"
+                                        type="text"
+                                        className="flex-1 w-full text-gray-600 rounded-md text-sm !h-7"
+                                        // name="search"
+                                        placeholder="Search by author, title, or year ...."
+                                        onChange={handleSearchChange}
+                                    />
+                                </div>
+                                <div>
+                                    <button
+                                        onClick={onOpenModal}
+                                        className="bg-blue-600 text-white/70 font-bold py-1 px-2 rounded-md hover:bg-blue-500"
+                                    >
+                                        Add New User
+                                    </button>
+                                </div>
+                            </div>
                             <div
                                 className="overflow-y-auto flex-grow"
                                 style={{ maxHeight: "calc(100vh - 200px)" }}
@@ -116,34 +161,45 @@ const Users = ({ auth, users, roles }) => {
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
-                                        {users.map((user) => (
-                                            <tr key={user.id}>
-                                                <td className="px-6 py-1 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                    {user.name}
-                                                </td>
-                                                <td className="px-6 py-1 whitespace-nowrap text-sm text-gray-500">
-                                                    {user.email}
-                                                </td>
-                                                <td className="px-6 py-1 whitespace-nowrap text-sm text-gray-500">
-                                                    {user.roles
-                                                        .map(
-                                                            (role) => role.name
-                                                        )
-                                                        .join(", ")}
-                                                </td>
-                                                <td className="px-6 py-1 whitespace-nowrap w-full flex text-sm font-medium items-end justify-end">
-                                                    {renderRoleButtons(user)}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
+                                    {filteredUsers.length > 0 ? (
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {filteredUsers.map((user) => (
+                                                <tr key={user.id}>
+                                                    <td className="px-6 py-1 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                        {user.name}
+                                                    </td>
+                                                    <td className="px-6 py-1 whitespace-nowrap text-sm text-gray-500">
+                                                        {user.email}
+                                                    </td>
+                                                    <td className="px-6 py-1 whitespace-nowrap text-sm text-gray-500">
+                                                        {user.roles
+                                                            .map(
+                                                                (role) =>
+                                                                    role.name
+                                                            )
+                                                            .join(", ")}
+                                                    </td>
+                                                    <td className="px-6 py-1 whitespace-nowrap w-full flex text-sm font-medium items-end justify-end">
+                                                        {renderRoleButtons(
+                                                            user
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    ) : (
+                                        <div className=" p-3">
+                                            <p>No user matched search</p>
+                                        </div>
+                                    )}
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {openModal && <User setIsModalOpen={setOpenModal} />}
         </AdminLayout>
     );
 };

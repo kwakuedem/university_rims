@@ -74,12 +74,12 @@ const Index = ({ auth, publications }) => {
                         <div className="p-6 text-gray-900">
                             {/* Search Input */}
                             <div className="mb-3 flex justify-between">
-                                <div className="items-center justify-center border w-[50%] m-auto border-slate-800 focus-within:border-slate-900 rounded-md">
+                                <div className="items-center justify-center  w-[40%] m-auto focus-within:border-slate-900 rounded-md">
                                     <input
                                         value={searchQuery}
                                         autoComplete="off"
                                         type="text"
-                                        className="flex-1 w-full text-gray-600 rounded-md"
+                                        className="flex-1 w-full text-gray-600 rounded-md !h-8"
                                         name="search"
                                         placeholder="Search by author, title, or year ...."
                                         onChange={handleSearchChange}
