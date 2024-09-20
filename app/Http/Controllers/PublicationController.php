@@ -115,7 +115,7 @@ class PublicationController extends Controller
 
     //get publication edit page
     public function edit(Publication $publication){
-        $collaborators=User::where('id', '!=', Auth::id())->where('name','!=','admin')->get();
+        $collaborators=User::where('id', '!=', Auth::id())->where('name','!=','Admin')->where('name','!=','Developer')->get();
          return inertia('Publications/Edit',compact('publication','collaborators'));
     }
 
@@ -174,6 +174,7 @@ class PublicationController extends Controller
 
 
 
+//function to handle download request
 public function download(Publication $publication)
 {
     // Log the request
